@@ -338,17 +338,17 @@
       "slot": 0,
       "label": "월 오전",
       "productIdx": 0,
-      "posted": false,
-      "reelId": null,
-      "postedAt": null
+      "posted": true,
+      "reelId": "17927314416387643",
+      "postedAt": "2026-08-11T15:05:23.360Z"
     },
     {
       "slot": 1,
       "label": "월 저녁",
       "productIdx": 1,
-      "posted": false,
-      "reelId": null,
-      "postedAt": null
+      "posted": true,
+      "reelId": "18173358115442746",
+      "postedAt": "2026-08-11T15:05:23.360Z"
     },
     {
       "slot": 2,
