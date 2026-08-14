@@ -35,18 +35,21 @@ const VIEWS = [
   'scale(1.38) translateX(10%)',
   'scale(1.38) translateX(-10%)',
 ];
-const BADGES = ['✨', '👌', '🙌', '🔥', '💡', '😌'];
-// 구매 유도 훅 — 상품별 buyHook 이 없을 때 쓰는 기본값.
+// 구매 유도 훅 — 상품별 buyHook 이 없을 때 쓰는 기본값(펫 종류별).
 // 허위 긴급성("품절 임박")·허위 후기는 금지, "사도 좋다"는 의견 표현만.
-const BUY_FALLBACK = ['이 가격이면 사야죠', '지금 사두면 이득', '장바구니 직행각'];
-// 씬마다 배경 blob 색을 살짝 바꿔 "같은 화면 반복" 느낌 제거
+const BUY_FALLBACK = {
+  dog: ['이 가격이면 사야죠', '댕댕이 선물로 딱', '지금 사두면 이득'],
+  cat: ['이 가격이면 사야죠', '냥이 선물로 딱', '지금 사두면 이득'],
+  any: ['이 가격이면 사야죠', '지금 사두면 이득', '장바구니 직행각'],
+};
+// 씬마다 배경 blob 색을 살짝 바꿔 "같은 화면 반복" 느낌 제거 — 따뜻한 파스텔(펫 톤)
 const MOODS = [
-  ['#F2B705', '#E0654A'],
-  ['#8FC7B0', '#E0654A'],
-  ['#F2B705', '#8FC7B0'],
-  ['#E0654A', '#C9A227'],
-  ['#8FC7B0', '#F2B705'],
-  ['#E0654A', '#8FC7B0'],
+  ['#F6C089', '#F09A6E'],
+  ['#BFD9C6', '#F6C089'],
+  ['#F4B8B0', '#F2CE8B'],
+  ['#F2CE8B', '#E8A063'],
+  ['#BFD9C6', '#F4B8B0'],
+  ['#F09A6E', '#BFD9C6'],
 ];
 
 function hookFontSize(hook = '') {
@@ -84,7 +87,48 @@ function blobs(i) {
     <div class="blob" data-loop="drift2" style="right:-320px;bottom:-260px;width:1000px;height:1000px;background:${c2}"></div>`;
 }
 
-const MASCOT = `
+// ── 마스코트 3종 — 카테고리에 맞춰 자동 선택 ────────────────────────
+// 강아지: 처진 귀 + 꼬리 살랑(빠름) / 고양이: 쫑긋 귀(가끔 씰룩) + 꼬리 스윙(느림)
+// 중립(비-펫 카테고리): 기존 라운드 캐릭터 유지 — 이번 주 남은 옛 카테고리 릴스용.
+const DOG_MASCOT = `
+<svg viewBox="0 0 220 212" width="100%" height="100%">
+  <ellipse cx="110" cy="200" rx="58" ry="9" fill="#00000012"/>
+  <g class="tail"><path d="M176 128 q36 -4 32 -40" stroke="#E9A566" stroke-width="17" fill="none" stroke-linecap="round"/></g>
+  <path d="M64 56 C42 28 18 44 30 78 C36 94 54 96 66 86z" fill="#CE8449"/>
+  <path d="M156 56 C178 28 202 44 190 78 C184 94 166 96 154 86z" fill="#CE8449"/>
+  <path d="M46 112 c0-38 28-64 64-64 s64 26 64 64 v18 c0 33-28 56-64 56 s-64-23-64-56z" fill="#E9A566"/>
+  <ellipse cx="110" cy="138" rx="37" ry="27" fill="#FFF7EC"/>
+  <g class="eyes">
+    <ellipse class="eye" cx="82" cy="106" rx="9" ry="11" fill="#33241B"/>
+    <ellipse class="eye" cx="138" cy="106" rx="9" ry="11" fill="#33241B"/>
+  </g>
+  <circle cx="85" cy="102" r="3" fill="#fff"/><circle cx="141" cy="102" r="3" fill="#fff"/>
+  <circle cx="82" cy="88" r="5" fill="#C97F45"/><circle cx="138" cy="88" r="5" fill="#C97F45"/>
+  <path d="M102 128 h16 c3 6-2 13-8 13 s-11-7-8-13z" fill="#4A3428"/>
+  <path d="M110 141 q-8 10-17 3 M110 141 q8 10 17 3" stroke="#4A3428" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <path d="M103 147 q7 15 15 0 z" fill="#F58E9A"/>
+  <circle cx="58" cy="124" r="10" fill="#F2A28C" opacity=".45"/><circle cx="162" cy="124" r="10" fill="#F2A28C" opacity=".45"/>
+</svg>`;
+const CAT_MASCOT = `
+<svg viewBox="0 0 220 212" width="100%" height="100%">
+  <ellipse cx="110" cy="200" rx="58" ry="9" fill="#00000012"/>
+  <g class="tail slow"><path d="M174 138 q42 6 36 -38" stroke="#ABB2C8" stroke-width="16" fill="none" stroke-linecap="round"/></g>
+  <g class="ear"><path d="M58 74 L44 20 L98 46z" fill="#ABB2C8"/><path d="M60 64 L52 32 L86 47z" fill="#F3ADB6"/></g>
+  <path d="M162 74 L176 20 L122 46z" fill="#ABB2C8"/><path d="M160 64 L168 32 L134 47z" fill="#F3ADB6"/>
+  <path d="M46 116 c0-38 28-62 64-62 s64 24 64 62 v16 c0 33-28 56-64 56 s-64-23-64-56z" fill="#ABB2C8"/>
+  <path d="M92 62 q6 10 0 18 M110 59 q5 11 0 20 M128 62 q-6 10 0 18" stroke="#8890AC" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <ellipse cx="110" cy="132" rx="32" ry="23" fill="#FFFDF6"/>
+  <g class="eyes">
+    <ellipse class="eye" cx="80" cy="104" rx="8.5" ry="11" fill="#3E3348"/>
+    <ellipse class="eye" cx="140" cy="104" rx="8.5" ry="11" fill="#3E3348"/>
+  </g>
+  <circle cx="83" cy="100" r="3" fill="#fff"/><circle cx="143" cy="100" r="3" fill="#fff"/>
+  <path d="M104 122 h12 c2 5-2 10-6 10 s-8-5-6-10z" fill="#E58A96"/>
+  <path d="M110 132 q-6 9-14 3 M110 132 q6 9 14 3" stroke="#3E3348" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M64 116 L34 110 M66 127 L38 132 M156 116 L186 110 M154 127 L182 132" stroke="#8890AC" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="58" cy="122" r="9" fill="#F3ADB6" opacity=".5"/><circle cx="162" cy="122" r="9" fill="#F3ADB6" opacity=".5"/>
+</svg>`;
+const NEUTRAL_MASCOT = `
 <svg viewBox="0 0 200 210" width="100%" height="100%">
   <ellipse cx="100" cy="196" rx="54" ry="9" fill="#00000014"/>
   <path d="M100 40V18" stroke="#E0654A" stroke-width="8" stroke-linecap="round"/>
@@ -100,6 +144,26 @@ const MASCOT = `
   <g class="arm"><path d="M156 116q24-4 30-26" stroke="#E0654A" stroke-width="15" fill="none" stroke-linecap="round"/></g>
 </svg>`;
 
+// 발자국(트레일 장식용) — currentColor 로 색을 물려받는다
+const PAW = `
+<svg viewBox="0 0 44 40" width="100%" height="100%" fill="currentColor">
+  <ellipse cx="22" cy="28" rx="10" ry="8"/>
+  <circle cx="8.5" cy="18" r="5"/><circle cx="17.5" cy="12.5" r="5"/>
+  <circle cx="26.5" cy="12.5" r="5"/><circle cx="35.5" cy="18" r="5"/>
+</svg>`;
+
+// 카테고리명 → 펫 종류. 비-펫 카테고리는 기존 중립 디자인으로 폴백(이번 주 잔여 슬롯 대비).
+function petKindOf(category = '') {
+  if (/강아지|댕댕|멍멍|퍼피/.test(category)) return 'dog';
+  if (/고양이|냥이|냥집사|캣/.test(category)) return 'cat';
+  return 'any';
+}
+const KIND_ASSETS = {
+  dog: { coverEmos: ['🐶', '❤️', '🦴'], badges: ['🦴', '🐾', '🎾', '❤️', '😍', '👍'], mascot: DOG_MASCOT, paw: true },
+  cat: { coverEmos: ['🐱', '❤️', '🐟'], badges: ['🐟', '🐾', '🧶', '❤️', '😻', '👍'], mascot: CAT_MASCOT, paw: true },
+  any: { coverEmos: ['✨', '👀', '👍'], badges: ['✨', '👌', '🙌', '🔥', '💡', '😌'], mascot: NEUTRAL_MASCOT, paw: false },
+};
+
 /**
  * 모션덱 HTML 생성.
  * @param {object} o
@@ -114,9 +178,12 @@ const MASCOT = `
  */
 export function buildMotionDeckHtml(o) {
   const { product, image, hook, category = '', benefits = [], otherImages = [], durations } = o;
+  const kind = petKindOf(category);
+  const A = KIND_ASSETS[kind];
+  const fallbacks = BUY_FALLBACK[kind];
   const buyHook =
     (o.buyHook || product.buyHook || '').trim() ||
-    BUY_FALLBACK[(Number(product.productId) || 0) % BUY_FALLBACK.length];
+    fallbacks[(Number(product.productId) || 0) % fallbacks.length];
   const scenes = [];
   let acc = 0;
   for (const d of durations) {
@@ -128,24 +195,34 @@ export function buildMotionDeckHtml(o) {
   const priceSceneIdx = nBen; // 마지막 장점 씬에서 가격 공개
 
   // ── 씬 0: 표지(훅) ────────────────────────────────────────────────
+  // 발자국 트레일 — 훅 오른쪽 여백을 따라 "걸어 들어온" 듯 지그재그로 콕콕 찍힌다(펫 전용).
+  // 표지는 실전에서 1.6초 남짓이라(COVER_MIN) 모든 등장을 1.1초 안에 끝낸다.
+  const trail = A.paw
+    ? [
+        [920, 262, -18, 0.30], [856, 354, 12, 0.40], [936, 436, -8, 0.50], [872, 522, 15, 0.60],
+      ].map(([x, y, r, d]) =>
+        `<span class="paw" style="left:${x}px;top:${y}px;transform:rotate(${r}deg)">
+           <i data-anim="pop" data-delay="${d}">${PAW}</i></span>`).join('')
+    : '';
   const cover = `
 <section class="scene cover">
   <div class="sbg">${blobs(0)}</div>
+  ${trail}
   <div class="pad">
-    <div class="chip" data-anim="fade" data-dur="0.26" data-delay="0">${esc(category)} · 이번 주 추천</div>
+    <div class="chip" data-anim="fade" data-dur="0.26" data-delay="0">${A.paw ? '🐾 ' : ''}${esc(category)} · 이번 주 추천</div>
     <h1 class="hook" data-stagger="0.022" data-delay="0.01" style="font-size:${hookFontSize(hook)}px">${splitChars(hook)}</h1>
     <div class="ul" data-anim="bar" data-dur="0.42" data-delay="0.26"></div>
     <div class="frame" data-anim="imgFast" data-delay="0">
       <div class="kb" data-ken="in">
         <div class="plate"><img src="${esc(image)}"></div>
       </div>
-      <span class="emo" style="left:-26px;top:34px" data-anim="pop" data-delay="0.62"><i data-loop="bob">✨</i></span>
-      <span class="emo" style="right:-24px;top:210px" data-anim="pop" data-delay="0.74"><i data-loop="bob2">👀</i></span>
-      <span class="emo" style="left:52px;bottom:-34px" data-anim="pop" data-delay="0.86"><i data-loop="bob">👍</i></span>
+      <span class="emo" style="left:-26px;top:34px" data-anim="pop" data-delay="0.42"><i data-loop="bob">${A.coverEmos[0]}</i></span>
+      <span class="emo" style="right:-24px;top:210px" data-anim="pop" data-delay="0.54"><i data-loop="bob2">${A.coverEmos[1]}</i></span>
+      <span class="emo" style="left:52px;bottom:-34px" data-anim="pop" data-delay="0.66"><i data-loop="bob">${A.coverEmos[2]}</i></span>
     </div>
   </div>
-  <div class="mascot" style="right:34px;bottom:-6px;width:212px" data-anim="pop" data-delay="0.98">
-    <div data-loop="bob">${MASCOT}</div>
+  <div class="mascot" style="right:34px;bottom:-6px;width:216px" data-anim="pop" data-delay="0.72">
+    <div data-loop="bob">${A.mascot}</div>
   </div>
 </section>`;
 
@@ -176,7 +253,7 @@ export function buildMotionDeckHtml(o) {
       <div class="kb" data-ken="${i % 2 ? 'out' : 'in'}">
         <div class="plate"><img src="${esc(image)}" style="transform:${VIEWS[sIdx % VIEWS.length]}"></div>
       </div>
-      <span class="badge" data-anim="pop" data-delay="0.60"><i data-loop="pulse">${BADGES[i % BADGES.length]}</i></span>
+      <span class="badge" data-anim="pop" data-delay="0.60"><i data-loop="pulse">${A.badges[i % A.badges.length]}</i></span>
     </div>
     <div class="body">
       <p class="btext" data-stagger="0.042" data-delay="0.40">${splitWords(b)}</p>
@@ -199,14 +276,14 @@ export function buildMotionDeckHtml(o) {
     <div class="brand" data-anim="rise" data-delay="0.04">atoztem</div>
     <h2 class="big" data-stagger="0.045" data-delay="0.12">${splitWords(buyHook)}</h2>
     <div class="sub" data-anim="fade" data-delay="0.42">이번 주 추천템 더 있어요</div>
-    <div class="go" data-anim="pop" data-delay="0.56"><i data-loop="pulse">👉</i> 프로필 링크에서 바로 구매</div>
+    <div class="go" data-anim="pop" data-delay="0.56"><i data-loop="pulse">${A.paw ? '🐾' : '👉'}</i> 프로필 링크에서 바로 구매</div>
     <div class="tiles" data-stagger="0.08" data-delay="0.72">${tiles}</div>
     <div class="disc" data-anim="fade" data-delay="1.20">
       이 게시물은 쿠팡 파트너스 활동의 일환으로,<br>이에 따른 일정액의 수수료를 제공받습니다.
     </div>
   </div>
-  <div class="mascot" style="right:56px;top:250px;width:180px" data-anim="pop" data-delay="0.85">
-    <div data-loop="bob">${MASCOT}</div>
+  <div class="mascot" style="right:56px;top:250px;width:184px" data-anim="pop" data-delay="0.85">
+    <div data-loop="bob">${A.mascot}</div>
   </div>
 </section>`;
 
@@ -215,8 +292,9 @@ export function buildMotionDeckHtml(o) {
 
   return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
 :root{
-  --cream:#FAF4EA; --ink:#221F1C; --sub:#9C8B79;
-  --accent:#E0654A; --accent2:#2F6E5E; --white:#fff;
+  /* 펫 톤 팔레트 — 따뜻한 우유빛 크림 + 살구 오렌지 + 허니 옐로 */
+  --cream:#FBF2E6; --ink:#3B2E23; --sub:#A78F79;
+  --accent:#E58345; --accent2:#37776B; --honey:#F2B84B; --white:#fff;
   --font:'Pretendard','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif;
   /* 인스타 안전 구역 — 릴스는 위(계정명·오디오)와 아래(캡션·버튼)를 앱 UI가 덮는다.
      실측(프로필 게시물 뷰/릴스 탭 모두 대응): 위 236px, 아래 376px 는 비워 둔다. */
@@ -235,12 +313,15 @@ body{font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased
 
 /* 표지 */
 .chip{align-self:flex-start;font-size:38px;font-weight:800;color:var(--accent);
-      background:rgba(224,101,74,.13);padding:16px 34px;border-radius:999px}
+      background:rgba(229,131,69,.14);padding:16px 34px;border-radius:999px}
 .hook{margin-top:28px;font-weight:900;line-height:1.06;letter-spacing:-5px}
 .hook .ch{display:inline-block;will-change:transform,opacity,filter}
 .hook .sp{display:inline-block;width:.3em}
 .ul{width:210px;height:14px;margin-top:26px;border-radius:999px;
-    background:linear-gradient(90deg,var(--accent),#F2B705);transform-origin:left center}
+    background:linear-gradient(90deg,var(--accent),var(--honey));transform-origin:left center}
+/* 발자국 트레일 — 은은한 워터마크 느낌(펫 카테고리 전용) */
+.paw{position:absolute;z-index:3;width:56px;height:52px;color:var(--accent);opacity:.30}
+.paw i{display:block;font-style:normal;width:100%;height:100%}
 
 .frame{position:relative;margin-top:46px;flex:1;min-height:0;will-change:transform,opacity}
 .frame.sm{flex:0 0 auto;height:760px;margin-top:26px}
@@ -262,6 +343,8 @@ body{font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased
 .mascot{position:absolute;z-index:5}
 .mascot .eye{transform-box:fill-box;transform-origin:center}
 .mascot .arm{transform-box:fill-box;transform-origin:left center}
+.mascot .tail{transform-box:fill-box;transform-origin:12% 88%}
+.mascot .ear{transform-box:fill-box;transform-origin:78% 92%}
 
 /* 장점 */
 .step{display:flex;align-items:center;gap:26px}
@@ -305,7 +388,7 @@ body{font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased
 .pbar{position:absolute;left:var(--side);right:var(--side);top:calc(var(--safe-top) - 48px);
       height:9px;border-radius:999px;background:rgba(34,31,28,.10);overflow:hidden}
 .pbar>i{display:block;height:100%;width:0;border-radius:999px;
-        background:linear-gradient(90deg,var(--accent),#F2B705)}
+        background:linear-gradient(90deg,var(--accent),var(--honey))}
 </style></head><body>
 <div id="stage">
   <div class="scenes">${cover}${benefitScenes}${cta}</div>
@@ -425,7 +508,7 @@ document.querySelectorAll('[data-loop]').forEach(function(el){
   add(el, l.kf, l.dur, 0, {iter:Infinity, dir:'alternate', ease:'ease-in-out'});
 });
 
-// 마스코트 눈 깜빡임 / 손 흔들기
+// 마스코트 생명감 — 눈 깜빡임 / (중립)손 흔들기 / (강아지)꼬리 살랑 / (고양이)꼬리 스윙·귀 씰룩
 document.querySelectorAll('.mascot .eye').forEach(function(el){
   add(el, [{transform:'scaleY(1)',offset:0},{transform:'scaleY(1)',offset:.93},
            {transform:'scaleY(.08)',offset:.955},{transform:'scaleY(1)',offset:.98},
@@ -434,6 +517,16 @@ document.querySelectorAll('.mascot .eye').forEach(function(el){
 document.querySelectorAll('.mascot .arm').forEach(function(el){
   add(el, [{transform:'rotate(-16deg)'},{transform:'rotate(14deg)'}], 0.62, 0,
       {iter:Infinity, dir:'alternate', ease:'ease-in-out'});
+});
+document.querySelectorAll('.mascot .tail').forEach(function(el){
+  var slow = el.classList.contains('slow'); // 고양이는 우아하게 천천히
+  add(el, [{transform:'rotate(-12deg)'},{transform:'rotate(15deg)'}], slow ? 1.7 : 0.5, 0,
+      {iter:Infinity, dir:'alternate', ease:'ease-in-out'});
+});
+document.querySelectorAll('.mascot .ear').forEach(function(el){
+  add(el, [{transform:'rotate(0deg)',offset:0},{transform:'rotate(0deg)',offset:.9},
+           {transform:'rotate(-13deg)',offset:.94},{transform:'rotate(0deg)',offset:1}],
+      5.2, 0, {iter:Infinity, ease:'linear'});
 });
 
 // 상단 진행바
