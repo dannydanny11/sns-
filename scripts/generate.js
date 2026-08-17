@@ -15,7 +15,12 @@ generateDue()
       .map((it) => (it.type === 'reel' ? `릴스[${it.slot}] ${it.name}` : `캐러셀(5개)`))
       .join(', ');
     console.log(`생성 완료 — ${n}건: ${summary}`);
-    await notify(`🧪 atoztem 생성 [${queue.weekKey}] — ${n}건\n${summary}`);
+    // 스토리는 자동 게시가 안 되는 유일한 단계(사람이 매일 직접 올려야 함) — 링크를 놓치면
+    // 이번 게시분의 스토리는 그냥 묻힌다. 그래서 매번 여기서 다시 알린다.
+    const storyLine = queue.storyPageUrl
+      ? `\n\n📌 스토리 ${queue.storyCount}개 준비됨 → ${queue.storyPageUrl}\n(꾹 눌러 저장 → 스토리 업로드 → 링크 스티커에 [링크 복사] 붙여넣기)`
+      : '';
+    await notify(`🧪 atoztem 생성 [${queue.weekKey}] — ${n}건\n${summary}${storyLine}`);
   })
   .catch(async (e) => {
     await closeBrowser();

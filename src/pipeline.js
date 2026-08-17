@@ -132,6 +132,9 @@ function refreshLinkPage(pool) {
  * (게시는 publishDue 에서. 그 전에 워크플로가 published/ 를 커밋해 공개 URL 확보)
  */
 const STORIES_PATH = 'data/stories.json';
+// 스토리는 반자동(사람이 매일 직접 올려야 함)이라 링크를 매번 알림에 실어 보낸다 —
+// 텔레그램 알림 없이는 이 링크를 사용자가 다시 찾을 방법이 없었다(2026-08-17 실측).
+const STORY_PAGE_URL = 'https://dannydanny11.github.io/sns-/story.html';
 const kstDate = (t) => new Date(t + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
 function readStories() {
   try { return JSON.parse(readFileSync(STORIES_PATH, 'utf8')); } catch { return []; }
@@ -247,7 +250,13 @@ export async function generateDue(now = Date.now()) {
     });
   }
 
-  const queue = { weekKey: pool.weekKey, generatedAt: new Date(now).toISOString(), items };
+  const queue = {
+    weekKey: pool.weekKey,
+    generatedAt: new Date(now).toISOString(),
+    items,
+    storyCount: storyEntries.length,
+    storyPageUrl: storyEntries.length ? STORY_PAGE_URL : null,
+  };
   writeFileSync(QUEUE, JSON.stringify(queue, null, 2));
   return queue;
 }
