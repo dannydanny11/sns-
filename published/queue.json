@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-08-17",
-  "generatedAt": "2026-08-17T04:05:25.871Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-08-17T04:06:46.620Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 1,
+      "productIdx": 1,
+      "runId": "2026-08-17-r1",
+      "reelFile": "2026-08-17-r1/reel.mp4",
+      "caption": "발톱 걱정 끝\n\n세로로 쭉 긁는 기둥형 스크래쳐\n\n🛒 바로 구매: https://link.coupang.com/a/gg9AF9QDO8\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이스크래쳐 #기둥스크래쳐 #고양이장난감 #냥집사 #고양이용품 #가성비템 #반려묘 #가성비",
+      "name": "온리상점 고양이 수직 기둥 스크래쳐 장난감"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
