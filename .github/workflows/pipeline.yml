@@ -57,6 +57,10 @@ jobs:
           FORCE_NEXT: ${{ github.event.inputs.force || '0' }}
           # 모션덱 릴스가 문제를 일으키면 수동 실행 시 legacy 를 골라 즉시 되돌린다.
           REEL_STYLE: ${{ github.event.inputs.reel_style || 'motion' }}
+          # 이 단계의 notify() 가 스토리 링크 알림을 보낸다 — "게시" 단계에만 넘겨주고
+          # 여기 빠뜨려서 스토리 알림이 조용히 안 나갔던 적이 있음(2026-08-17).
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: npm run pipeline:generate
 
       # 생성물(카드/영상/풀/링크페이지)을 커밋 → raw URL 로 공개

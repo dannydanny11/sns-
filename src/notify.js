@@ -11,7 +11,12 @@ export async function notify(message) {
 
   console.log('\n[통지]\n' + message + '\n');
 
-  if (!token || !chatId) return; // 미설정 시 콘솔만
+  if (!token || !chatId) {
+    // 이 줄이 안 보이면(=아래로 진행됐으면) 텔레그램 전송을 실제로 시도한 것이고,
+    // 이 줄이 보이면 이 단계(step)의 env 에 TELEGRAM_* 시크릿이 안 넘어온 것이다.
+    console.warn('[통지] TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID 미설정 — 콘솔에만 남기고 전송 생략');
+    return;
+  }
 
   // fetch() 는 네트워크 장애(DNS·연결 실패)에만 reject 한다 — 텔레그램이 4xx 로
   // 거부해도(잘못된 chat_id, 봇 차단 등) HTTP 자체는 "정상 응답"이라 catch 에 안 걸린다.
