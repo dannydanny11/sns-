@@ -346,9 +346,9 @@
       "slot": 1,
       "label": "월 저녁",
       "productIdx": 1,
-      "posted": false,
-      "reelId": null,
-      "postedAt": null
+      "posted": true,
+      "reelId": "18118977472686740",
+      "postedAt": "2026-08-17T04:08:23.372Z"
     },
     {
       "slot": 2,
