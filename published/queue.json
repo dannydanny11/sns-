@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-08-17",
-  "generatedAt": "2026-08-18T03:55:11.186Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-08-18T10:23:59.992Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 3,
+      "productIdx": 3,
+      "runId": "2026-08-17-r3",
+      "reelFile": "2026-08-17-r3/reel.mp4",
+      "caption": "만원대 실화?\n\n대용량 화장실에 모래삽까지 한 세트\n\n🛒 바로 구매: https://link.coupang.com/a/gg9AGlxGsS\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이화장실 #탐사 #고양이용품 #냥집사 #모래삽 #가성비템 #반려묘 #가성비",
+      "name": "탐사 베이직 대용량 고양이 화장실 + 모래삽 세트"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
