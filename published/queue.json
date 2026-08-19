@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-08-17",
-  "generatedAt": "2026-08-19T03:48:25.218Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-08-19T10:24:12.365Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 5,
+      "productIdx": 5,
+      "runId": "2026-08-17-r5",
+      "reelFile": "2026-08-17-r5/reel.mp4",
+      "caption": "사냥 본능 폭발\n\n굴속에서 꼬리가 들락날락하는 자동 장난감\n\n🛒 바로 구매: https://link.coupang.com/a/gg9AGs9mFw\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이장난감 #자동장난감 #꼬리잡기 #냥집사 #고양이용품 #반려묘 #가성비템 #가성비",
+      "name": "고양이 굴속꼬리잡기 자동 장난감 혼자 사냥 놀이"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
