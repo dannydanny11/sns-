@@ -394,9 +394,9 @@
       "slot": 7,
       "label": "목 저녁",
       "productIdx": 7,
-      "posted": false,
-      "reelId": null,
-      "postedAt": null
+      "posted": true,
+      "reelId": "18091991951375982",
+      "postedAt": "2026-08-20T10:27:41.849Z"
     },
     {
       "slot": 8,
