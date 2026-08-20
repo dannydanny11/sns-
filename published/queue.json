@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-08-17",
-  "generatedAt": "2026-08-20T03:48:20.470Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-08-20T10:25:56.965Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 7,
+      "productIdx": 7,
+      "runId": "2026-08-17-r7",
+      "reelFile": "2026-08-17-r7/reel.mp4",
+      "caption": "냄새 걱정 끝\n\nUV살균등 달린 대형 후드 화장실\n\n🛒 바로 구매: https://link.coupang.com/a/gg9AGDEwtU\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이화장실 #후드형화장실 #고양이용품 #냥집사 #냄새제거 #반려묘 #가성비템 #가성비",
+      "name": "그린홈 대형 항균 고양이 후드형 화장실+모래삽. UV살균등 냄새제거"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
