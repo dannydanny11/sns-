@@ -1,17 +1,29 @@
 {
   "weekKey": "2026-08-17",
-  "generatedAt": "2026-08-21T10:25:52.093Z",
+  "generatedAt": "2026-08-21T11:33:12.111Z",
   "items": [
     {
-      "type": "reel",
-      "slot": 9,
-      "productIdx": 9,
-      "runId": "2026-08-17-r9",
-      "reelFile": "2026-08-17-r9/reel.mp4",
-      "caption": "만원대 사냥터\n\n혼자서도 계속 도는 꼬리잡기 장난감\n\n🛒 바로 구매: https://link.coupang.com/a/gg9AGLzzzh\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이장난감 #자동장난감 #꼬리잡기 #냥집사 #고양이용품 #반려묘 #가성비템 #가성비",
-      "name": "TUKKI 고양이 장난감 꼬리잡기 자동 장난감"
+      "type": "carousel",
+      "runId": "2026-08-17-carousel",
+      "cardFiles": [
+        "01-cover.jpg",
+        "02-product.jpg",
+        "03-product.jpg",
+        "04-product.jpg",
+        "05-product.jpg",
+        "06-product.jpg",
+        "07-cta.jpg"
+      ],
+      "caption": "이번 주 유독 많이 담긴 반려동물 아이템 5가지를 정리해봤어요 🐾\n화장실 세트부터 혼자서도 잘 노는 자동 장난감까지, 종류별로 모아봤습니다.\n집사 손이 부족한 날이나 강아지 활동량이 넘치는 날에 참고하기 좋은 구성이에요 🐶🐱\n가격대는 1~2만 원 선으로 부담이 크지 않은 편입니다.\n자세한 정보는 프로필 링크에서 확인하실 수 있어요 ✨\n\n👉 링크는 프로필에서 확인하세요\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#반려동물용품 #고양이용품 #강아지용품 #집사템 #고양이화장실 #자동장난감 #강아지장난감 #터그놀이 #이갈이장난감 #꼬리잡기장난감 #가성비템 #반려생활 #댕댕이템 #냥이템 #쿠팡템",
+      "picks": [
+        3,
+        4,
+        5,
+        8,
+        9
+      ]
     }
   ],
-  "storyCount": 1,
-  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
+  "storyCount": 0,
+  "storyPageUrl": null
 }
