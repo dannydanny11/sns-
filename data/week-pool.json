@@ -416,9 +416,15 @@
     }
   ],
   "carousel": {
-    "picks": [],
-    "posted": false,
-    "postId": null,
-    "postedAt": null
+    "picks": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "posted": true,
+    "postId": "18102068501222149",
+    "postedAt": "2026-08-21T11:33:39.024Z"
   }
 }
