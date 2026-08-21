@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-08-21",
+    "slot": 9,
+    "name": "TUKKI 고양이 장난감 꼬리잡기 자동 장난감",
+    "price": 12600,
+    "url": "https://link.coupang.com/a/gg9AGLzzzh",
+    "image": "./stories/2026-08-17-s9.jpg"
+  },
+  {
+    "date": "2026-08-21",
     "slot": 8,
     "name": "강아지 이갈이 장난감 애견 삑삑이 장난감 세트",
     "price": 19800,
@@ -230,13 +238,5 @@
     "price": 20500,
     "url": "https://link.coupang.com/a/fU68ZYg0k0",
     "image": "./stories/2026-08-03-s5.jpg"
-  },
-  {
-    "date": "2026-08-05",
-    "slot": 4,
-    "name": "모니터받침대 USB 포트 포함 컴퓨터받침대 데스크 수납 선반",
-    "price": 32800,
-    "url": "https://link.coupang.com/a/fU68ZS2BXg",
-    "image": "./stories/2026-08-03-s4.jpg"
   }
 ]
