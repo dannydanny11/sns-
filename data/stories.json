@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-08-24",
+    "slot": 0,
+    "name": "픽스모 라텍스 볼 강아지 만득이 장난감 6개세트",
+    "price": 16700,
+    "url": "https://link.coupang.com/a/gsLY7tTvfo",
+    "image": "./stories/2026-08-24-s0.jpg"
+  },
+  {
     "date": "2026-08-21",
     "slot": 9,
     "name": "TUKKI 고양이 장난감 꼬리잡기 자동 장난감",
@@ -230,13 +238,5 @@
     "price": 15900,
     "url": "https://link.coupang.com/a/fU68Z2RwC4",
     "image": "./stories/2026-08-03-s6.jpg"
-  },
-  {
-    "date": "2026-08-05",
-    "slot": 5,
-    "name": "Fowod 3.5L 대용량가습기 3중 분무 무소음 초음파 가습기",
-    "price": 20500,
-    "url": "https://link.coupang.com/a/fU68ZYg0k0",
-    "image": "./stories/2026-08-03-s5.jpg"
   }
 ]

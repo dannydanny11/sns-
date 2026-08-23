@@ -1,30 +1,30 @@
 {
-  "weekKey": "2026-08-17",
-  "createdAt": "2026-08-16T23:14:24.293Z",
+  "weekKey": "2026-08-24",
+  "createdAt": "2026-08-23T23:15:21.564Z",
   "products": [
     {
-      "productId": 9425966577,
-      "productName": "보코토 스마트 점프볼 강아지 고양이 장난감 움직이는 자동장난감, 1개, 블루",
-      "productPrice": 45900,
-      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9425966577&itemId=28019460082&vendorItemId=94976693604&traceid=V0-153-9eaa15b9eeb10814&clickBeacon=38fa1b20-99c8-11f1-b778-e59cb464cca6%7E3&requestid=20260817081425332171168452&token=31850C%7CMIXED",
-      "productImage": "https://ads-partners.coupang.com/image1/fL81yJ427jyONK7-fFpkiy9lT1WxJbuoQKp81b8jJ-M2zfvq4_5PykVYY6nfogKgJ-auIRhtAhpVf-AS9fWJd-m1gwzw0tFLQyQ7wV5pj7Clv_8JyoYDpm3ZfVbbo9sDYng5K6NeFXRsBW5ANd7owNxrjmZpwjJgphFoSCq4HxUizuWnubpf6ArQ83Z8Tpm9XXuDE7lhIkkfeSCZP-cuTEfv5LSu_r_dlFB9FQXWoPqcG2wJMvdVmnKlr9GCdZf6OdbfEhyztCT_fHcrCDtzIdkNc-jZOGGFyrOi1ZEK5799tUu7GpMqeTA=",
-      "deeplink": "https://link.coupang.com/a/gg9AF6dlro",
-      "hook": "혼자서 잘 논다",
-      "copy": "공이 알아서 튀고 굴러가는 자동 놀이",
+      "productId": 8560894929,
+      "productName": "픽스모 라텍스 볼 강아지 만득이 장난감 6개세트, 1개, 6종",
+      "productPrice": 16700,
+      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=8560894929&itemId=24791964378&vendorItemId=91806215903&traceid=V0-153-d900064dbd8b0920&clickBeacon=83ba4380-9f48-11f1-aeb9-7422aa0bbc99%7E3&requestid=20260824081522135135163336&token=31850C%7CMIXED",
+      "productImage": "https://ads-partners.coupang.com/image1/MDcGPl5SqEpQchnwMIcvn2zwERzvrZ9x5RFvqP3iOe0Ct4A_fPV4eGNjHjs5K3Gy0vdFBU7zScSd1qFa5fsQW8Xm3vW0RevrO91D8lpK_c0asIqAf52Uccy7IJ39DGpiHXqL2OUcZ9USzDdEGDQsWe7HIq9mE2WDciKzBIhoZjQyKgbdreG0atmFDP_aLKWVbTmGRZBF1bj4OcUlflJxJNKDs5Gmo_59eYntlwrXrY5WHp6jALh9OTNWxftX9KQFWC1zfUuVLsREhtxvbUDnbAr6_YcDeCeBi_uvZslrGertmh_MFDBlKEBXpg==",
+      "deeplink": "https://link.coupang.com/a/gsLY7tTvfo",
+      "hook": "6개나 들었네",
+      "copy": "라텍스 볼 6개, 하나쯤 잃어버려도 여유",
       "buyHook": "이 가격이면 사야죠",
       "narration": [
-        "공이 스스로 튀고 굴러서 아이가 알아서 따라다녀요.",
-        "강아지 고양이 둘 다 반응하는 움직임이에요.",
-        "집 비우는 시간 길 때 놀이 시간 채워줍니다.",
-        "충전해두면 매일 꺼내 쓰기 편해요."
+        "라텍스 볼 6개 세트라 잃어버려도 바로 교체돼요.",
+        "말랑한 라텍스라 이빨에 부담이 덜해요.",
+        "소리 나는 만득이 타입이라 혼자서도 잘 물고 놀아요.",
+        "공 물어오기 좋아하는 활동량 많은 아이에게 딱이에요."
       ],
       "tags": [
         "#강아지장난감",
-        "#고양이장난감",
-        "#자동장난감",
-        "#점프볼",
+        "#라텍스볼",
+        "#만득이",
+        "#노즈워크",
         "#반려견용품",
-        "#집사템",
+        "#강아지공",
         "#가성비템",
         "#가성비"
       ],
@@ -36,29 +36,29 @@
       "_score": 6
     },
     {
-      "productId": 9314293269,
-      "productName": "온리상점 고양이 수직 기둥 스크래쳐 장난감, 1개, 브라우니",
-      "productPrice": 21900,
-      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9314293269&itemId=27601742404&vendorItemId=94565021196&traceid=V0-153-d74dbc130956808b&clickBeacon=39ec6a60-99c8-11f1-aab3-feccb4c5df3e%7E3&requestid=20260817081426923171168826&token=31850C%7CMIXED",
-      "productImage": "https://ads-partners.coupang.com/image1/Ls2WicW6De0qZ8w1LjugpssehqICYpoDvFiM891lqG5MCCOwuNC-wjAZOQ0lQ8tj7U-GqDDwqNan1TNKLh41oFsCFOp4oMyz8hBSukL2THKAK8gNVjb0hyz-BilewjCxMhAlsTFJieTz4Pft7rRaZfe_axBxJFrpTbkWtqv1Kkx1_ZIqMiUIqmwGcwn7D7NMzNC3_zEYPAZsKA72PPieP-pj9eb929GL0Rs-lgoRDvhCzdwgxt7sy7ZR5wPPhPNJ1oxDMwa9VjEi0y5lR-wiaj2ve6EKnl2vcEIoGu7cwbAvoIlfHksxUFY=",
-      "deeplink": "https://link.coupang.com/a/gg9AF9QDO8",
-      "hook": "발톱 걱정 끝",
-      "copy": "세로로 쭉 긁는 기둥형 스크래쳐",
-      "buyHook": "장바구니 직행각",
+      "productId": 9322941658,
+      "productName": "고양이 꼬리잡기 자동 장난감 움직이는 사냥 놀이",
+      "productPrice": 12500,
+      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9322941658&itemId=28962581903&vendorItemId=94596440384&traceid=V0-153-ab41fef6125866d4&requestid=20260824081523551120973165&token=31850C%7CMIXED",
+      "productImage": "https://ads-partners.coupang.com/image1/nzN8e3Gx96gQ1ftnn7wGdsAmzMzokgaTLAj330Evi1DX9UDP-FeUnUkeiDBbIMkO9Oc05iuolTGwvNoa9DWVgDk2UGcFosUaw4jQp1iZa2ks41muluur9dGJGyveJdnRSB45JTMXVx38Z8CTAx0nQ_QbR4aG_jIUMdKV8pxYvBtggAwNgXlYrRy7X6bBiAHWnRj-bJ0X9yan9HVGlBJoV30pgxAS50N9jAfgp_ki1HRtQ9PgKJhVzSap39VMwH7p9K0YnOAZwhZ7jG56_7xrVH8L8jnLw2IGNA4fzwfmdAYNAwzb2WPYYdjYJ3gxV-eofqePcBM=",
+      "deeplink": "https://link.coupang.com/a/gsLY7yNfTE",
+      "hook": "혼자서도 잘놈",
+      "copy": "자동으로 도는 꼬리, 사냥본능 자극 끝",
+      "buyHook": "고민할 가격 아님",
       "narration": [
-        "기둥형이라 고양이가 서서 온몸을 쭉 늘려 긁어요.",
-        "벽지랑 소파 대신 여기로 발톱이 갑니다.",
-        "위쪽 장난감이 달려 있어 놀이까지 같이 돼요.",
-        "바닥 면적 적게 차지해 좁은 집에도 맞아요."
+        "버튼만 누르면 꼬리가 알아서 돌아가 사냥본능을 건드려요.",
+        "집사가 낚싯대 흔들 힘 없을 때 대신 놀아줘요.",
+        "불규칙하게 움직여서 금방 질리지 않아요.",
+        "혼자 두는 시간이 긴 집에 특히 잘 맞아요."
       ],
       "tags": [
-        "#고양이스크래쳐",
-        "#기둥스크래쳐",
         "#고양이장난감",
+        "#자동장난감",
+        "#꼬리잡기",
         "#냥집사",
-        "#고양이용품",
+        "#고양이놀이",
+        "#사냥놀이",
         "#가성비템",
-        "#반려묘",
         "#가성비"
       ],
       "category": {
@@ -69,29 +69,29 @@
       "_score": 6
     },
     {
-      "productId": 7278837071,
-      "productName": "페츠모아 냄새잡는 요술 배변패드 엣지 레몬향, 100개입, 3개",
-      "productPrice": 43900,
-      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=7278837071&itemId=369296532&vendorItemId=3896130546&traceid=V0-153-3633a1f072fe2e73&clickBeacon=3ae85690-99c8-11f1-9e94-f79eb2a32009%7E3&requestid=20260817081428578096812017&token=31850C%7CMIXED",
-      "productImage": "https://ads-partners.coupang.com/image1/w5o7qDUG6Tpj7XJywxh59bCiH0p2ERLCasZsJdwpCsObwyRc4t8qJdIN1Dxs5IVGvZFgdEIiyWqVMjCm9D_VuWTbPTM8ajnty4VAGAQE4eAKQQ26Mk2X8-sYAWmW22WsFFkN3L4pFfECkPOVO-TXIl-_S0lDxZjGdTw0AGbICwXGiEZHo0FR09qUeSVKzVktkcy7xMvug6NbvTna25fl5qZ3iAmn6RtsVRzbNG28JHOuyzTTT5zuX_0-rs4AfGuujEXnhyQVWKloPU5q29HTlLorpVuS-dYQ_w==",
-      "deeplink": "https://link.coupang.com/a/gg9AGg8iEC",
-      "hook": "냄새 걱정 끝",
-      "copy": "레몬향으로 잡아주는 엣지 배변패드",
-      "buyHook": "지금 사두면 이득",
+      "productId": 7299719601,
+      "productName": "탐사 실속형 배변패드",
+      "productPrice": 12000,
+      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=7299719601&itemId=19815641903&vendorItemId=86917697307&traceid=V0-153-a654f2eb1a75f0f5&requestid=20260824081524890071763710&token=31850C%7CMIXED",
+      "productImage": "https://ads-partners.coupang.com/image1/7xWg-jVh_E0p14v_73pUlcE2ytWKYk5zFe-kkBz1VQNWEqc2rAxQ9N8Sw8ssuohXfa0dR-2pB-0aPZOaNAjJSzo7O0p60112T3z4VDtnEpFg_9A59qD4ZyCPf--Iqwk3hl7uyqDa4FcdskBvsE__FIwxKn_cSaqxEqQDIMkmq0Of9V3X5R5t0KzHD977rijhsy99cwv-lqgACIF07XLv_XQioqbr6A4BWWPsFYLIYCQ9629K5IRmFuHsNfy6KAzIqIVYcRy4HdBgieazHwAecD4e7oBrM-TtfsAKz2MfssWontG6JA==",
+      "deeplink": "https://link.coupang.com/a/gsLY7BfOQm",
+      "hook": "패드 걱정 끝",
+      "copy": "매일 갈아도 아깝지 않은 실속 배변패드",
+      "buyHook": "쟁여두면 이득",
       "narration": [
-        "배변 냄새를 레몬향으로 눌러주는 패드예요.",
-        "가장자리 엣지 처리로 옆으로 새는 걸 막아줍니다.",
-        "흡수층이 소변을 빠르게 빨아들여 발이 안 젖어요.",
-        "대용량이라 자주 주문할 일이 줄어요."
+        "실속형이라 하루에 여러 번 갈아도 부담이 적어요.",
+        "흡수층이 소변을 빠르게 잡아 바닥이 덜 젖어요.",
+        "깔아두면 냄새가 퍼지는 속도도 늦춰줘요.",
+        "배변 훈련 중인 강아지 키우는 집에 필수예요."
       ],
       "tags": [
-        "#강아지배변패드",
         "#배변패드",
-        "#강아지용품",
-        "#냄새제거",
-        "#반려견",
+        "#강아지패드",
+        "#탐사",
+        "#반려견용품",
+        "#배변훈련",
+        "#소모품추천",
         "#가성비템",
-        "#펫용품",
         "#가성비"
       ],
       "category": {
@@ -102,29 +102,29 @@
       "_score": 6
     },
     {
-      "productId": 7164892839,
-      "productName": "탐사 베이직 대용량 고양이 화장실 + 모래삽 세트",
-      "productPrice": 11490,
-      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=7164892839&itemId=20283531255&vendorItemId=87369992694&traceid=V0-153-5092c79e8e970237&requestid=20260817081430060097242560&token=31850C%7CMIXED",
-      "productImage": "https://ads-partners.coupang.com/image1/s7hJz3QJzHVvb485s7kp_ivGceYGTMayRuiXEfxhN4cEHwR1QPTFXLA6aV_Do-a9b9FNsWeRElMdxf7eP2ABJm6dg6N2tzdOwPKsScd6ByEjUf1DuTxykx4Nr5BeamhfL-kyTaQHVX3XBFTumivKBsslIiZnxhKT4eHo_FJWTErlTTvYuF1-UwYdnINObtSrKBmrSNzY7rz0uzXaAnwEV4SMgZ9oC9HX0JEbl-petltaikm5aYOjVIPiCAmBPoFJ1IAc7z9wwrXptl8IDEtw10ZFXTS3tpKWbYpZuKF6uTifPGDqWGUS",
-      "deeplink": "https://link.coupang.com/a/gg9AGlxGsS",
-      "hook": "만원대 실화?",
-      "copy": "대용량 화장실에 모래삽까지 한 세트",
-      "buyHook": "고민할 가격 아님",
+      "productId": 9407437059,
+      "productName": "2도어 완전 밀폐형 고양이 화장실, 1개, 그레이",
+      "productPrice": 28500,
+      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9407437059&itemId=27948999344&vendorItemId=94921827144&traceid=V0-153-67c68b8c2586ec9e&clickBeacon=8638b100-9f48-11f1-8fab-e6dd5817a4d0%7E3&requestid=20260824081526331024922630&token=31850C%7CMIXED",
+      "productImage": "https://ads-partners.coupang.com/image1/CFwphG0Ph-deosW4CEs0T5OAJOCRC3l3lGRr4L_UAux8n-mJGuBB47XGpA_cdyvyuARaoEFa1S-TOaWWdZYist2eBuauN-n2O_-4Eq4gGjUAE2OKKB_sux4SaLa0itgw7Ock6gD8a5cN0EWhBhC5bMXNPSQn2J2ddbPVyKu49i7KEUjtEa20phXCN5iaOgvfUFOQtiZYjzyfeCRpq8PvlH-gchyYwLOzlqtIuBe-WZ3R0hde5ivTkyXIcymFcoOB1aHllyJnNGzh2b5tb8nOCpipv_uLrbO-4ACFr6oTOiXsxtFNNdBXHNHBPQ==",
+      "deeplink": "https://link.coupang.com/a/gsLY7F4xhI",
+      "hook": "냄새 걱정 끝",
+      "copy": "완전 밀폐 2도어, 모래 튐까지 잡는다",
+      "buyHook": "지금 사두면 이득",
       "narration": [
-        "대용량 사이즈라 몸집 큰 고양이도 여유롭게 들어가요.",
-        "모래삽이 같이 와서 따로 살 필요가 없어요.",
-        "벽이 높아 모래가 밖으로 덜 튑니다.",
-        "첫 화장실이나 두 번째 화장실로 딱이에요."
+        "완전 밀폐형이라 냄새가 밖으로 새는 걸 막아줘요.",
+        "2도어 구조로 청소할 때 통째로 열려 손이 편해요.",
+        "벽이 높아 모래 튐과 오줌 튐도 줄어들어요.",
+        "거실에 화장실 둬야 하는 집에 특히 좋아요."
       ],
       "tags": [
         "#고양이화장실",
-        "#탐사",
-        "#고양이용품",
+        "#밀폐형화장실",
         "#냥집사",
-        "#모래삽",
+        "#고양이용품",
+        "#모래튐방지",
+        "#냄새차단",
         "#가성비템",
-        "#반려묘",
         "#가성비"
       ],
       "category": {
@@ -135,28 +135,28 @@
       "_score": 6
     },
     {
-      "productId": 9620984654,
-      "productName": "또또댕 강아지 장난감 소리나는 애착인형 터그놀이 바스락 삑삑이 봉제, 1세트, 혼합색",
-      "productPrice": 19900,
-      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9620984654&itemId=28729827085&vendorItemId=95687247108&traceid=V0-153-09907f5a3ce45f1a&clickBeacon=38fa4230-99c8-11f1-81a3-6960e7963c49%7E3&requestid=20260817081425332171168452&token=31850C%7CMIXED",
-      "productImage": "https://ads-partners.coupang.com/image1/7m1mSV7rO6J14GKp7uoejMvPMb9zJz0SC0Ry7Pt0UGlEHrmrHCOSoTpyVPzQMf6NPHDTS-9v0fKscX9Mxg7m3KtNDxp1lPYSn-p79H4jCMefAt-F71yZ7H2cvIzD-lcvMWcdWQ7S_2HbiJ8StHkQRi9P6IogwJS1EwkFFZGPxLsci78-Is_RxBTHBlwi0ItCRsvpjuWHcNYfrbg_xrWd6vPmu11lBgGgJ_57H1wNRnoyfE4cbwCKI3gMgV1rK-n0rQtCEJAbVekbL8MTnWNjg_V0FzIjAgQSJrE7AEa-Zyl7lFj5UiOnPtQ7",
-      "deeplink": "https://link.coupang.com/a/gg9AGpqRqe",
-      "hook": "물고 안 놔요",
-      "copy": "바스락 삑삑 소리 나는 터그 인형",
-      "buyHook": "이 가격이면 사야죠",
+      "productId": 9446220760,
+      "productName": "터그놀이 흡착식 강아지 로프 이갈이 장난감",
+      "productPrice": 14800,
+      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9446220760&itemId=28098630020&vendorItemId=95054822800&traceid=V0-153-2297ccbef9110ab9&requestid=20260824081522135135163336&token=31850C%7CMIXED",
+      "productImage": "https://ads-partners.coupang.com/image1/rVZSvhjqzXyH-d-lrcioz1lfWpcp4y9MCPWSziZScyVec-fxfi_wAXMn1RPDWh6DRbHSsIM88MQh94dEJr0biQq8I96xjGd404LZgkX9DaS0L6NeLHE2Ddp9J8CN-O-DLHDkYcAEvAev4eoLRTOVYm4fDeW628PG284-09ksDMIwzSR47jlQ0S7oKL0N27fRWxpgbY9J7YjUNX0IokLyD6acNjAndytvtAmGRhTvDJz0FaBqeMo-Ea7b4YkYwS1-Y4ALxLPTcKNiriNs94KL3Cr2zOoCAOYem-M1xlsuR1nEL8m_mn9eBrqYcIPa679Msz-dWg==",
+      "deeplink": "https://link.coupang.com/a/gsLY7LtnwG",
+      "hook": "손 안 아픈 터그",
+      "copy": "벽에 붙이면 혼자 터그놀이 시작",
+      "buyHook": "장바구니 직행각",
       "narration": [
-        "바스락 소리랑 삑삑이가 같이 들어가 반응이 확 옵니다.",
-        "봉제라 물고 흔드는 터그놀이에 잘 맞아요.",
-        "입에 물고 다니는 애착인형으로도 자리 잡아요.",
-        "가벼워서 실내에서 던지고 놀기 편합니다."
+        "흡착판으로 벽에 붙이면 강아지가 혼자 터그를 해요.",
+        "집사가 잡아줄 필요 없어 팔이 편해요.",
+        "꼬인 로프라 이갈이 시기 무는 욕구를 받아줘요.",
+        "에너지 넘치는 중소형견 실내 놀이로 좋아요."
       ],
       "tags": [
         "#강아지장난감",
-        "#삑삑이",
         "#터그놀이",
-        "#애착인형",
-        "#강아지용품",
-        "#반려견",
+        "#이갈이장난감",
+        "#흡착장난감",
+        "#반려견용품",
+        "#실내놀이",
         "#가성비템",
         "#가성비"
       ],
@@ -168,94 +168,94 @@
       "_score": 6
     },
     {
-      "productId": 9639036125,
-      "productName": "고양이 굴속꼬리잡기 자동 장난감 혼자 사냥 놀이",
-      "productPrice": 19800,
-      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9639036125&itemId=28799251306&vendorItemId=95734640215&traceid=V0-153-14b9e976843acaed&requestid=20260817081426923171168826&token=31850C%7CMIXED",
-      "productImage": "https://ads-partners.coupang.com/image1/v4-iL3KqocfBjVKSv73m7EanQnTDgvz04h69Z10jiOFHEkAkA4bMv9TtfJeda2-B-5q5JVWKBJXopEB4NJo6y51COKaVG8fP8N_4APhe0gdyAm1hN_vpw8t8mvQ4gyZbIKZOJluNRJ8Ep2kkipmpeyzve9DRIE4Cl9O1OF6sBQs4vAYzrlsDYuHee7U057UcoF4HTZd8Qrtil-UiSre163CicKVDbMzExepuAnJuHMm5RT5ozX0r_zHW5rgdrpKwi2AEO7ze9X3mPuwR1IW281Cz5Gp-_VsNT4gKuUqIjZipFa2ZS_9gPgkqBRRn5iwp0mPh6AQ=",
-      "deeplink": "https://link.coupang.com/a/gg9AGs9mFw",
-      "hook": "사냥 본능 폭발",
-      "copy": "굴속에서 꼬리가 들락날락하는 자동 장난감",
+      "productId": 9585837952,
+      "productName": "홈앤힐링 고양이 깃털 방울 낚시대 장난감 세트, 1세트, 코지 그레이",
+      "productPrice": 11400,
+      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9585837952&itemId=28614835005&vendorItemId=95564117223&traceid=V0-153-7ca91cb9924a614b&clickBeacon=84914290-9f48-11f1-81af-a937f84e468e%7E3&requestid=20260824081523551120973165&token=31850C%7CMIXED",
+      "productImage": "https://ads-partners.coupang.com/image1/U647YXzkjOmDtQq1U2PunntlLtJa2SjZOchStELNHQ8Mz5wdcQkojOacCSrLGuaUlPQsikrZXd1p-SlYYahRPc4V7A0tR6JmXir3vvmJzhzkmtuOWQnBDQF0Ej_CPG3vgav1i7RW878Q5J3nbeGr_QZ_CHS3Q6voIEjxAbAe_FFgvxum8TNC8NPqxlgVeWy0ElF18_rXmzKZRf-VW5H40-tH1y_-rcjR-t8PWgIw88vaDWL9GlabMfPPZ6drbIy7JUhgGyU8S3ZRRUI8pkyBH95u2h8i0jLikxEgFTnVddwNErhBpwAs_pebJg==",
+      "deeplink": "https://link.coupang.com/a/gsLY7P6MPA",
+      "hook": "냥이 폭주 각",
+      "copy": "깃털에 방울까지, 반응 안 오면 섭섭",
+      "buyHook": "이 가격이면 사야죠",
+      "narration": [
+        "깃털에 방울이 달려 소리로 먼저 시선을 끌어요.",
+        "낚싯대 세트라 깃털을 갈아 끼우며 오래 써요.",
+        "가벼워서 한 손으로 오래 흔들어도 편해요.",
+        "놀이 부족으로 밤에 우다다 하는 냥이에게 좋아요."
+      ],
+      "tags": [
+        "#고양이장난감",
+        "#낚시대장난감",
+        "#깃털장난감",
+        "#냥집사",
+        "#고양이놀이",
+        "#우다다",
+        "#가성비템",
+        "#가성비"
+      ],
+      "category": {
+        "id": "cat-play",
+        "name": "고양이 장난감·놀이용품",
+        "tier": "high"
+      },
+      "_score": 6
+    },
+    {
+      "productId": 8466415135,
+      "productName": "씨엔앨라이프  전국민  집사 배변패드 모음전",
+      "productPrice": 19790,
+      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=8466415135&itemId=21085455074&vendorItemId=90866891771&traceid=V0-153-6c492b22e991819f&requestid=20260824081524890071763710&token=31850C%7CMIXED",
+      "productImage": "https://ads-partners.coupang.com/image1/PJTDhKpgDKJyUTLHPPQDZHkkif5ahlECuHrtXl_d1fxWRxCrsdXnHj7sKr2xAWD7p2rHaEZ88WhR91gd7X679h_HQynRyz0aqIWl-iOne635MU6O8PzMR7KaF7eFifBWZSC7UvfOckzOqP7CmPd5pELoNVCUfWvBZ3BQ37Womt_o4F96OXAMyHuoZ6bFq0NI6zcxll9--S-TodkgeHGEN92D09O6pWwEnzYL13nB3yYxg6C3AdTTNVxKZDA5sRoecz-fg8EzMmrWhtVO94loXlu0Rhvd45nInIQv7iAMybXs_fWis-5-boUONsKZ1NV-75VgiTo=",
+      "deeplink": "https://link.coupang.com/a/gsLY7U7ha8",
+      "hook": "쟁여야 편함",
+      "copy": "모음전으로 한 번에 채우는 배변패드",
+      "buyHook": "쟁여두면 이득",
+      "narration": [
+        "모음전이라 사이즈와 수량을 집에 맞게 고를 수 있어요.",
+        "떨어질 때마다 사는 번거로움이 줄어요.",
+        "다층 흡수 구조로 새는 걱정을 덜어줘요.",
+        "다견 가정처럼 소모 빠른 집에 잘 맞아요."
+      ],
+      "tags": [
+        "#배변패드",
+        "#강아지패드",
+        "#반려견용품",
+        "#패드모음전",
+        "#배변훈련",
+        "#쟁여두기",
+        "#가성비템",
+        "#가성비"
+      ],
+      "category": {
+        "id": "dog-life",
+        "name": "강아지 생활용품",
+        "tier": "high"
+      },
+      "_score": 6
+    },
+    {
+      "productId": 8476130314,
+      "productName": "딩동펫 바스켓 특대형 고양이 화장실",
+      "productPrice": 18800,
+      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=8476130314&itemId=24528800409&vendorItemId=85644751170&traceid=V0-153-121a4148e738606e&requestid=20260824081526331024922630&token=31850C%7CMIXED",
+      "productImage": "https://ads-partners.coupang.com/image1/GuC62iGWV7YFB5kDGvgZoknTaIiAUak1FdElmL36pmv8CMvLeTWav5V7XeCMhcr7V69DP4ig664bp4VsNwK8YH-4LMNK4nnvN0ko_huyUvCf2Vi4namDeAO_tnvXSrrtHKgtn7h-vH6ESwBRM2H-RYYB6hnIhJR50sCR0TeBSnXONHIO54oLzQVWSEQJWuJgcVupElDOc4M8NeSrAKZ3i-kSp-MnaQ_CGn6UuyluG0Wtddm58Zl1JqXUFPDjkxTQpWpejq4Qc25x9PwqUNzC2SQA-7LYoTDUA_QOYyIhzG5FbhmO5lQzh0Vf25HlPfCznaj-I_uv",
+      "deeplink": "https://link.coupang.com/a/gsLY70BWDY",
+      "hook": "덩치묘 환영",
+      "copy": "특대형 바스켓, 돌아서도 넉넉한 크기",
       "buyHook": "살까 말까면 사기",
       "narration": [
-        "굴 안에서 꼬리가 불규칙하게 움직여 계속 덮칩니다.",
-        "자동이라 집사가 흔들어줄 필요가 없어요.",
-        "혼자 있는 시간에 사냥 놀이를 채워줍니다.",
-        "놀이 부족한 실내묘에게 특히 잘 맞아요."
-      ],
-      "tags": [
-        "#고양이장난감",
-        "#자동장난감",
-        "#꼬리잡기",
-        "#냥집사",
-        "#고양이용품",
-        "#반려묘",
-        "#가성비템",
-        "#가성비"
-      ],
-      "category": {
-        "id": "cat-play",
-        "name": "고양이 장난감·놀이용품",
-        "tier": "high"
-      },
-      "_score": 6
-    },
-    {
-      "productId": 7567469702,
-      "productName": "뽀시래기 강아지 든든한 배변패드, 30개입, 4개",
-      "productPrice": 39500,
-      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=7567469702&itemId=24707710206&vendorItemId=94395745735&traceid=V0-153-63559252d2d58042&clickBeacon=3ae87da0-99c8-11f1-92ea-6a61a9771df8%7E3&requestid=20260817081428578096812017&token=31850C%7CMIXED",
-      "productImage": "https://ads-partners.coupang.com/image1/xqzkBEp3S1VoVfFExlL34BOvG93k7AzlvidrNP65n_c5gtEMdkYmIJgnnrFRt9bhOMogv4-gOwkU9yu5mxmlb-2dfRdLEkeCxF5f9G2NhtM-LBNTlV12orVSG7odtFTMUlwNnA_uiF-Tb9OVo9kJAZWI6222CL0nrtc_akJXIRqegmCT1uk-_Tyh57VgZseFNHmA1R04KfYj_5iytLf43ufcBw4UUWOYnGNL07HmcvYtynSCgErr0zLZaCk5-8RdbSAfwNvr234qtXVjBestI5brkhEsxKH5XYI=",
-      "deeplink": "https://link.coupang.com/a/gg9AGyrPAy",
-      "hook": "바닥 뽀송 유지",
-      "copy": "흡수 두툼한 든든한 배변패드",
-      "buyHook": "지금 사두면 이득",
-      "narration": [
-        "흡수층이 두툼해 여러 번 봐도 바닥이 안 젖어요.",
-        "역류가 적어 발바닥에 묻는 일이 줄어듭니다.",
-        "대용량 구성이라 하루 여러 장 써도 부담이 적어요.",
-        "배변 훈련 중인 아이에게도 쓰기 좋아요."
-      ],
-      "tags": [
-        "#강아지배변패드",
-        "#배변패드",
-        "#뽀시래기",
-        "#강아지용품",
-        "#반려견",
-        "#가성비템",
-        "#펫용품",
-        "#가성비"
-      ],
-      "category": {
-        "id": "dog-life",
-        "name": "강아지 생활용품",
-        "tier": "high"
-      },
-      "_score": 6
-    },
-    {
-      "productId": 8526495121,
-      "productName": "그린홈 대형 항균 고양이 후드형 화장실+모래삽. UV살균등 냄새제거",
-      "productPrice": 38900,
-      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=8526495121&itemId=24689557003&vendorItemId=91699431511&traceid=V0-153-81a3b6b8be9982b6&requestid=20260817081430060097242560&token=31850C%7CMIXED",
-      "productImage": "https://ads-partners.coupang.com/image1/ZeUQaUVWo3QsAenFZcOeg6I2TmFQOJcLSSbtOj8vZWwUNKVC3GFrlfWWzE1doEyehKtz8ZrBt_nKpGjNcI6BBbRN4ZOnXl9MnoUtw8AFucT7xr8gsa5lSTbmK4nTnBU7ashqQT81kVP3hNScMlyOTpP-5BcLmB_iQUINMAFobtrgWT5mFpFfNI-LD5WpcltLdgodvDAqzabT-P_lf4k4QwvcAr75jyQMCbInc_ZLVdAVRF20IhNljYRuMr5UowxpeYHIfCaUOdeRYhQd4upSAPFxupyAHmZVEWA93xyIOITL8ElvMBuTfB6VBZNqwPtx20VGv2zX",
-      "deeplink": "https://link.coupang.com/a/gg9AGDEwtU",
-      "hook": "냄새 걱정 끝",
-      "copy": "UV살균등 달린 대형 후드 화장실",
-      "buyHook": "장바구니 직행각",
-      "narration": [
-        "후드형이라 냄새와 모래가 밖으로 덜 퍼져요.",
-        "UV살균등이 내부 관리를 도와줍니다.",
-        "대형 사이즈로 덩치 큰 아이도 돌기 편해요.",
-        "모래삽이 함께 와서 바로 세팅 가능합니다."
+        "특대형이라 큰 고양이도 몸을 돌리기 편해요.",
+        "바스켓 형태로 통째로 헹구는 청소가 쉬워요.",
+        "벽 높이가 있어 모래가 덜 튀어나와요.",
+        "여러 마리가 함께 쓰는 집에도 여유로워요."
       ],
       "tags": [
         "#고양이화장실",
-        "#후드형화장실",
-        "#고양이용품",
+        "#특대형화장실",
+        "#딩동펫",
         "#냥집사",
-        "#냄새제거",
-        "#반려묘",
+        "#고양이용품",
+        "#모래튐방지",
         "#가성비템",
         "#가성비"
       ],
@@ -267,28 +267,28 @@
       "_score": 6
     },
     {
-      "productId": 9206730667,
-      "productName": "강아지 이갈이 장난감 애견 삑삑이 장난감 세트, 3개, 혼색",
-      "productPrice": 19800,
-      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9206730667&itemId=27190867264&vendorItemId=94184712346&traceid=V0-153-286e01a8a24c884f&clickBeacon=38fa4230-99c8-11f1-879c-68ba1d3e4850%7E3&requestid=20260817081425332171168452&token=31850C%7CMIXED",
-      "productImage": "https://ads-partners.coupang.com/image1/bIxCb3WMuNpdGimRbJvGKSp2Vvb9N_9XWxQ9H4p4O1_yWurx9ltdJ4GqXphdjq1sdSYzxsd-UL_khgKtMiEmtEp-Jh0HSV_n8hmjDMi3AlbfVI_dk0btSxhjWSWfDYFVacF7YlNapIwwHlCrYm-zvruKcqI3eQK1gLuSAj5iNpeLnCQp6aaSqoUVE9mwEX7pHQQk00y_NemDqJnUREyMKoglZRczPWI8zseMT2Yn0lvFUjplSO5BYUVMXbY60MywDx7gptfwwRttCeM0fK8pgVE4IsXxx6p7h_EQg9XnbUUJ7_AfH8hnlEs=",
-      "deeplink": "https://link.coupang.com/a/gg9AGHXZJY",
-      "hook": "이갈이 해결",
-      "copy": "삑삑이까지 들어간 이갈이 장난감 세트",
-      "buyHook": "이 가격이면 사야죠",
+      "productId": 9510099558,
+      "productName": "코코포 강아지 여름 하네스, 소형견/중형견/대형견 애견 관절보호 하네스, 1개, 카키",
+      "productPrice": 42800,
+      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9510099558&itemId=28339466606&vendorItemId=95291707733&traceid=V0-153-1b8ccbec9646560f&clickBeacon=83e34f50-9f48-11f1-b5a7-e4b84476b527%7E3&requestid=20260824081522415120972850&token=31850C%7CMIXED",
+      "productImage": "https://ads-partners.coupang.com/image1/BpBTtgUI5Wmun0ElBiaNlS2lvUWwpiviOIgwqPDz0MRph3P5ylkw0IyYBWf7QuBl0O_nNWmWz7Af35MSg85Nb-nVSDuxoe5oqLK2ZrrdY9p18DpZSQER_RSkpBsEFWYmriMwPm-j6XhW65yLcb3aVUBf2aYGmHVcLqtrTrIS3crTryzf-gMMNgANT_bigUyCl9UOvXPbXi9i3bOvI9qfhd-zlwaTHRKD8IfvVAlEtzNYSKEYyi_4ViIU3bWddmAUqoMCDaAJ6S_4t8v0xRhQfP1gGlegfJRFILPIpsJehDLQuwRfU909Eygsgw==",
+      "deeplink": "https://link.coupang.com/a/gsLY74uve0",
+      "hook": "여름 산책각",
+      "copy": "통풍 되는 여름 하네스, 목 압박 없이",
+      "buyHook": "지금 사두면 이득",
       "narration": [
-        "씹는 욕구 풀어주는 이갈이용 장난감 세트예요.",
-        "삑삑이 소리가 나서 흥미가 오래 갑니다.",
-        "여러 개 구성이라 번갈아 주면 질림이 덜해요.",
-        "가구 물어뜯는 시기 강아지에게 잘 맞습니다."
+        "통기성 소재라 여름 산책에도 열이 덜 차요.",
+        "가슴을 넓게 받쳐 목에 힘이 몰리지 않아요.",
+        "조절 버클로 체형에 맞춰 딱 맞게 채워져요.",
+        "리드줄 당김이 있는 강아지에게 특히 안정적이에요."
       ],
       "tags": [
-        "#강아지장난감",
-        "#이갈이장난감",
-        "#삑삑이",
-        "#강아지용품",
-        "#반려견",
-        "#퍼피",
+        "#강아지하네스",
+        "#여름하네스",
+        "#산책용품",
+        "#반려견용품",
+        "#강아지산책",
+        "#통기성",
         "#가성비템",
         "#가성비"
       ],
@@ -300,29 +300,29 @@
       "_score": 6
     },
     {
-      "productId": 9533558592,
-      "productName": "TUKKI 고양이 장난감 꼬리잡기 자동 장난감, 실내용 고양이 사냥놀이 혼자놀이 움직이는 새 장난감",
-      "productPrice": 12600,
-      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9533558592&itemId=28432794913&vendorItemId=95669118593&traceid=V0-153-32b85c6b2e06c80a&requestid=20260817081426923171168826&token=31850C%7CMIXED",
-      "productImage": "https://ads-partners.coupang.com/image1/ccVdHTldX9Z9MpBiceClzru60PfTI5OhW1crsT3HNlMWNLPYI23dktVyvgoR2-2SCYiKc7jxymb9P6k1lDcdjsGmtU3JOK_dBIErqgjocc5oeVGK2hGtNf00vhz7jOXJSaek6wiEFU56U4YAaBwPGg7LUPJH0cJI4EPj4JBX15rABrGEb5M_fmP-jFAi_hoKOfdXxROoZEu3MxcFrGOd-_PlHe5cu-LZ5mrcLcfoECvixbHAT1vsizLcF57D5ix-XaxemU0-kw4NK04tg3z4Nnq4koQR5QMqQSXM4oe8BuQE0_1PapOpmiZeQhYbA8F4ChPtil0fcTO8HW1IN9MbUIq13Dqh2tqUFlhhogsZXFTQ6aXuRRk=",
-      "deeplink": "https://link.coupang.com/a/gg9AGLzzzh",
-      "hook": "만원대 사냥터",
-      "copy": "혼자서도 계속 도는 꼬리잡기 장난감",
+      "productId": 9490157318,
+      "productName": "묘메이트 고양이 자동 장난감 새소리 4단 속도조절 사냥놀이",
+      "productPrice": 38900,
+      "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF7089092&pageKey=9490157318&itemId=28263525243&vendorItemId=95268399153&traceid=V0-153-c696067e45253cd5&requestid=20260824081523551120973165&token=31850C%7CMIXED",
+      "productImage": "https://ads-partners.coupang.com/image1/2wfYW7LVpopop-no276hzoVyIpEgQY5BB2GziWwrhzIDUJ4X2EbG385pCH-agN2u8JAQ0-NUXoQ2l_63xmZ-XCJWR7F6QGAelBOFBKrbRq--lucrg9z377-_jwOt1ZY4BYkUph8riZ5ZlpET5UfRj5dyJRTn6kdUetJWQ_p2ns0wffTleMGWndmvGdxOncPlIxRcX9pWAQ0zGsys7k883IS6xAh6tPdbxumwdMB6D3ei_35DuI_r2AQsaRzJBHCOClWNmMoR1ITzfqgVx7wYp5yuXICy6TYOCzsVDrji0_ph2KUNbq2IxZWQPkiWT4N5Wt_9kNU=",
+      "deeplink": "https://link.coupang.com/a/gsLY783k6K",
+      "hook": "삶의 질 폭등",
+      "copy": "새소리에 4단 속도, 사냥본능 자동 자극",
       "buyHook": "고민할 가격 아님",
       "narration": [
-        "꼬리가 불규칙하게 돌아 계속 덮치게 만들어요.",
-        "자동이라 켜두기만 하면 놀이가 시작됩니다.",
-        "작고 가벼워 방 어디에나 두기 좋아요.",
-        "활동량 부족한 실내묘 운동용으로 좋습니다."
+        "새소리가 나와 소리만으로 냥이 시선을 끌어요.",
+        "4단 속도 조절로 성격에 맞게 난이도를 바꿔요.",
+        "자동으로 움직여 집사는 구경만 해도 돼요.",
+        "활동량 부족해 살찌는 실내묘에게 좋아요."
       ],
       "tags": [
         "#고양이장난감",
         "#자동장난감",
-        "#꼬리잡기",
+        "#묘메이트",
         "#냥집사",
+        "#사냥놀이",
+        "#실내묘",
         "#고양이용품",
-        "#반려묘",
-        "#가성비템",
         "#가성비"
       ],
       "category": {
@@ -338,93 +338,87 @@
       "slot": 0,
       "label": "월 오전",
       "productIdx": 0,
-      "posted": true,
-      "reelId": "18113428546758270",
-      "postedAt": "2026-08-16T23:16:48.995Z"
+      "posted": false,
+      "reelId": null,
+      "postedAt": null
     },
     {
       "slot": 1,
       "label": "월 저녁",
       "productIdx": 1,
-      "posted": true,
-      "reelId": "18118977472686740",
-      "postedAt": "2026-08-17T04:08:23.372Z"
+      "posted": false,
+      "reelId": null,
+      "postedAt": null
     },
     {
       "slot": 2,
       "label": "화 오전",
       "productIdx": 2,
-      "posted": true,
-      "reelId": "18417626653147536",
-      "postedAt": "2026-08-17T23:19:05.014Z"
+      "posted": false,
+      "reelId": null,
+      "postedAt": null
     },
     {
       "slot": 3,
       "label": "화 저녁",
       "productIdx": 3,
-      "posted": true,
-      "reelId": "18138665626597456",
-      "postedAt": "2026-08-18T10:25:36.178Z"
+      "posted": false,
+      "reelId": null,
+      "postedAt": null
     },
     {
       "slot": 4,
       "label": "수 오전",
       "productIdx": 4,
-      "posted": true,
-      "reelId": "18100437856998905",
-      "postedAt": "2026-08-18T23:18:31.747Z"
+      "posted": false,
+      "reelId": null,
+      "postedAt": null
     },
     {
       "slot": 5,
       "label": "수 저녁",
       "productIdx": 5,
-      "posted": true,
-      "reelId": "18125105683772895",
-      "postedAt": "2026-08-19T10:25:58.411Z"
+      "posted": false,
+      "reelId": null,
+      "postedAt": null
     },
     {
       "slot": 6,
       "label": "목 오전",
       "productIdx": 6,
-      "posted": true,
-      "reelId": "17946390813051346",
-      "postedAt": "2026-08-19T23:19:38.829Z"
+      "posted": false,
+      "reelId": null,
+      "postedAt": null
     },
     {
       "slot": 7,
       "label": "목 저녁",
       "productIdx": 7,
-      "posted": true,
-      "reelId": "18091991951375982",
-      "postedAt": "2026-08-20T10:27:41.849Z"
+      "posted": false,
+      "reelId": null,
+      "postedAt": null
     },
     {
       "slot": 8,
       "label": "금 오전",
       "productIdx": 8,
-      "posted": true,
-      "reelId": "18114721483977679",
-      "postedAt": "2026-08-20T23:22:32.323Z"
+      "posted": false,
+      "reelId": null,
+      "postedAt": null
     },
     {
       "slot": 9,
       "label": "금 저녁",
       "productIdx": 9,
-      "posted": true,
-      "reelId": "18113376934996400",
-      "postedAt": "2026-08-21T10:27:33.321Z"
+      "posted": false,
+      "reelId": null,
+      "postedAt": null
     }
   ],
   "carousel": {
-    "picks": [
-      3,
-      4,
-      5,
-      8,
-      9
-    ],
-    "posted": true,
-    "postId": "18102068501222149",
-    "postedAt": "2026-08-21T11:33:39.024Z"
+    "picks": [],
+    "posted": false,
+    "postId": null,
+    "postedAt": null
   }
 }
