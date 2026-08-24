@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-08-25",
+    "slot": 2,
+    "name": "탐사 실속형 배변패드",
+    "price": 12000,
+    "url": "https://link.coupang.com/a/gsLY7BfOQm",
+    "image": "./stories/2026-08-24-s2.jpg"
+  },
+  {
     "date": "2026-08-24",
     "slot": 1,
     "name": "고양이 꼬리잡기 자동 장난감 움직이는 사냥 놀이",
@@ -230,13 +238,5 @@
     "price": 32500,
     "url": "https://link.coupang.com/a/fU680c186m",
     "image": "./stories/2026-08-03-s8.jpg"
-  },
-  {
-    "date": "2026-08-06",
-    "slot": 7,
-    "name": "FURYCUBE G11 초경량 무선 게이밍 마우스 PAW3311 센서 메테오 볼캐노 다이내믹 RGB 3모드 연결 6단계 DPI 인체공학적 디자인 대용량 장시간 사용",
-    "price": 33900,
-    "url": "https://link.coupang.com/a/fU68Z7NKIC",
-    "image": "./stories/2026-08-03-s7.jpg"
   }
 ]
