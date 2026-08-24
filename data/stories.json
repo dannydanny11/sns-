@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-08-24",
+    "slot": 1,
+    "name": "고양이 꼬리잡기 자동 장난감 움직이는 사냥 놀이",
+    "price": 12500,
+    "url": "https://link.coupang.com/a/gsLY7yNfTE",
+    "image": "./stories/2026-08-24-s1.jpg"
+  },
+  {
+    "date": "2026-08-24",
     "slot": 0,
     "name": "픽스모 라텍스 볼 강아지 만득이 장난감 6개세트",
     "price": 16700,
@@ -230,13 +238,5 @@
     "price": 33900,
     "url": "https://link.coupang.com/a/fU68Z7NKIC",
     "image": "./stories/2026-08-03-s7.jpg"
-  },
-  {
-    "date": "2026-08-06",
-    "slot": 6,
-    "name": "길이조절선반 하부장 주방 싱크대 양념통 슬라이딩 수납",
-    "price": 15900,
-    "url": "https://link.coupang.com/a/fU68Z2RwC4",
-    "image": "./stories/2026-08-03-s6.jpg"
   }
 ]

@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-08-24",
-  "generatedAt": "2026-08-24T03:55:54.094Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-08-24T10:33:59.107Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 1,
+      "productIdx": 1,
+      "runId": "2026-08-24-r1",
+      "reelFile": "2026-08-24-r1/reel.mp4",
+      "caption": "혼자서도 잘놈\n\n자동으로 도는 꼬리, 사냥본능 자극 끝\n\n🛒 바로 구매: https://link.coupang.com/a/gsLY7yNfTE\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이장난감 #자동장난감 #꼬리잡기 #냥집사 #고양이놀이 #사냥놀이 #가성비템 #가성비",
+      "name": "고양이 꼬리잡기 자동 장난감 움직이는 사냥 놀이"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
