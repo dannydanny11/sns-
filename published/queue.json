@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-08-24",
-  "generatedAt": "2026-08-25T03:50:47.770Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-08-25T10:28:00.302Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 3,
+      "productIdx": 3,
+      "runId": "2026-08-24-r3",
+      "reelFile": "2026-08-24-r3/reel.mp4",
+      "caption": "냄새 걱정 끝\n\n완전 밀폐 2도어, 모래 튐까지 잡는다\n\n🛒 바로 구매: https://link.coupang.com/a/gsLY7F4xhI\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이화장실 #밀폐형화장실 #냥집사 #고양이용품 #모래튐방지 #냄새차단 #가성비템 #가성비",
+      "name": "2도어 완전 밀폐형 고양이 화장실"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }

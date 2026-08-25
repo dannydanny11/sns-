@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-08-25",
+    "slot": 3,
+    "name": "2도어 완전 밀폐형 고양이 화장실",
+    "price": 28500,
+    "url": "https://link.coupang.com/a/gsLY7F4xhI",
+    "image": "./stories/2026-08-24-s3.jpg"
+  },
+  {
+    "date": "2026-08-25",
     "slot": 2,
     "name": "탐사 실속형 배변패드",
     "price": 12000,
@@ -230,13 +238,5 @@
     "price": 13000,
     "url": "https://link.coupang.com/a/fU680hk4gm",
     "image": "./stories/2026-08-03-s9.jpg"
-  },
-  {
-    "date": "2026-08-07",
-    "slot": 8,
-    "name": "우드웰 스토리 서랍형 듀얼 모니터 받침대 MT-01",
-    "price": 32500,
-    "url": "https://link.coupang.com/a/fU680c186m",
-    "image": "./stories/2026-08-03-s8.jpg"
   }
 ]
