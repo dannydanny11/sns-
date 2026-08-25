@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-08-26",
+    "slot": 4,
+    "name": "터그놀이 흡착식 강아지 로프 이갈이 장난감",
+    "price": 14800,
+    "url": "https://link.coupang.com/a/gsLY7LtnwG",
+    "image": "./stories/2026-08-24-s4.jpg"
+  },
+  {
     "date": "2026-08-25",
     "slot": 3,
     "name": "2도어 완전 밀폐형 고양이 화장실",
@@ -230,13 +238,5 @@
     "price": 45650,
     "url": "https://link.coupang.com/a/f5x516v3u0",
     "image": "./stories/2026-08-10-s1.jpg"
-  },
-  {
-    "date": "2026-08-07",
-    "slot": 9,
-    "name": "필모어 9세대 2L 초음파 듀얼 가습기 무드등",
-    "price": 13000,
-    "url": "https://link.coupang.com/a/fU680hk4gm",
-    "image": "./stories/2026-08-03-s9.jpg"
   }
 ]
