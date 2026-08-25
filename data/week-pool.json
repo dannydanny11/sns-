@@ -370,9 +370,9 @@
       "slot": 4,
       "label": "수 오전",
       "productIdx": 4,
-      "posted": false,
-      "reelId": null,
-      "postedAt": null
+      "posted": true,
+      "reelId": "18124694338867327",
+      "postedAt": "2026-08-25T23:22:15.591Z"
     },
     {
       "slot": 5,
