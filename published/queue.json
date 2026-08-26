@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-08-24",
-  "generatedAt": "2026-08-26T03:55:07.062Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-08-26T10:32:20.449Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 5,
+      "productIdx": 5,
+      "runId": "2026-08-24-r5",
+      "reelFile": "2026-08-24-r5/reel.mp4",
+      "caption": "냥이 폭주 각\n\n깃털에 방울까지, 반응 안 오면 섭섭\n\n🛒 바로 구매: https://link.coupang.com/a/gsLY7P6MPA\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이장난감 #낚시대장난감 #깃털장난감 #냥집사 #고양이놀이 #우다다 #가성비템 #가성비",
+      "name": "홈앤힐링 고양이 깃털 방울 낚시대 장난감 세트"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }

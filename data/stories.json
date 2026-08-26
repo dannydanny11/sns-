@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-08-26",
+    "slot": 5,
+    "name": "홈앤힐링 고양이 깃털 방울 낚시대 장난감 세트",
+    "price": 11400,
+    "url": "https://link.coupang.com/a/gsLY7P6MPA",
+    "image": "./stories/2026-08-24-s5.jpg"
+  },
+  {
+    "date": "2026-08-26",
     "slot": 4,
     "name": "터그놀이 흡착식 강아지 로프 이갈이 장난감",
     "price": 14800,
@@ -230,13 +238,5 @@
     "price": 68000,
     "url": "https://link.coupang.com/a/f5x511vliC",
     "image": "./stories/2026-08-10-s0.jpg"
-  },
-  {
-    "date": "2026-08-10",
-    "slot": 1,
-    "name": "[백화점 입점] 풀라스 UV 살균 대용량 무선 미니 가습기 1위 무소음 책상 사무실 탁상용 휴대용 여행용 차량용 가정용 원룸 소형 무드등 통세척 초음파 room humidifier",
-    "price": 45650,
-    "url": "https://link.coupang.com/a/f5x516v3u0",
-    "image": "./stories/2026-08-10-s1.jpg"
   }
 ]
