@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-08-27",
+    "slot": 6,
+    "name": "씨엔앨라이프  전국민  집사 배변패드 모음전",
+    "price": 19790,
+    "url": "https://link.coupang.com/a/gsLY7U7ha8",
+    "image": "./stories/2026-08-24-s6.jpg"
+  },
+  {
     "date": "2026-08-26",
     "slot": 5,
     "name": "홈앤힐링 고양이 깃털 방울 낚시대 장난감 세트",
@@ -230,13 +238,5 @@
     "price": 45650,
     "url": "https://link.coupang.com/a/f5x516v3u0",
     "image": "./stories/2026-08-10-s1.jpg"
-  },
-  {
-    "date": "2026-08-10",
-    "slot": 0,
-    "name": "일리안 모니터 받침대 M",
-    "price": 68000,
-    "url": "https://link.coupang.com/a/f5x511vliC",
-    "image": "./stories/2026-08-10-s0.jpg"
   }
 ]
