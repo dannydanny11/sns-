@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-08-27",
+    "slot": 7,
+    "name": "딩동펫 바스켓 특대형 고양이 화장실",
+    "price": 18800,
+    "url": "https://link.coupang.com/a/gsLY70BWDY",
+    "image": "./stories/2026-08-24-s7.jpg"
+  },
+  {
+    "date": "2026-08-27",
     "slot": 6,
     "name": "씨엔앨라이프  전국민  집사 배변패드 모음전",
     "price": 19790,
@@ -230,13 +238,5 @@
     "price": 68000,
     "url": "https://link.coupang.com/a/f5x511vliC",
     "image": "./stories/2026-08-10-s0.jpg"
-  },
-  {
-    "date": "2026-08-11",
-    "slot": 1,
-    "name": "[백화점 입점] 풀라스 UV 살균 대용량 무선 미니 가습기 1위 무소음 책상 사무실 탁상용 휴대용 여행용 차량용 가정용 원룸 소형 무드등 통세척 초음파 room humidifier",
-    "price": 45650,
-    "url": "https://link.coupang.com/a/f5x516v3u0",
-    "image": "./stories/2026-08-10-s1.jpg"
   }
 ]
