@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-08-24",
-  "generatedAt": "2026-08-27T20:08:01.613Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-08-28T06:28:14.050Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 8,
+      "productIdx": 8,
+      "runId": "2026-08-24-r8",
+      "reelFile": "2026-08-24-r8/reel.mp4",
+      "caption": "여름 산책각\n\n통풍 되는 여름 하네스, 목 압박 없이\n\n🛒 바로 구매: https://link.coupang.com/a/gsLY74uve0\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#강아지하네스 #여름하네스 #산책용품 #반려견용품 #강아지산책 #통기성 #가성비템 #가성비",
+      "name": "코코포 강아지 여름 하네스"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }

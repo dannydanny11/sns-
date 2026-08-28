@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-08-28",
+    "slot": 8,
+    "name": "코코포 강아지 여름 하네스",
+    "price": 42800,
+    "url": "https://link.coupang.com/a/gsLY74uve0",
+    "image": "./stories/2026-08-24-s8.jpg"
+  },
+  {
     "date": "2026-08-27",
     "slot": 7,
     "name": "딩동펫 바스켓 특대형 고양이 화장실",
@@ -230,13 +238,5 @@
     "price": 45650,
     "url": "https://link.coupang.com/a/f5x516v3u0",
     "image": "./stories/2026-08-10-s1.jpg"
-  },
-  {
-    "date": "2026-08-11",
-    "slot": 0,
-    "name": "일리안 모니터 받침대 M",
-    "price": 68000,
-    "url": "https://link.coupang.com/a/f5x511vliC",
-    "image": "./stories/2026-08-10-s0.jpg"
   }
 ]
