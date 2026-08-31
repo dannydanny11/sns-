@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-01",
+    "slot": 1,
+    "name": "더보양 보양묘술 고양이 수제 장난감",
+    "price": 26000,
+    "url": "https://link.coupang.com/a/gEvZTezcui",
+    "image": "./stories/2026-08-31-s1.jpg"
+  },
+  {
     "date": "2026-08-31",
     "slot": 0,
     "name": "레몽크리프 강아지 소리나는 양말 장난감 3종 세트",
@@ -230,13 +238,5 @@
     "price": 59880,
     "url": "https://link.coupang.com/a/f5x52gzZtc",
     "image": "./stories/2026-08-10-s2.jpg"
-  },
-  {
-    "date": "2026-08-12",
-    "slot": 3,
-    "name": "UGREEN 유그린 4000DPI 인체공학 버티컬 블루투스 무선 무소음 마우스 |손목보호| 멀티페어링| 4단계 DPI 조절| 지능형 절전 모드|맥북 태블릿 노트북 컴퓨터 PC 호환",
-    "price": 22500,
-    "url": "https://link.coupang.com/a/f5x52mvEVo",
-    "image": "./stories/2026-08-10-s3.jpg"
   }
 ]

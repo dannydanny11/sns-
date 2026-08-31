@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-08-31",
-  "generatedAt": "2026-08-31T09:26:50.125Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-08-31T17:22:43.621Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 1,
+      "productIdx": 1,
+      "runId": "2026-08-31-r1",
+      "reelFile": "2026-08-31-r1/reel.mp4",
+      "caption": "냥이 텐션 폭등\n\n수제라 마감부터 다른 사냥 본능 자극템\n\n🛒 바로 구매: https://link.coupang.com/a/gEvZTezcui\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이장난감 #수제장난감 #냥집사 #고양이용품 #사냥놀이 #실내묘 #가성비템 #가성비",
+      "name": "더보양 보양묘술 고양이 수제 장난감"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
