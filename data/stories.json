@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-08-31",
+    "slot": 0,
+    "name": "레몽크리프 강아지 소리나는 양말 장난감 3종 세트",
+    "price": 12700,
+    "url": "https://link.coupang.com/a/gEvZS9ib8K",
+    "image": "./stories/2026-08-31-s0.jpg"
+  },
+  {
     "date": "2026-08-29",
     "slot": 9,
     "name": "묘메이트 고양이 자동 장난감 새소리 4단 속도조절 사냥놀이",
@@ -230,13 +238,5 @@
     "price": 22500,
     "url": "https://link.coupang.com/a/f5x52mvEVo",
     "image": "./stories/2026-08-10-s3.jpg"
-  },
-  {
-    "date": "2026-08-12",
-    "slot": 0,
-    "name": "일리안 모니터 받침대 M",
-    "price": 68000,
-    "url": "https://link.coupang.com/a/f5x511vliC",
-    "image": "./stories/2026-08-10-s0.jpg"
   }
 ]
