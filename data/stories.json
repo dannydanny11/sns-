@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-01",
+    "slot": 2,
+    "name": "웁쉬 스며들개 고흡수 강아지 배변패드 두툼형 피톤치드향",
+    "price": 36800,
+    "url": "https://link.coupang.com/a/gEvZTkiYzQ",
+    "image": "./stories/2026-08-31-s2.jpg"
+  },
+  {
+    "date": "2026-09-01",
     "slot": 1,
     "name": "더보양 보양묘술 고양이 수제 장난감",
     "price": 26000,
@@ -230,13 +238,5 @@
     "price": 10960,
     "url": "https://link.coupang.com/a/f5x52qLcaG",
     "image": "./stories/2026-08-10-s4.jpg"
-  },
-  {
-    "date": "2026-08-12",
-    "slot": 2,
-    "name": "마치 슬라이딩 철제 수납장 조미료 양념통 선반",
-    "price": 59880,
-    "url": "https://link.coupang.com/a/f5x52gzZtc",
-    "image": "./stories/2026-08-10-s2.jpg"
   }
 ]
