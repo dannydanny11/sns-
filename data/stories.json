@@ -1,5 +1,21 @@
 [
   {
+    "date": "2026-09-02",
+    "slot": 3,
+    "name": "푸푸펫츠 반려동물 스마트 자동 급수기",
+    "price": 54900,
+    "url": "https://link.coupang.com/a/gEvZTop0nc",
+    "image": "./stories/2026-08-31-s3.jpg"
+  },
+  {
+    "date": "2026-09-02",
+    "slot": 4,
+    "name": "울리 강아지 베이커리 장난감 6종 세트",
+    "price": 13990,
+    "url": "https://link.coupang.com/a/gEvZTs97fg",
+    "image": "./stories/2026-08-31-s4.jpg"
+  },
+  {
     "date": "2026-09-01",
     "slot": 2,
     "name": "웁쉬 스며들개 고흡수 강아지 배변패드 두툼형 피톤치드향",
@@ -222,21 +238,5 @@
     "price": 29800,
     "url": "https://link.coupang.com/a/f5x52z8pau",
     "image": "./stories/2026-08-10-s6.jpg"
-  },
-  {
-    "date": "2026-08-12",
-    "slot": 5,
-    "name": "디디오랩 스텐 듀얼 미니 가습기",
-    "price": 49000,
-    "url": "https://link.coupang.com/a/f5x52v3XcO",
-    "image": "./stories/2026-08-10-s5.jpg"
-  },
-  {
-    "date": "2026-08-12",
-    "slot": 4,
-    "name": "아임홈리빙 심플C 모니터 받침대",
-    "price": 10960,
-    "url": "https://link.coupang.com/a/f5x52qLcaG",
-    "image": "./stories/2026-08-10-s4.jpg"
   }
 ]

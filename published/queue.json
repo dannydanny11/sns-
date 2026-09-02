@@ -1,7 +1,26 @@
 {
   "weekKey": "2026-08-31",
-  "generatedAt": "2026-09-01T08:24:14.894Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-09-02T00:46:47.280Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 3,
+      "productIdx": 3,
+      "runId": "2026-08-31-r3",
+      "reelFile": "2026-08-31-r3/reel.mp4",
+      "caption": "물그릇 졸업\n\n흐르는 물이라 스스로 더 마신다\n\n🛒 바로 구매: https://link.coupang.com/a/gEvZTop0nc\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#자동급수기 #고양이급수기 #반려동물용품 #냥집사 #음수량 #강아지급수기 #가성비템 #가성비",
+      "name": "푸푸펫츠 반려동물 스마트 자동 급수기"
+    },
+    {
+      "type": "reel",
+      "slot": 4,
+      "productIdx": 4,
+      "runId": "2026-08-31-r4",
+      "reelFile": "2026-08-31-r4/reel.mp4",
+      "caption": "강아지 빵집 오픈\n\n빵 여섯 개 세트로 놀이 시간이 길어진다\n\n🛒 바로 구매: https://link.coupang.com/a/gEvZTs97fg\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#강아지장난감 #베이커리장난감 #강아지선물 #반려견 #인형장난감 #강아지용품 #가성비템 #가성비",
+      "name": "울리 강아지 베이커리 장난감 6종 세트"
+    }
+  ],
+  "storyCount": 2,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
