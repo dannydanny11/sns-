@@ -362,17 +362,17 @@
       "slot": 3,
       "label": "화 저녁",
       "productIdx": 3,
-      "posted": false,
-      "reelId": null,
-      "postedAt": null
+      "posted": true,
+      "reelId": "18082355897306651",
+      "postedAt": "2026-09-02T00:50:22.179Z"
     },
     {
       "slot": 4,
       "label": "수 오전",
       "productIdx": 4,
-      "posted": false,
-      "reelId": null,
-      "postedAt": null
+      "posted": true,
+      "reelId": "18067419158772673",
+      "postedAt": "2026-09-02T00:50:22.179Z"
     },
     {
       "slot": 5,
