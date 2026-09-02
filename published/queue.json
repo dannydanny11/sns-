@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-08-31",
-  "generatedAt": "2026-09-02T07:43:52.735Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-09-02T14:03:14.215Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 5,
+      "productIdx": 5,
+      "runId": "2026-08-31-r5",
+      "reelFile": "2026-08-31-r5/reel.mp4",
+      "caption": "새 잡았다\n\n진짜 새 같은 깃털에 냥이가 돌변\n\n🛒 바로 구매: https://link.coupang.com/a/gEvZTxRVkG\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이장난감 #낚싯대장난감 #깃털장난감 #냥집사 #고양이놀이 #자동장난감 #가성비템 #가성비",
+      "name": "스마일플로우 진짜같은 새 고양이 최애 풀세트 튼튼 고정 낚시대 장난감"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }

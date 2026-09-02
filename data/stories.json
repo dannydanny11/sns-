@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-02",
+    "slot": 5,
+    "name": "스마일플로우 진짜같은 새 고양이 최애 풀세트 튼튼 고정 낚시대 장난감",
+    "price": 42300,
+    "url": "https://link.coupang.com/a/gEvZTxRVkG",
+    "image": "./stories/2026-08-31-s5.jpg"
+  },
+  {
+    "date": "2026-09-02",
     "slot": 3,
     "name": "푸푸펫츠 반려동물 스마트 자동 급수기",
     "price": 54900,
@@ -230,13 +238,5 @@
     "price": 25670,
     "url": "https://link.coupang.com/a/f5x52F5xca",
     "image": "./stories/2026-08-10-s7.jpg"
-  },
-  {
-    "date": "2026-08-13",
-    "slot": 6,
-    "name": "HK.sell 화이트톤 다용도 사각 식탁정리함",
-    "price": 29800,
-    "url": "https://link.coupang.com/a/f5x52z8pau",
-    "image": "./stories/2026-08-10-s6.jpg"
   }
 ]
