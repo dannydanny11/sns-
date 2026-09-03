@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-08-31",
-  "generatedAt": "2026-09-03T07:52:09.448Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-09-03T14:05:58.342Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 7,
+      "productIdx": 7,
+      "runId": "2026-08-31-r7",
+      "reelFile": "2026-08-31-r7/reel.mp4",
+      "caption": "밥 걱정 끝\n\n사료 3L 물 2L, 하루가 통째로 해결\n\n🛒 바로 구매: https://link.coupang.com/a/gEvZTGRVPo\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#자동급식기 #자동급수기 #고양이용품 #반려동물 #집사템 #정량급여 #가성비템 #가성비",
+      "name": "로제코 반려동물 자동 급식기 3L + 급수기 2L 세트"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }

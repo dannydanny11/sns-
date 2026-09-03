@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-03",
+    "slot": 7,
+    "name": "로제코 반려동물 자동 급식기 3L + 급수기 2L 세트",
+    "price": 45900,
+    "url": "https://link.coupang.com/a/gEvZTGRVPo",
+    "image": "./stories/2026-08-31-s7.jpg"
+  },
+  {
+    "date": "2026-09-03",
     "slot": 6,
     "name": "탐사 고흡수 든든패드 레몬향",
     "price": 10060,
@@ -230,13 +238,5 @@
     "price": 29800,
     "url": "https://link.coupang.com/a/f5x52P3QJg",
     "image": "./stories/2026-08-10-s9.jpg"
-  },
-  {
-    "date": "2026-08-14",
-    "slot": 8,
-    "name": "15종 가죽 와이드 키보드 패드 데스크 매트 양면 코르크 장패드",
-    "price": 14900,
-    "url": "https://link.coupang.com/a/f5x52Me5Cu",
-    "image": "./stories/2026-08-10-s8.jpg"
   }
 ]
