@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-03",
+    "slot": 6,
+    "name": "탐사 고흡수 든든패드 레몬향",
+    "price": 10060,
+    "url": "https://link.coupang.com/a/gEvZTCtiTY",
+    "image": "./stories/2026-08-31-s6.jpg"
+  },
+  {
     "date": "2026-09-02",
     "slot": 5,
     "name": "스마일플로우 진짜같은 새 고양이 최애 풀세트 튼튼 고정 낚시대 장난감",
@@ -230,13 +238,5 @@
     "price": 14900,
     "url": "https://link.coupang.com/a/f5x52Me5Cu",
     "image": "./stories/2026-08-10-s8.jpg"
-  },
-  {
-    "date": "2026-08-13",
-    "slot": 7,
-    "name": "로지텍 무소음 무선 마우스",
-    "price": 25670,
-    "url": "https://link.coupang.com/a/f5x52F5xca",
-    "image": "./stories/2026-08-10-s7.jpg"
   }
 ]
