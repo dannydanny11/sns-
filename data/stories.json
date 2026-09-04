@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-04",
+    "slot": 8,
+    "name": "네오핏 강아지 에어 X 하네스",
+    "price": 19500,
+    "url": "https://link.coupang.com/a/gEvZTMKrdI",
+    "image": "./stories/2026-08-31-s8.jpg"
+  },
+  {
     "date": "2026-09-03",
     "slot": 7,
     "name": "로제코 반려동물 자동 급식기 3L + 급수기 2L 세트",
@@ -230,13 +238,5 @@
     "price": 45900,
     "url": "https://link.coupang.com/a/gg9AF6dlro",
     "image": "./stories/2026-08-17-s0.jpg"
-  },
-  {
-    "date": "2026-08-14",
-    "slot": 9,
-    "name": "오아 듀얼미스트 미니 휴대용 초음파 탁상용 무선가습기",
-    "price": 29800,
-    "url": "https://link.coupang.com/a/f5x52P3QJg",
-    "image": "./stories/2026-08-10-s9.jpg"
   }
 ]
