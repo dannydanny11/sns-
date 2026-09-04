@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-04",
+    "slot": 9,
+    "name": "New World 캣타워 고양이 스크래쳐 안정적인 구조로 튼튼하고 견고함 다층 구조로 놀이터 링트리 등반 프레임 + 스크래쳐 + 고양이장난감 대형 및 소형 고양이모두사용 MPJ04",
+    "price": 39900,
+    "url": "https://link.coupang.com/a/gEvZTR1rzg",
+    "image": "./stories/2026-08-31-s9.jpg"
+  },
+  {
+    "date": "2026-09-04",
     "slot": 8,
     "name": "네오핏 강아지 에어 X 하네스",
     "price": 19500,
@@ -230,13 +238,5 @@
     "price": 21900,
     "url": "https://link.coupang.com/a/gg9AF9QDO8",
     "image": "./stories/2026-08-17-s1.jpg"
-  },
-  {
-    "date": "2026-08-17",
-    "slot": 0,
-    "name": "보코토 스마트 점프볼 강아지 고양이 장난감 움직이는 자동장난감",
-    "price": 45900,
-    "url": "https://link.coupang.com/a/gg9AF6dlro",
-    "image": "./stories/2026-08-17-s0.jpg"
   }
 ]
