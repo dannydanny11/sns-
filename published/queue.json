@@ -1,7 +1,17 @@
 {
-  "weekKey": "2026-08-31",
-  "generatedAt": "2026-09-04T14:54:11.849Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "weekKey": "2026-09-07",
+  "generatedAt": "2026-09-07T00:38:14.140Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 0,
+      "productIdx": 0,
+      "runId": "2026-09-07-r0",
+      "reelFile": "2026-09-07-r0/reel.mp4",
+      "caption": "당김 끝\n\n산책 내내 앞으로 튀어나가던 습관 정리\n\n🛒 바로 구매: https://link.coupang.com/a/gP6yYuGFA4\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#강아지하네스 #앞섬방지 #산책템 #멍템 #반려견용품 #소형견하네스 #가성비템 #가성비",
+      "name": "멍템 강아지 앞섬방지 팔레트 하네스"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
