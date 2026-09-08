@@ -362,9 +362,9 @@
       "slot": 3,
       "label": "화 저녁",
       "productIdx": 3,
-      "posted": false,
-      "reelId": null,
-      "postedAt": null
+      "posted": true,
+      "reelId": "18140479915594491",
+      "postedAt": "2026-09-08T14:07:38.630Z"
     },
     {
       "slot": 4,
