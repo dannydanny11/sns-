@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-08",
+    "slot": 2,
+    "name": "강아지 배변패드 고흡수 탈취 애견패드",
+    "price": 33000,
+    "url": "https://link.coupang.com/a/gP6yYEZ7Lw",
+    "image": "./stories/2026-09-07-s2.jpg"
+  },
+  {
+    "date": "2026-09-08",
     "slot": 1,
     "name": "리스펫 고양이 멀티꼬리잡기 자동 장난감",
     "price": 34900,
@@ -230,13 +238,5 @@
     "price": 11490,
     "url": "https://link.coupang.com/a/gg9AGlxGsS",
     "image": "./stories/2026-08-17-s3.jpg"
-  },
-  {
-    "date": "2026-08-18",
-    "slot": 2,
-    "name": "페츠모아 냄새잡는 요술 배변패드 엣지 레몬향",
-    "price": 43900,
-    "url": "https://link.coupang.com/a/gg9AGg8iEC",
-    "image": "./stories/2026-08-17-s2.jpg"
   }
 ]
