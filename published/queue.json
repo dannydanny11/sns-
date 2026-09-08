@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-09-07",
-  "generatedAt": "2026-09-08T07:53:59.026Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-09-08T14:05:47.738Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 3,
+      "productIdx": 3,
+      "runId": "2026-09-07-r3",
+      "reelFile": "2026-09-07-r3/reel.mp4",
+      "caption": "사막화 끝\n\n서랍식 초대형, 모래 튐까지 잡는 화장실\n\n🛒 바로 구매: https://link.coupang.com/a/gP6yYK7pxk\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이화장실 #사막화방지 #서랍식화장실 #악취방지 #냥집사 #고양이용품 #대형화장실 #가성비",
+      "name": "슈퍼인 초대형 서랍식 악취방지 고양이화장실 모래똥 유출방지형"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }

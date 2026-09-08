@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-08",
+    "slot": 3,
+    "name": "슈퍼인 초대형 서랍식 악취방지 고양이화장실 모래똥 유출방지형",
+    "price": 46890,
+    "url": "https://link.coupang.com/a/gP6yYK7pxk",
+    "image": "./stories/2026-09-07-s3.jpg"
+  },
+  {
+    "date": "2026-09-08",
     "slot": 2,
     "name": "강아지 배변패드 고흡수 탈취 애견패드",
     "price": 33000,
@@ -230,13 +238,5 @@
     "price": 19900,
     "url": "https://link.coupang.com/a/gg9AGpqRqe",
     "image": "./stories/2026-08-17-s4.jpg"
-  },
-  {
-    "date": "2026-08-18",
-    "slot": 3,
-    "name": "탐사 베이직 대용량 고양이 화장실 + 모래삽 세트",
-    "price": 11490,
-    "url": "https://link.coupang.com/a/gg9AGlxGsS",
-    "image": "./stories/2026-08-17-s3.jpg"
   }
 ]
