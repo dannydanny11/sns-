@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-09",
+    "slot": 5,
+    "name": "PAWZ Road 5단 심플 다색 중대형 플러시 패브릭 캣타워",
+    "price": 62800,
+    "url": "https://link.coupang.com/a/gP6yYUNLy0",
+    "image": "./stories/2026-09-07-s5.jpg"
+  },
+  {
+    "date": "2026-09-09",
     "slot": 4,
     "name": "강아지 소형견 하네스 여름 경량 하네스 리드줄 세트",
     "price": 20500,
@@ -230,13 +238,5 @@
     "price": 39500,
     "url": "https://link.coupang.com/a/gg9AGyrPAy",
     "image": "./stories/2026-08-17-s6.jpg"
-  },
-  {
-    "date": "2026-08-19",
-    "slot": 5,
-    "name": "고양이 굴속꼬리잡기 자동 장난감 혼자 사냥 놀이",
-    "price": 19800,
-    "url": "https://link.coupang.com/a/gg9AGs9mFw",
-    "image": "./stories/2026-08-17-s5.jpg"
   }
 ]
