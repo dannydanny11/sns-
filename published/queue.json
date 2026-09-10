@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-09-07",
-  "generatedAt": "2026-09-10T07:56:24.496Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-09-10T14:02:32.730Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 7,
+      "productIdx": 7,
+      "runId": "2026-09-07-r7",
+      "reelFile": "2026-09-07-r7/reel.mp4",
+      "caption": "이거 실화?\n\n3L 대용량 자동급식기, 며칠치 한 번에\n\n🛒 바로 구매: https://link.coupang.com/a/gP6yY6OOvQ\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#자동급식기 #3L대용량 #고양이용품 #강아지용품 #정량급여 #집사템 #가성비템 #가성비",
+      "name": "파우시 강아지 고양이 자동급식기 3L"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
