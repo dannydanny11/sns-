@@ -1,7 +1,38 @@
 {
   "weekKey": "2026-09-07",
-  "generatedAt": "2026-09-11T07:52:29.766Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-09-11T14:01:44.184Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 9,
+      "productIdx": 9,
+      "runId": "2026-09-07-r9",
+      "reelFile": "2026-09-07-r9/reel.mp4",
+      "caption": "긁기 걱정 끝\n\n쉬는 자리와 스크래처를 한 몸에\n\n🛒 바로 구매: https://link.coupang.com/a/gP6yZiD4uq\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#캣타워 #스크래처 #고양이용품 #원룸 #냥집사 #고양이휴식 #가성비템 #가성비",
+      "name": "고양이 휴식&스크래칭  캣 타워"
+    },
+    {
+      "type": "carousel",
+      "runId": "2026-09-07-carousel",
+      "cardFiles": [
+        "01-cover.jpg",
+        "02-product.jpg",
+        "03-product.jpg",
+        "04-product.jpg",
+        "05-product.jpg",
+        "06-product.jpg",
+        "07-cta.jpg"
+      ],
+      "caption": "이번 주 많이 담긴 반려생활 아이템 5가지를 모아봤어요 🐾\n산책용 하네스부터 실내 필수템까지, 목적별로 나눠 정리했습니다.\n소형견이라면 경량 타입, 힘이 센 아이라면 앞섬방지 구조를 살펴보시면 좋아요.\n집에 고양이가 있다면 마지막 캣타워도 함께 보세요 🐱\n가격대는 1만 원대 후반~3만 원대로 형성되어 있어요.\n자세한 정보는 프로필 링크에서 확인하실 수 있습니다 🔗\n\n👉 링크는 프로필에서 확인하세요\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#강아지용품 #반려견용품 #하네스 #강아지하네스 #소형견하네스 #배변패드 #애견패드 #산책용품 #고양이용품 #캣타워 #스크래쳐 #반려동물 #집사템 #가성비템 #이번주베스트",
+      "picks": [
+        0,
+        2,
+        4,
+        8,
+        9
+      ]
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }

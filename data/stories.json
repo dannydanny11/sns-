@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-11",
+    "slot": 9,
+    "name": "고양이 휴식&스크래칭  캣 타워",
+    "price": 33000,
+    "url": "https://link.coupang.com/a/gP6yZiD4uq",
+    "image": "./stories/2026-09-07-s9.jpg"
+  },
+  {
+    "date": "2026-09-11",
     "slot": 8,
     "name": "베니즈 베이직 하네스",
     "price": 18000,
@@ -230,13 +238,5 @@
     "price": 16700,
     "url": "https://link.coupang.com/a/gsLY7tTvfo",
     "image": "./stories/2026-08-24-s0.jpg"
-  },
-  {
-    "date": "2026-08-21",
-    "slot": 9,
-    "name": "TUKKI 고양이 장난감 꼬리잡기 자동 장난감",
-    "price": 12600,
-    "url": "https://link.coupang.com/a/gg9AGLzzzh",
-    "image": "./stories/2026-08-17-s9.jpg"
   }
 ]
