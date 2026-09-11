@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-11",
+    "slot": 8,
+    "name": "베니즈 베이직 하네스",
+    "price": 18000,
+    "url": "https://link.coupang.com/a/gP6yZdxntA",
+    "image": "./stories/2026-09-07-s8.jpg"
+  },
+  {
     "date": "2026-09-10",
     "slot": 7,
     "name": "파우시 강아지 고양이 자동급식기 3L",
@@ -230,13 +238,5 @@
     "price": 12600,
     "url": "https://link.coupang.com/a/gg9AGLzzzh",
     "image": "./stories/2026-08-17-s9.jpg"
-  },
-  {
-    "date": "2026-08-21",
-    "slot": 8,
-    "name": "강아지 이갈이 장난감 애견 삑삑이 장난감 세트",
-    "price": 19800,
-    "url": "https://link.coupang.com/a/gg9AGHXZJY",
-    "image": "./stories/2026-08-17-s8.jpg"
   }
 ]
