@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-15",
+    "slot": 1,
+    "name": "고양이 자동 낚싯대 장난감 움직이는 줄잡기 놀이",
+    "price": 16800,
+    "url": "https://link.coupang.com/a/g1IOTOphE4",
+    "image": "./stories/2026-09-14-s1.jpg"
+  },
+  {
     "date": "2026-09-14",
     "slot": 0,
     "name": "Qdan 강아지 장난감 공 축구공 끈 달린 펌프 포함 내구성 가죽",
@@ -230,13 +238,5 @@
     "price": 12000,
     "url": "https://link.coupang.com/a/gsLY7BfOQm",
     "image": "./stories/2026-08-24-s2.jpg"
-  },
-  {
-    "date": "2026-08-24",
-    "slot": 1,
-    "name": "고양이 꼬리잡기 자동 장난감 움직이는 사냥 놀이",
-    "price": 12500,
-    "url": "https://link.coupang.com/a/gsLY7yNfTE",
-    "image": "./stories/2026-08-24-s1.jpg"
   }
 ]
