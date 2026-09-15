@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-15",
+    "slot": 2,
+    "name": "킹스패드 프리미엄 블랙 참숯 배변패드 3초흡수",
+    "price": 54900,
+    "url": "https://link.coupang.com/a/g1IOTTir48",
+    "image": "./stories/2026-09-14-s2.jpg"
+  },
+  {
+    "date": "2026-09-15",
     "slot": 1,
     "name": "고양이 자동 낚싯대 장난감 움직이는 줄잡기 놀이",
     "price": 16800,
@@ -230,13 +238,5 @@
     "price": 28500,
     "url": "https://link.coupang.com/a/gsLY7F4xhI",
     "image": "./stories/2026-08-24-s3.jpg"
-  },
-  {
-    "date": "2026-08-25",
-    "slot": 2,
-    "name": "탐사 실속형 배변패드",
-    "price": 12000,
-    "url": "https://link.coupang.com/a/gsLY7BfOQm",
-    "image": "./stories/2026-08-24-s2.jpg"
   }
 ]
