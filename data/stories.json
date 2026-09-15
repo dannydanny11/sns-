@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-15",
+    "slot": 3,
+    "name": "고양이 사발 미끄럼 방지 초대형 반폐쇄 서랍형 고양이 화장실",
+    "price": 68900,
+    "url": "https://link.coupang.com/a/g1IOTYJfNs",
+    "image": "./stories/2026-09-14-s3.jpg"
+  },
+  {
+    "date": "2026-09-15",
     "slot": 2,
     "name": "킹스패드 프리미엄 블랙 참숯 배변패드 3초흡수",
     "price": 54900,
@@ -230,13 +238,5 @@
     "price": 14800,
     "url": "https://link.coupang.com/a/gsLY7LtnwG",
     "image": "./stories/2026-08-24-s4.jpg"
-  },
-  {
-    "date": "2026-08-25",
-    "slot": 3,
-    "name": "2도어 완전 밀폐형 고양이 화장실",
-    "price": 28500,
-    "url": "https://link.coupang.com/a/gsLY7F4xhI",
-    "image": "./stories/2026-08-24-s3.jpg"
   }
 ]
