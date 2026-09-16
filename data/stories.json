@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-16",
+    "slot": 5,
+    "name": "GERDU 고양이 캣타워 대형 튼튼한 다층 놀이터 스크래쳐 숨숨집",
+    "price": 39900,
+    "url": "https://link.coupang.com/a/g1IOT7qpno",
+    "image": "./stories/2026-09-14-s5.jpg"
+  },
+  {
+    "date": "2026-09-16",
     "slot": 4,
     "name": "온댕 야광 빛반사 티타늄 강아지 하네스 리드줄 세트",
     "price": 22500,
@@ -230,13 +238,5 @@
     "price": 19790,
     "url": "https://link.coupang.com/a/gsLY7U7ha8",
     "image": "./stories/2026-08-24-s6.jpg"
-  },
-  {
-    "date": "2026-08-26",
-    "slot": 5,
-    "name": "홈앤힐링 고양이 깃털 방울 낚시대 장난감 세트",
-    "price": 11400,
-    "url": "https://link.coupang.com/a/gsLY7P6MPA",
-    "image": "./stories/2026-08-24-s5.jpg"
   }
 ]
