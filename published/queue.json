@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-09-14",
-  "generatedAt": "2026-09-17T08:28:01.617Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-09-17T14:39:05.335Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 7,
+      "productIdx": 7,
+      "runId": "2026-09-14-r7",
+      "reelFile": "2026-09-14-r7/reel.mp4",
+      "caption": "먼지 거의 없음\n\n6가지 기능 합친 프리미엄 두부 모래\n\n🛒 바로 구매: https://link.coupang.com/a/g1IOUiSL12\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#두부모래 #고양이모래 #저먼지모래 #냥집사 #고양이용품 #사막화방지 #가성비템 #가성비",
+      "name": "내꼬냥 고양이 프리미엄 두부벤토 모래 6in1 MAXMI6"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }

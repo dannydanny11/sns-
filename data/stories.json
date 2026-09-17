@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-17",
+    "slot": 7,
+    "name": "내꼬냥 고양이 프리미엄 두부벤토 모래 6in1 MAXMI6",
+    "price": 39100,
+    "url": "https://link.coupang.com/a/g1IOUiSL12",
+    "image": "./stories/2026-09-14-s7.jpg"
+  },
+  {
+    "date": "2026-09-17",
     "slot": 6,
     "name": "페키움 정량 배식 강아지 고양이 분리불안해소 자동 급식기",
     "price": 59900,
@@ -230,13 +238,5 @@
     "price": 42800,
     "url": "https://link.coupang.com/a/gsLY74uve0",
     "image": "./stories/2026-08-24-s8.jpg"
-  },
-  {
-    "date": "2026-08-27",
-    "slot": 7,
-    "name": "딩동펫 바스켓 특대형 고양이 화장실",
-    "price": 18800,
-    "url": "https://link.coupang.com/a/gsLY70BWDY",
-    "image": "./stories/2026-08-24-s7.jpg"
   }
 ]
