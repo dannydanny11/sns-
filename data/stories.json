@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-18",
+    "slot": 9,
+    "name": "포조이 캣타워 캣폴 튼튼한 다기능 고양이 캣타워 원목 대형 멀티 클라이밍 놀이터 링트리",
+    "price": 79000,
+    "url": "https://link.coupang.com/a/g1IOUs6kIm",
+    "image": "./stories/2026-09-14-s9.jpg"
+  },
+  {
+    "date": "2026-09-18",
     "slot": 8,
     "name": "푸키 강아지 중형견 대형견 이중잠금 리지드 하네스 가슴줄",
     "price": 13840,
@@ -230,13 +238,5 @@
     "price": 12700,
     "url": "https://link.coupang.com/a/gEvZS9ib8K",
     "image": "./stories/2026-08-31-s0.jpg"
-  },
-  {
-    "date": "2026-08-29",
-    "slot": 9,
-    "name": "묘메이트 고양이 자동 장난감 새소리 4단 속도조절 사냥놀이",
-    "price": 38900,
-    "url": "https://link.coupang.com/a/gsLY783k6K",
-    "image": "./stories/2026-08-24-s9.jpg"
   }
 ]

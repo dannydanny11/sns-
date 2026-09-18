@@ -1,7 +1,38 @@
 {
   "weekKey": "2026-09-14",
-  "generatedAt": "2026-09-18T08:02:40.113Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-09-18T14:04:46.538Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 9,
+      "productIdx": 9,
+      "runId": "2026-09-14-r9",
+      "reelFile": "2026-09-14-r9/reel.mp4",
+      "caption": "천장까지 논다\n\n원목 캣폴에 링트리까지 붙은 대형 놀이터\n\n🛒 바로 구매: https://link.coupang.com/a/g1IOUs6kIm\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#캣폴 #캣타워 #원목캣타워 #고양이놀이터 #링트리 #냥집사 #반려묘용품 #가성비",
+      "name": "포조이 캣타워 캣폴 튼튼한 다기능 고양이 캣타워 원목 대형 멀티 클라이밍 놀이터 링트리"
+    },
+    {
+      "type": "carousel",
+      "runId": "2026-09-14-carousel",
+      "cardFiles": [
+        "01-cover.jpg",
+        "02-product.jpg",
+        "03-product.jpg",
+        "04-product.jpg",
+        "05-product.jpg",
+        "06-product.jpg",
+        "07-cta.jpg"
+      ],
+      "caption": "이번 주 반려동물 카테고리에서 눈에 띈 제품 5가지를 정리했습니다 🐾\n놀이용부터 산책용, 모래까지 종류별로 모아봤어요.\n캣타워는 다층 구조에 스크래쳐와 숨숨집이 함께 구성된 타입이고요.\n하네스는 야광 반사 소재, 이중잠금 등 서로 쓰임이 조금씩 다릅니다.\n우리 집 상황에 맞는 게 있는지 한 번 살펴보세요 🐶🐱\n\n👉 링크는 프로필에서 확인하세요\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#반려동물용품 #고양이용품 #강아지용품 #집사템 #캣타워 #두부모래 #강아지하네스 #강아지산책 #고양이장난감 #다묘가정 #반려견용품 #가성비템 #펫용품추천 #아토즈템",
+      "picks": [
+        1,
+        4,
+        5,
+        7,
+        8
+      ]
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
