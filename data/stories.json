@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-18",
+    "slot": 8,
+    "name": "푸키 강아지 중형견 대형견 이중잠금 리지드 하네스 가슴줄",
+    "price": 13840,
+    "url": "https://link.coupang.com/a/g1IOUnETzE",
+    "image": "./stories/2026-09-14-s8.jpg"
+  },
+  {
     "date": "2026-09-17",
     "slot": 7,
     "name": "내꼬냥 고양이 프리미엄 두부벤토 모래 6in1 MAXMI6",
@@ -230,13 +238,5 @@
     "price": 38900,
     "url": "https://link.coupang.com/a/gsLY783k6K",
     "image": "./stories/2026-08-24-s9.jpg"
-  },
-  {
-    "date": "2026-08-28",
-    "slot": 8,
-    "name": "코코포 강아지 여름 하네스",
-    "price": 42800,
-    "url": "https://link.coupang.com/a/gsLY74uve0",
-    "image": "./stories/2026-08-24-s8.jpg"
   }
 ]
