@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-22",
+    "slot": 1,
+    "name": "고양이 굴속꼬리잡기 자동 장난감 혼자 사냥 놀이",
+    "price": 16800,
+    "url": "https://link.coupang.com/a/hdlPp7QViv",
+    "image": "./stories/2026-09-21-s1.jpg"
+  },
+  {
     "date": "2026-09-21",
     "slot": 0,
     "name": "보코토 스마트 점프볼 강아지 고양이 장난감 움직이는 자동장난감",
@@ -230,13 +238,5 @@
     "price": 36800,
     "url": "https://link.coupang.com/a/gEvZTkiYzQ",
     "image": "./stories/2026-08-31-s2.jpg"
-  },
-  {
-    "date": "2026-09-01",
-    "slot": 1,
-    "name": "더보양 보양묘술 고양이 수제 장난감",
-    "price": 26000,
-    "url": "https://link.coupang.com/a/gEvZTezcui",
-    "image": "./stories/2026-08-31-s1.jpg"
   }
 ]
