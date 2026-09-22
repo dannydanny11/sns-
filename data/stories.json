@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-22",
+    "slot": 3,
+    "name": "탐사 베이직 대용량 고양이 화장실 + 모래삽 세트",
+    "price": 11490,
+    "url": "https://link.coupang.com/a/hdlPqhorC0",
+    "image": "./stories/2026-09-21-s3.jpg"
+  },
+  {
+    "date": "2026-09-22",
     "slot": 2,
     "name": "페츠모아 냄새잡는 요술 배변패드 엣지 레몬향",
     "price": 43900,
@@ -230,13 +238,5 @@
     "price": 54900,
     "url": "https://link.coupang.com/a/gEvZTop0nc",
     "image": "./stories/2026-08-31-s3.jpg"
-  },
-  {
-    "date": "2026-09-02",
-    "slot": 4,
-    "name": "울리 강아지 베이커리 장난감 6종 세트",
-    "price": 13990,
-    "url": "https://link.coupang.com/a/gEvZTs97fg",
-    "image": "./stories/2026-08-31-s4.jpg"
   }
 ]
