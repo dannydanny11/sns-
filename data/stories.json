@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-22",
+    "slot": 2,
+    "name": "페츠모아 냄새잡는 요술 배변패드 엣지 레몬향",
+    "price": 43900,
+    "url": "https://link.coupang.com/a/hdlPqbD8vs",
+    "image": "./stories/2026-09-21-s2.jpg"
+  },
+  {
+    "date": "2026-09-22",
     "slot": 1,
     "name": "고양이 굴속꼬리잡기 자동 장난감 혼자 사냥 놀이",
     "price": 16800,
@@ -230,13 +238,5 @@
     "price": 13990,
     "url": "https://link.coupang.com/a/gEvZTs97fg",
     "image": "./stories/2026-08-31-s4.jpg"
-  },
-  {
-    "date": "2026-09-01",
-    "slot": 2,
-    "name": "웁쉬 스며들개 고흡수 강아지 배변패드 두툼형 피톤치드향",
-    "price": 36800,
-    "url": "https://link.coupang.com/a/gEvZTkiYzQ",
-    "image": "./stories/2026-08-31-s2.jpg"
   }
 ]
