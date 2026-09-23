@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-23",
+    "slot": 5,
+    "name": "그로이즘 고양이 혼자노는 장난감 더블 낚시대 새 4마리",
+    "price": 18620,
+    "url": "https://link.coupang.com/a/hdlPqrrfgW",
+    "image": "./stories/2026-09-21-s5.jpg"
+  },
+  {
+    "date": "2026-09-23",
     "slot": 4,
     "name": "앤트앤비 스마트 롤링 라인 펫 볼 강아지 고양이 장난감",
     "price": 12900,
@@ -230,13 +238,5 @@
     "price": 10060,
     "url": "https://link.coupang.com/a/gEvZTCtiTY",
     "image": "./stories/2026-08-31-s6.jpg"
-  },
-  {
-    "date": "2026-09-02",
-    "slot": 5,
-    "name": "스마일플로우 진짜같은 새 고양이 최애 풀세트 튼튼 고정 낚시대 장난감",
-    "price": 42300,
-    "url": "https://link.coupang.com/a/gEvZTxRVkG",
-    "image": "./stories/2026-08-31-s5.jpg"
   }
 ]

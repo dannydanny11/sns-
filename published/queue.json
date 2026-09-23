@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-09-21",
-  "generatedAt": "2026-09-23T08:22:06.747Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-09-23T14:39:07.973Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 5,
+      "productIdx": 5,
+      "runId": "2026-09-21-r5",
+      "reelFile": "2026-09-21-r5/reel.mp4",
+      "caption": "새 네 마리\n\n더블 낚싯대로 두 배로 흔들리는 사냥감\n\n🛒 바로 구매: https://link.coupang.com/a/hdlPqrrfgW\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이장난감 #낚싯대장난감 #혼자노는장난감 #냥집사 #고양이용품 #다묘가정 #가성비템 #가성비",
+      "name": "그로이즘 고양이 혼자노는 장난감 더블 낚시대 새 4마리"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
