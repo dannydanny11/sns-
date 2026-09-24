@@ -65,15 +65,30 @@ def parse_roles(text: str | None) -> dict[str, str]:
     return out
 
 
-def apply_roles(syncs: list[dict], roles: dict[str, str]) -> None:
+def apply_roles(syncs: list[dict], roles: dict[str, str], by_file: bool = False) -> None:
+    """카메라 이름(by_file 이면 파일 이름 일부로도)이 맞으면 역할을 바꾼다."""
+    def hit(key, cam, path):
+        return key == cam or (by_file and key.lower() in os.path.basename(path).lower())
+    renamed = {}
     for sy in syncs:
         for s in sy["sessions"]:
             for c in s["clips"]:
-                if c["camera"] in roles:
-                    c["role"] = roles[c["camera"]]
+                for key, role in roles.items():
+                    if hit(key, c["camera"], c["file"]):
+                        c["role"] = role
+                        renamed[c["camera"]] = role
         for ci in sy.get("cameras", []):
-            if ci["name"] in roles:
-                ci["role"], ci["evidence"] = roles[ci["name"]], "직접 지정(--roles)"
+            if ci["name"] in renamed or ci["name"] in roles:
+                ci["role"] = renamed.get(ci["name"]) or roles[ci["name"]]
+                ci["evidence"] = "학습한 스타일" if by_file else "직접 지정(--roles)"
+
+
+def load_style(path: str) -> dict:
+    """learn 결과(JSON)의 rules. config/styles/<이름>.json 이름만 줘도 된다."""
+    cand = path if os.path.exists(path) else os.path.join(ROOT, "config", "styles", f"{path}.json")
+    with open(cand, encoding="utf-8") as f:
+        data = json.load(f)
+    return data.get("rules", data)
 
 
 def _dump(path: str, data) -> None:
@@ -104,10 +119,11 @@ def _dedupe_across_sessions(parts: list[dict]) -> None:
 def run(project_dir: str, preset: str | None = "auto", script_path: str | None = None, target_len: str | None = None,
         until: str = "export", redo: set[str] | None = None, work_root: str | None = None,
         output_root: str | None = None, overrides: str | None = None, proxy: bool = False,
-        roles: str | None = None, log=print) -> dict:
+        roles: str | None = None, style: str | None = None, log=print) -> dict:
     redo = redo or set()
     auto_preset = preset in (None, "", "auto")
     rules = load_rules("default" if auto_preset else preset)
+    learned = load_style(style) if style else {}
     project = os.path.basename(os.path.normpath(project_dir))
     work = os.path.join(work_root or os.path.join(ROOT, "work"))
     out_dir = os.path.join(output_root or os.path.join(ROOT, "output"), project)
@@ -130,11 +146,16 @@ def run(project_dir: str, preset: str | None = "auto", script_path: str | None =
         log("[1/5] 싱크")
         syncs = [sync.sync_place(p, rules, log) for p in places]
         _dump(sync_path, syncs)
+    if learned.get("camera_roles"):
+        apply_roles(syncs, learned["camera_roles"], by_file=True)
     apply_roles(syncs, parse_roles(roles))
     if auto_preset:
         preset, why = guess_preset(syncs, script_path)
         rules = load_rules(preset)
         log(f"  촬영 유형 자동 판정: {preset} ({why})")
+    if learned:
+        rules.update({k: v for k, v in learned.items() if k != "camera_roles"})
+        log(f"  편집 스타일 적용: {os.path.basename(style)}")
     if stop_after == 0:
         return {"sync": syncs, "preset": preset}
 
@@ -166,11 +187,11 @@ def run(project_dir: str, preset: str | None = "auto", script_path: str | None =
         tr = _load(tpath)
         # 마이크별 음량: 화자 판정 + 뷰어 파형
         if tracks:
-            envs = [audio.envelope(t, sess["reference"]["duration"]) for t in tracks]
-            n = audio.assign_speakers(tr["words"], tracks, envs)
+            named = audio.by_name(tracks, [audio.envelope(t, sess["reference"]["duration"]) for t in tracks])
+            n = audio.assign_speakers(tr["words"], named)
             if n:
-                log(f"  화자 판정: 마이크 {len(audio.speaker_tracks(tracks))}개 기준, 단어 {n}개")
-            peaks[label] = {t["name"]: audio.peaks(e) for t, e in zip(tracks, envs)}
+                log(f"  화자 판정: 마이크 {len(audio.speaker_names(list(named)))}개 기준, 단어 {n}개")
+            peaks[label] = {name: audio.peaks(e) for name, e in named.items()}
         transcripts[label] = tr
     if stop_after == 1:
         return {"sync": syncs, "transcripts": transcripts}
@@ -214,10 +235,11 @@ def run(project_dir: str, preset: str | None = "auto", script_path: str | None =
     base_media = next((c["media"] for p in parts for c in p["session"]["clips"]
                        if c["status"] == "ok" and c["role"] in rules["roles"]["base"]), None) or \
         next((c["media"] for p in parts for c in p["session"]["clips"] if c["status"] == "ok"), {})
-    fps = base_media.get("fps") or 29.97
+    fps = rules.get("sequence_fps") or base_media.get("fps") or 29.97
     rate = frame_rate(fps)
-    w, h = base_media.get("width") or 1920, base_media.get("height") or 1080
-    tl = timeline.build_timeline(parts, rate)
+    w = rules.get("sequence_width") or base_media.get("width") or 1920
+    h = rules.get("sequence_height") or base_media.get("height") or 1080
+    tl = timeline.build_timeline(parts, rate, rules.get("multicam_stack", True), rules.get("camera_audio_tracks", True))
 
     def pick_base(session, s, e):
         got = angles.CameraPool(session, rules["roles"]).pick(["base", "alt", "wide", "tele"], s, e)

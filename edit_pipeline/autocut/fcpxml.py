@@ -40,9 +40,12 @@ class _Files:
             return f'<file id="{self.ids[path]}"/>'
         fid = f"file-{len(self.ids) + 1}"
         self.ids[path] = fid
-        dur = int(round(media.get("duration", 0) * self.rate))
+        # 파일 자체의 프레임레이트로 적는다(29.97 원본을 23.976 시퀀스에 올리는 셀렉츠 작업과 같은 방식)
+        file_fps = media.get("fps") if media.get("has_video") and media.get("fps") else self.fps
+        base, ntsc = timebase(file_fps)
+        dur = int(round(media.get("duration", 0) * (Fraction(base * 1000, 1001) if ntsc else Fraction(base))))
         parts = [f'<file id="{fid}">', f"<name>{escape(os.path.basename(path))}</name>",
-                 f"<pathurl>{escape(pathurl(path))}</pathurl>", _rate(self.fps), f"<duration>{dur}</duration>",
+                 f"<pathurl>{escape(pathurl(path))}</pathurl>", _rate(file_fps), f"<duration>{dur}</duration>",
                  "<media>"]
         if media.get("has_video"):
             parts.append("<video><samplecharacteristics>"

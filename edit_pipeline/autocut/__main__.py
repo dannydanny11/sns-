@@ -8,10 +8,13 @@
   python -m autocut run input/<프로젝트> --roles "카메라2=tele"            # 역할 판정이 틀렸을 때
   python -m autocut run input/<프로젝트> --redo sync                       # 싱크 다시 계산
   python -m autocut run input/<프로젝트> --overrides output/<프로젝트>/<프로젝트>_수정.json
+  python -m autocut learn 셀렉츠편집.xml --media input/<프로젝트> --name 팟캐스트   # 편집 스타일 학습
+  python -m autocut run input/<프로젝트> --style 팟캐스트                          # 학습한 스타일로 편집
 """
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 
 from .pipeline import STAGES, run
@@ -30,11 +33,26 @@ def main(argv=None) -> int:
     r.add_argument("--overrides", help="타임라인 뷰어에서 저장한 수정 JSON(테이크 채택/탈락 변경)")
     r.add_argument("--proxy", action="store_true", help="타임라인 뷰어 미리보기용 저해상도 프록시 생성(MXF·HEVC·4K 원본일 때)")
     r.add_argument("--roles", help="카메라 역할 직접 지정: '카메라2=tele,A캠=front' (front/side/tele/wide/two)")
+    r.add_argument("--style", help="learn 으로 만든 편집 스타일(JSON 경로 또는 config/styles/ 의 이름)")
     r.add_argument("--work", help="작업 폴더(기본 edit_pipeline/work)")
     r.add_argument("--output", help="출력 폴더(기본 edit_pipeline/output)")
+    le = sub.add_parser("learn", help="셀렉츠·프리미어에서 편집한 XML 로 편집 스타일 학습")
+    le.add_argument("xml", help="FCP7 XML(프리미어/셀렉츠 '내보내기 → Final Cut Pro XML')")
+    le.add_argument("--media", help="원본 폴더(마이크 파일을 찾아 화자 → 카메라까지 학습)")
+    le.add_argument("--name", help="저장 이름(기본: XML 파일 이름) → config/styles/<이름>.json")
     a = ap.parse_args(argv)
+    if a.cmd == "learn":
+        from . import learn
+        from .pipeline import ROOT
+        res = learn.analyze(a.xml, a.media)
+        name = a.name or os.path.splitext(os.path.basename(a.xml))[0]
+        path = learn.save(res, os.path.join(ROOT, "config", "styles", f"{name}.json"))
+        print(learn.summary(res))
+        print(f"\n저장: {path}\n쓰는 법: python -m autocut run input/<프로젝트> --style {name}")
+        return 0
     redo = {x.strip() for x in a.redo.split(",") if x.strip()}
-    run(a.project, a.preset, a.script, a.target, a.until, redo, a.work, a.output, a.overrides, a.proxy, a.roles)
+    run(a.project, a.preset, a.script, a.target, a.until, redo, a.work, a.output, a.overrides, a.proxy, a.roles,
+        a.style)
     return 0
 
 

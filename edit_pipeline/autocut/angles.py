@@ -11,6 +11,8 @@
 """
 from __future__ import annotations
 
+import os
+
 
 class CameraPool:
     def __init__(self, session: dict, roles: dict):
@@ -54,6 +56,17 @@ class CameraPool:
         return None
 
 
+def resolve_speaker_cams(mapping: dict[str, str], pool: "CameraPool") -> dict[str, str]:
+    """{"이형": "C400"} 처럼 화자 → 카메라(이름 또는 파일 이름 일부)를 실제 카메라 이름으로 바꾼다."""
+    out = {}
+    for spk, key in mapping.items():
+        for c in pool.clips:
+            if c["camera"] == key or key.lower() in os.path.basename(c["file"]).lower():
+                out[spk] = c["camera"]
+                break
+    return out
+
+
 def _snap(t: float, bounds: list[float], lo: float, hi: float) -> float:
     inside = [b for b in bounds if lo < b < hi]
     return min(inside, key=lambda b: abs(b - t)) if inside else t
@@ -67,16 +80,22 @@ def place_angles(plan: dict, session: dict, rules: dict) -> list[dict]:
     alt_hold = rules.get("alt_hold", 5.0)
     wide_hold = rules.get("wide_hold", 4.0)
     cover_jumps = rules.get("cover_jump_cuts", True)
+    follow_speaker = rules.get("switch_on_speaker", True)
     pool = CameraPool(session, roles)
+    speaker_cam = resolve_speaker_cams(rules.get("speaker_cams") or {}, pool)
     words = plan.get("words", [])
     bounds = sorted({w["e"] for w in words} | {w["s"] for w in words})
 
     # 1) 요청 구간 만들기: (s, e, slots, why)
     requests = []
     prev_e = None
+    prev_spk = None
     for it in plan["items"]:
         if not it["enabled"]:
             continue
+        spk = it.get("spk")
+        spk_change = bool(spk and prev_spk and spk != prev_spk)
+        prev_spk = spk or prev_spk
         for k, seg in enumerate(it["segments"]):
             s, e = seg["s"], seg["e"]
             jump = prev_e is not None and abs(s - prev_e) > 0.05
@@ -106,6 +125,12 @@ def place_angles(plan: dict, session: dict, rules: dict) -> list[dict]:
                 t = b
             if e - t > 0.01:
                 requests.append({"s": t, "e": e, "slots": None, "why": "", "jump": jump and first})
+            if k == 0:
+                for rq in requests[::-1]:
+                    if rq["s"] >= s - 1e-6:
+                        rq["spk"], rq["spk_change"] = spk, spk_change and rq["s"] == s
+                    else:
+                        break
             prev_e = e
 
     # 2) 자동 구간에 기본/측면 배정, 오래 머물면 측면으로 끊기
@@ -122,7 +147,12 @@ def place_angles(plan: dict, session: dict, rules: dict) -> list[dict]:
             cur_auto = "base"
             continue
         s = rq["s"]
-        if rq["jump"] and cover_jumps and shots and hold >= min_shot:
+        want = speaker_cam.get(rq.get("spk"))
+        if rq.get("spk_change") and follow_speaker and shots and hold >= min_shot:
+            # 화자가 바뀌면 앵글도 바꾼다(셀렉츠 실작업에서 연속 발화 중 컷의 95%가 앵글 전환)
+            cur_auto = "base" if want else ("alt" if cur_auto == "base" else "base")
+            hold = 0.0
+        elif rq["jump"] and cover_jumps and shots and hold >= min_shot:
             cur_auto = "alt" if cur_auto == "base" else "base"
             hold = 0.0
         while s < rq["e"] - 1e-3:
@@ -132,9 +162,15 @@ def place_angles(plan: dict, session: dict, rules: dict) -> list[dict]:
                 end = _snap(s + limit, bounds, s + min_shot, rq["e"] - min_shot) if rq["e"] - s > 2 * min_shot else rq["e"]
             prev_cam = shots[-1]["camera"] if shots else None
             slots = ["alt", "base"] if cur_auto == "alt" else ["base", "alt"]
-            got = pool.pick(slots, s, end, avoid=prev_cam if cur_auto == "alt" else None)
+            got = None
+            if want and cur_auto == "base":
+                clip = pool.clip_covering(want, s, end)
+                got = (want, clip) if clip else None
+            if not got:
+                got = pool.pick(slots, s, end, avoid=prev_cam if cur_auto == "alt" else None)
             if got:
-                shots.append(_shot(s, end, got, "측면 전환" if cur_auto == "alt" else ""))
+                why = f"화자 {rq.get('spk')}" if want and got[0] == want else ("측면 전환" if cur_auto == "alt" else "")
+                shots.append(_shot(s, end, got, why))
             hold += end - s
             if end < rq["e"] - 1e-3:
                 cur_auto = "alt" if cur_auto == "base" else "base"

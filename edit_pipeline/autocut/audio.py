@@ -55,26 +55,35 @@ def envelope(track: dict, duration: float) -> np.ndarray:
     return out
 
 
-def speaker_tracks(tracks: list[dict]) -> list[int]:
+def by_name(tracks: list[dict], envs: list[np.ndarray]) -> dict[str, np.ndarray]:
+    """이름이 같은 트랙(쪼개진 녹음 파일)은 하나로 합친다."""
+    out: dict[str, np.ndarray] = {}
+    for t, e in zip(tracks, envs):
+        out[t["name"]] = e if t["name"] not in out else np.fmax(out[t["name"]], e)
+    return out
+
+
+def speaker_names(names: list[str]) -> list[str]:
     """화자 판정에 쓸 트랙(녹음기 믹스 LR 트랙은 개인 마이크가 따로 있으면 뺀다)."""
-    idx = [i for i, t in enumerate(tracks) if t["name"].lower() not in MIX_NAMES]
+    idx = [n for n in names if n.lower() not in MIX_NAMES]
     return idx if len(idx) >= 2 else []
 
 
-def assign_speakers(words: list[dict], tracks: list[dict], envs: list[np.ndarray], margin_db: float = 3.0) -> int:
+def assign_speakers(words: list[dict], named: dict[str, np.ndarray], margin_db: float = 3.0) -> int:
     """단어마다 가장 크게 들어온 개인 마이크를 화자로 붙인다. 붙인 단어 수를 돌려준다."""
-    idx = speaker_tracks(tracks)
-    if not idx:
+    names = speaker_names(list(named))
+    if not names:
         return 0
+    envs = [named[n] for n in names]
     # 마이크마다 게인이 달라서, 각 트랙의 '말할 때 음량'(상위 10%)을 기준으로 정규화한다.
-    ref_level = [np.nanpercentile(envs[i], 90) if np.isfinite(envs[i]).any() else 0.0 for i in idx]
+    ref_level = [np.nanpercentile(e, 90) if np.isfinite(e).any() else 0.0 for e in envs]
     n = 0
     prev = None
     for w in words:
         a, b = int(w["s"] * ENV_HZ), max(int(w["e"] * ENV_HZ), int(w["s"] * ENV_HZ) + 1)
         scores = []
-        for k, i in enumerate(idx):
-            seg = envs[i][a:b]
+        for k, e in enumerate(envs):
+            seg = e[a:b]
             seg = seg[np.isfinite(seg)]
             scores.append(float(seg.mean()) - ref_level[k] if seg.size else -1e9)
         order = np.argsort(scores)[::-1]
@@ -84,7 +93,7 @@ def assign_speakers(words: list[dict], tracks: list[dict], envs: list[np.ndarray
         if len(order) > 1 and scores[best] - scores[int(order[1])] < margin_db and prev is not None:
             w["spk"] = prev          # 차이가 작으면 앞 단어 화자를 이어 간다
         else:
-            w["spk"] = tracks[idx[best]]["name"]
+            w["spk"] = names[best]
         prev = w["spk"]
         n += 1
     return n

@@ -32,20 +32,64 @@ def audio_pieces(tracks: list[dict], ref_s: float, ref_e: float, rec_start: int,
     return out
 
 
+def _primary(pieces, ref, rec, length, f_s, f_e) -> dict:
+    """미리보기 재생용 대표 오디오: 이 구간을 녹음한 첫 트랙(분할 녹음이면 해당 파일)."""
+    for _, p in pieces:
+        if p["start"] == rec:
+            return {"file": p["file"], "media": p["media"], "start": rec, "end": rec + length,
+                    "in": p["in"], "out": p["in"] + length}
+    return {"file": ref["file"], "media": ref["media"], "start": rec, "end": rec + length, "in": f_s, "out": f_e}
+
+
 def _tracks_of(session: dict) -> list[dict]:
     ref = session["reference"]
     return ref.get("tracks") or [{"file": ref["file"], "offset": 0.0, "rate": 1.0, "media": ref["media"],
                                   "name": "녹음"}]
 
 
-def build_timeline(parts: list[dict], rate: Fraction) -> dict:
-    """parts: [{"session": sync 세션, "plan": 컷 계획, "shots": 샷 목록, "label": str}]"""
+def video_pieces(clips: list[dict], ref_s: float, ref_e: float, rec_start: int, rate: Fraction,
+                 active: str, why: str = "") -> list[tuple[str, dict]]:
+    """기준 구간을 찍은 모든 카메라 클립을 잘라 온다(셀렉츠식 멀티캠: 고른 카메라만 켜짐)."""
+    out = []
+    f0 = to_frames(ref_s, rate)
+    for c in clips:
+        r = c.get("rate", 1.0)
+        a = max(ref_s, c["offset"])
+        b = min(ref_e, c["offset"] + c["duration"] * r)
+        fa, fb = to_frames(a, rate), to_frames(b, rate)
+        if fb <= fa:
+            continue
+        src_in = to_frames((a - c["offset"]) / r, rate)
+        on = c["camera"] == active
+        out.append((c["camera"], {"file": c["file"], "camera": c["camera"], "role": c["role"], "media": c["media"],
+                                  "start": rec_start + fa - f0, "end": rec_start + fb - f0, "in": src_in,
+                                  "out": src_in + fb - fa, "why": why if on else "", "enabled": on}))
+    return out
+
+
+def _stacked(vtracks: dict, atracks: dict, cam_audio: dict) -> dict:
+    order = {"front": 0, "side": 1, "wide": 2, "two": 3, "tele": 4}
+    vt = sorted(vtracks.items(), key=lambda kv: (order.get(kv[1][0]["role"], 5), kv[0]))
+    return {"video_tracks": [cl for _, cl in vt], "video_names": [k for k, _ in vt],
+            "audio_tracks": [{"name": k, "clips": v} for k, v in atracks.items()]
+            + [{"name": f"{k} 오디오", "clips": v} for k, v in sorted(cam_audio.items())]}
+
+
+def build_timeline(parts: list[dict], rate: Fraction, stack: bool = True, camera_audio: bool = True) -> dict:
+    """parts: [{"session": sync 세션, "plan": 컷 계획, "shots": 샷 목록, "label": str}]
+
+    stack=True 면 셀렉츠처럼 컷마다 모든 카메라를 트랙별로 쌓고 고른 카메라만 켠다(프리미어에서 켜고 끄기로 앵글 교체).
+    카메라 오디오는 꺼진 채로 함께 넣고, 마이크(녹음) 트랙만 켠다.
+    """
     video, audio, markers, mapping = [], [], [], []
     atracks: dict[str, list[dict]] = {}
+    vtracks: dict[str, list[dict]] = {}
+    cam_audio: dict[str, list[dict]] = {}
     rec = 0
     for part in parts:
         ref = part["session"]["reference"]
         tracks = _tracks_of(part["session"])
+        cams = [c for c in part["session"]["clips"] if c["status"] == "ok" and c["offset"] is not None]
         for sh in part["shots"]:
             f_s, f_e = to_frames(sh["s"], rate), to_frames(sh["e"], rate)
             if f_e <= f_s:
@@ -55,10 +99,15 @@ def build_timeline(parts: list[dict], rate: Fraction) -> dict:
             video.append({"file": sh["file"], "camera": sh["camera"], "role": sh["role"], "media": sh["media"],
                           "start": rec, "end": rec + length, "in": src_in, "out": src_in + length,
                           "why": sh["why"], "enabled": True})
-            audio.append({"file": ref["file"], "media": ref["media"], "start": rec, "end": rec + length,
-                          "in": f_s, "out": f_e})
-            for name, piece in audio_pieces(tracks, f_s / rate, f_e / rate, rec, rate):
+            pieces = audio_pieces(tracks, f_s / rate, f_e / rate, rec, rate)
+            audio.append(_primary(pieces, ref, rec, length, f_s, f_e))
+            for name, piece in pieces:
                 atracks.setdefault(name, []).append(piece)
+            if stack:
+                for cam, piece in video_pieces(cams, f_s / rate, f_e / rate, rec, rate, sh["camera"], sh["why"]):
+                    vtracks.setdefault(cam, []).append(piece)
+                    if camera_audio and piece["media"].get("has_audio"):
+                        cam_audio.setdefault(cam, []).append({**piece, "enabled": False, "why": ""})
             mapping.append({"ref_s": float(f_s / rate), "ref_e": float(f_e / rate), "rec_s": float(rec / rate), "label": part["label"]})
             rec += length
         for it in part["plan"]["items"]:
@@ -67,8 +116,11 @@ def build_timeline(parts: list[dict], rate: Fraction) -> dict:
                 if pos is not None:
                     title = it.get("chapter") or (it.get("script") or it["text"])[:24]
                     markers.append({"frame": pos, "name": title, "comment": part["label"]})
-    return {"video": video, "audio": audio, "markers": markers, "mapping": mapping, "duration": rec,
-            "audio_tracks": [{"name": k, "clips": v} for k, v in atracks.items()]}
+    out = {"video": video, "audio": audio, "markers": markers, "mapping": mapping, "duration": rec,
+           "audio_tracks": [{"name": k, "clips": v} for k, v in atracks.items()]}
+    if stack and vtracks:
+        out.update(_stacked(vtracks, atracks, cam_audio if camera_audio else {}))
+    return out
 
 
 def _rec_of(mapping, ref_t, label, rate):
@@ -97,9 +149,9 @@ def build_review(parts: list[dict], rate: Fraction, pick_base) -> dict:
             video.append({"file": clip["file"], "camera": clip["camera"], "role": clip["role"],
                           "media": clip.get("media", {}), "start": rec, "end": rec + length,
                           "in": src_in, "out": src_in + length, "why": it["reason"], "enabled": it["enabled"]})
-            audio.append({"file": ref["file"], "media": ref["media"], "start": rec, "end": rec + length,
-                          "in": f_s, "out": f_e, "enabled": it["enabled"]})
-            for name, piece in audio_pieces(tracks, f_s / rate, f_e / rate, rec, rate, it["enabled"]):
+            pieces = audio_pieces(tracks, f_s / rate, f_e / rate, rec, rate, it["enabled"])
+            audio.append({**_primary(pieces, ref, rec, length, f_s, f_e), "enabled": it["enabled"]})
+            for name, piece in pieces:
                 atracks.setdefault(name, []).append(piece)
             if not it["enabled"]:
                 markers.append({"frame": rec, "name": it["reason"], "comment": it["text"][:80]})

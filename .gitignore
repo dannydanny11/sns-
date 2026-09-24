@@ -25,3 +25,6 @@ edit_pipeline/index/*
 !edit_pipeline/**/.gitkeep
 __pycache__/
 .pytest_cache/
+# 학습한 편집 스타일(실제 작업 XML 에서 뽑은 것: 출연자 이름·프로젝트명 포함) — 공개 저장소에 올리지 않음
+edit_pipeline/config/styles/*
+!edit_pipeline/config/styles/.gitkeep

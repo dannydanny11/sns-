@@ -33,6 +33,7 @@ class ClipSync:
     confidence: float = 0.0     # 0~1, 1 - (두 번째 피크 / 최고 피크)
     zscore: float = 0.0          # 최고 피크가 잡음 대비 몇 σ 인지
     slate: dict | None = None    # 슬레이트 검증 결과
+    matches: list = field(default_factory=list)  # 맞은 모든 기준 [{ref, offset, confidence}] — 분할 녹음 연결용
     status: str = "ok"           # ok / failed / missing
     reason: str = ""
     media: dict = field(default_factory=dict)
@@ -188,8 +189,11 @@ def sync_file(path: str, refs: list[dict], coarse_refs: dict, rules: dict,
             return clip, ref
     sig = load_audio(path, COARSE_SR)
     best = None
+    min_conf, min_z = rules.get("min_confidence", 0.25), rules.get("min_zscore", 8.0)
     for ref in refs:
         off, conf, z = estimate_offset(coarse_refs[ref["file"]], sig, COARSE_SR)
+        if conf >= min_conf and z >= min_z:
+            clip.matches.append({"ref": ref["file"], "offset": round(off, 4), "confidence": round(conf, 3)})
         if best is None or (conf, z) > (best[1], best[2]):
             best = (off, conf, z, ref)
     if best is None:
@@ -208,9 +212,11 @@ def sync_file(path: str, refs: list[dict], coarse_refs: dict, rules: dict,
 
 
 def track_name(path: str) -> str:
-    """오디오 트랙 표시 이름: TX01_MIC028_… → TX01, ZOOM0001_Tr1 → Tr1, 그 외는 파일 이름."""
+    """오디오 트랙 표시 이름: TX01_MIC028_… → TX01, …_MIC이형1 → 이형, ZOOM0001_Tr1 → Tr1, 그 외는 파일 이름.
+
+    이름이 같은 파일(녹음기가 쪼갠 MIC이형1·MIC이형2)은 타임라인에서 한 트랙에 이어 붙는다."""
     stem = os.path.splitext(os.path.basename(path))[0]
-    for pat in (r"^(TX\d+)", r"_(Tr\d+|LR|TrMic|Mix)$", r"^(RX\d+)", r"^(MIC\d+)"):
+    for pat in (r"^(TX\d+)", r"MIC[_-]?([^\W\d_]+)", r"_(Tr\d+|LR|TrMic|Mix)$", r"^(RX\d+)", r"^(MIC\d+)"):
         m = re.search(pat, stem, re.I)
         if m:
             return m.group(1)
@@ -270,6 +276,58 @@ def choose_references(candidates: list[str], rules: dict, source: str, log=print
     return refs, warnings
 
 
+def link_references(refs: list[dict], clips: list[dict], log=print) -> dict[str, tuple[dict, float]]:
+    """녹음이 여러 파일로 쪼개졌는데 카메라는 계속 돌았다면(마이크 1.wav → 2.wav),
+    두 녹음에 모두 맞는 카메라 파일을 다리 삼아 하나의 시간축으로 잇는다.
+
+    반환: {원래 기준 파일: (합친 기준, 합친 시간축에서 그 파일의 0초 위치)}
+    합친 기준의 tracks 에는 모든 녹음 파일이 새 오프셋으로 들어간다.
+    """
+    import statistics
+    by_file = {r["file"]: r for r in refs}
+    deltas: dict[tuple[str, str], list[float]] = {}
+    for c in clips:
+        ms = c.get("matches") or []
+        for a in ms:
+            for b in ms:
+                if a["ref"] != b["ref"]:
+                    # 카메라 0초 = A 의 off_a = B 의 off_b  →  B 의 0초는 A 시간축의 off_a - off_b
+                    deltas.setdefault((a["ref"], b["ref"]), []).append(a["offset"] - b["offset"])
+    edges: dict[str, dict[str, float]] = {}
+    for (a, b), v in deltas.items():
+        edges.setdefault(a, {})[b] = statistics.median(v)
+    out: dict[str, tuple[dict, float]] = {}
+    seen: set[str] = set()
+    for r in refs:
+        if r["file"] in seen:
+            continue
+        pos = {r["file"]: 0.0}
+        queue = [r["file"]]
+        while queue:
+            x = queue.pop(0)
+            for y, d in edges.get(x, {}).items():
+                if y not in pos:
+                    pos[y] = pos[x] + d
+                    queue.append(y)
+        seen |= set(pos)
+        lo = min(pos.values())
+        pos = {k: v - lo for k, v in pos.items()}
+        members = sorted(pos, key=lambda k: pos[k])
+        if len(members) == 1:
+            out[r["file"]] = (by_file[r["file"]], 0.0)
+            continue
+        root = by_file[members[0]]
+        merged = {"file": root["file"], "source": root["source"], "media": root["media"],
+                  "duration": max(pos[m] + by_file[m]["duration"] for m in members),
+                  "members": members, "tracks": []}
+        for m in members:
+            for t in by_file[m]["tracks"]:
+                merged["tracks"].append({**t, "offset": round(t["offset"] + pos[m], 4)})
+            out[m] = (merged, pos[m])
+        log("  분할 녹음 연결: " + " → ".join(f"{os.path.basename(m)}(+{pos[m]:.1f}s)" for m in members))
+    return out
+
+
 def load_coarse(refs: list[dict]) -> dict:
     return {ref["file"]: load_audio(ref["file"], COARSE_SR) for ref in refs}
 
@@ -290,7 +348,7 @@ def sync_place(place: Place, rules: dict, log=print) -> dict:
         return {"place": place.name, "sessions": [], "warnings": warnings + ["기준 트랙 없음 — 싱크 불가"]}
 
     coarse_refs = load_coarse(refs)
-    sessions = {ref["file"]: {"reference": ref, "clips": []} for ref in refs}
+    results = []
     for cam in place.cameras:
         for path in cam.files:
             clip, ref = sync_file(path, refs, coarse_refs, rules, cam.name, cam.role)
@@ -300,7 +358,16 @@ def sync_place(place: Place, rules: dict, log=print) -> dict:
                 warnings.append(f"{cam.name}/{os.path.basename(path)}: 슬레이트 피크와 불일치(확인 필요)")
             log(f"  [{place.name}] {cam.name}/{os.path.basename(path)} → "
                 f"{'offset %.3fs' % clip.offset if clip.offset is not None else '실패'} (conf {clip.confidence:.2f})")
-            sessions[(ref or refs[0])["file"]]["clips"].append(asdict(clip))
+            results.append((asdict(clip), ref))
+    links = link_references(refs, [c for c, _ in results], log)
+    sessions: dict[int, dict] = {}
+    for m, _ in links.values():
+        sessions.setdefault(id(m), {"reference": m, "clips": []})
+    for c, ref in results:
+        merged, shift = links[(ref or refs[0])["file"]]
+        if ref and shift:
+            c["offset"] = round(c["offset"] + shift, 4)
+        sessions[id(merged)]["clips"].append(c)
 
     failed_cams = []
     for cam in place.cameras:

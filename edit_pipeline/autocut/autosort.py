@@ -78,6 +78,11 @@ def _prefix(name: str) -> str:
     return re.sub(r"\d+", "#", re.sub(r"[_-]?(tr\d|lr|m01)$", "", stem.lower()))
 
 
+def _name_tokens(path: str) -> list[str]:
+    stem = os.path.splitext(os.path.basename(path))[0]
+    return [t for t in re.split(r"[_\s-]+", stem) if t]
+
+
 def signature(clip: dict, project_dir: str) -> tuple:
     m = clip.get("media", {})
     return (folder_of(clip["file"], project_dir), m.get("model") or "", m.get("serial") or "",
@@ -168,6 +173,16 @@ def organize(project_dir: str, rules: dict, role_overrides: dict[str, str] | Non
             state += f", 시계 오차 {(c['rate'] - 1) * 1e6:+.0f}ppm 보정"
         log(f"  [{k}/{len(videos)}] {os.path.relpath(path, project_dir)} → {state}")
 
+    # 2-0) 녹음이 여러 파일로 쪼개졌어도 같은 카메라가 양쪽에 걸쳐 있으면 한 시간축으로 잇는다
+    links = sync.link_references(refs, [c for c, _ in synced], log)
+    for i, (c, ref) in enumerate(synced):
+        if ref:
+            merged, shift = links[ref["file"]]
+            if shift:
+                c["offset"] = round(c["offset"] + shift, 4)
+            synced[i] = (c, merged)
+    refs = list({id(m): m for m, _ in links.values()}.values())
+
     # 2-1) 소리로 못 맞춘 파일 중 '분할 녹화의 다음 파일'은 앞 파일 바로 뒤에 붙인다
     #      (4GB·시간 제한으로 쪼개진 파일은 끊김 없이 이어지므로 말소리가 없어도 위치를 안다)
     placed = continue_split_files(synced, project_dir)
@@ -192,12 +207,19 @@ def organize(project_dir: str, rules: dict, role_overrides: dict[str, str] | Non
         for i in range(max(len(ch) for ch in per_ref)):
             cameras.append([c for ch in per_ref if i < len(ch) for c in ch[i]])
 
-    # 4) 이름·역할
+    # 4) 이름·역할 — 카메라마다 폴더가 따로면 폴더 이름, 한 폴더에 섞여 있으면 파일 이름에서 다른 부분(R3, C400…)
     cams_info = []
+    folders = [folder_of(clips[0]["file"], project_dir) for clips in cameras]
+    stems = [set(_name_tokens(clips[0]["file"])) for clips in cameras]
     for n, clips in enumerate(cameras, 1):
-        folder = folder_of(clips[0]["file"], project_dir)
+        folder = folders[n - 1]
         media = clips[0].get("media", {})
         base = folder.split("/")[0] if folder else ""
+        if folders.count(folder) > 1 or not base:
+            others = [stems[k] for k in range(len(cameras)) if k != n - 1 and folders[k] == folder]
+            common = set.intersection(stems[n - 1], *others) if others else set()
+            distinct = [t for t in _name_tokens(clips[0]["file"]) if t not in common and not t.isdigit()]
+            base = "_".join(distinct[:2]) if distinct and others else base
         name = re.sub(r"[^\w가-힣-]+", "_", base) or f"카메라{n}"
         if any(ci["name"] == name for ci in cams_info):
             name = f"{name}_{n}"

@@ -121,9 +121,16 @@ def test_end_to_end(tmp_path):
     vclips = list(root.find(".//video").iter("clipitem"))
     assert vclips and all("cam_tele" not in c.find("file").findtext("pathurl", "") for c in vclips
                           if c.find("file").find("pathurl") is not None)
-    ends = [(int(c.findtext("start")), int(c.findtext("end"))) for c in vclips]
-    assert all(a[1] == b[0] for a, b in zip(ends, ends[1:]))   # 빈틈 없이 이어짐
-    assert int(root.findtext("sequence/duration")) == ends[-1][1]
+    # 셀렉츠식 멀티캠: 싱크된 카메라 2대가 트랙별로 쌓이고, 같은 컷에서는 하나만 켜짐
+    assert len(root.findall(".//video/track")) == 2
+    on = sorted((int(c.findtext("start")), int(c.findtext("end"))) for c in vclips if c.findtext("enabled") == "TRUE")
+    assert all(a[1] == b[0] for a, b in zip(on, on[1:]))   # 켜진 클립이 빈틈 없이 이어짐
+    assert int(root.findtext("sequence/duration")) == on[-1][1]
+    from collections import Counter
+    assert set(Counter(c.findtext("start") for c in vclips if c.findtext("enabled") == "TRUE").values()) == {1}
+    # 카메라 오디오는 꺼진 채 포함, 녹음 트랙은 켜짐
+    aen = {tr.find("clipitem/file").get("id"): tr.find("clipitem").findtext("enabled") for tr in root.findall(".//audio/track")}
+    assert "TRUE" in aen.values() and "FALSE" in aen.values()
     assert [m.findtext("name") for m in root.iter("marker")] == ["들어가며", "첫 번째 원칙"]
 
     review = ET.parse(res["outputs"]["검토용 XML(탈락 테이크 포함)"]).getroot()
@@ -188,7 +195,10 @@ def test_auto_sort_dump(tmp_path):
     assert len(root.findall(".//video/track")) == 5
     assert len(root.findall(".//audio/track")) == 8
     rough = ET.parse(res["outputs"]["러프컷 XML"]).getroot()
-    assert len(rough.findall(".//audio/track")) == 4
+    assert len(rough.findall(".//video/track")) == 4                  # 카메라 4대 멀티캠
+    atr = rough.findall(".//audio/track")
+    on = [all(c.findtext("enabled") == "TRUE" for c in t.findall("clipitem")) for t in atr]
+    assert len(atr) == 8 and sum(on) == 4                               # 마이크 4개만 켜짐, 카메라 오디오 4개는 꺼짐
 
 
 def test_roles_override(tmp_path):
@@ -234,3 +244,75 @@ def test_role_decision_from_faces():
             {"name": "e", "coverage": 10, "faces": f(0.9, 0.0, 0.01, people=2.0)}]
     decide(cams)
     assert [c["role"] for c in cams] == ["front", "side", "tele", "wide", "two"]
+
+
+# ── 셀렉츠 실작업 구성: 분할 녹음 + 스타일 학습 ─────────────
+
+def _podcast(tmp_path):
+    fx = make_fixture.build_podcast(str(tmp_path))
+    fx["quiet"] = dict(work_root=fx["work"], output_root=fx["output"], log=lambda *_: None)
+    return fx
+
+
+def test_split_recording_joined(tmp_path):
+    fx = _podcast(tmp_path)
+    res = run(fx["project"], **fx["quiet"])
+    sy = res["sync"][0]
+    assert len(sy["sessions"]) == 1                                   # 마이크 1.wav·2.wav 가 한 시간축으로
+    tracks = sy["sessions"][0]["reference"]["tracks"]
+    by = {}
+    for t in tracks:
+        by.setdefault(t["name"], []).append(t["offset"])
+    assert set(by) == set(make_fixture.PODCAST_SPK)                   # MIC이형1 → 이형
+    assert all(sorted(v) == pytest.approx([0.0, 32.5], abs=0.01) for v in by.values())
+    assert {c["name"] for c in sy["cameras"]} == {"R3", "C400", "C50"}   # 한 폴더에 섞여 있어도 파일 이름으로 구분
+    offs = {c["camera"]: c["offset"] for c in sy["sessions"][0]["clips"]}
+    assert offs == pytest.approx({"R3": 0.7, "C400": 1.2, "C50": 0.4}, abs=0.002)
+    truth = {w["s"]: w["spk"] for w in fx["words"]}
+    words = res["parts"][0]["plan"]["words"]
+    assert sum(truth[w["s"]] == w.get("spk") for w in words) / len(words) > 0.95   # 2.wav 구간 화자도 맞음
+    # 러프컷: 마이크 트랙 4개(두 파일이 한 트랙에 이어짐) + 카메라 오디오 3개(꺼짐)
+    root = ET.parse(res["outputs"]["러프컷 XML"]).getroot()
+    assert len(root.findall(".//audio/track")) == 7
+
+
+def test_learn_style_roundtrip(tmp_path):
+    from fractions import Fraction
+    from autocut import fcpxml, learn, timeline
+    fx = _podcast(tmp_path)
+    sess = run(fx["project"], until="sync", **fx["quiet"])["sync"][0]["sessions"][0]
+    mapping = {"이형": "C400", "은비": "C400", "시온": "C50", "다인": "R3"}
+    rate = Fraction(24000, 1001)
+    clips = sess["clips"]
+    tracks = sess["reference"]["tracks"]
+    vtr, atr, rec = {}, {}, 0
+    phrases = [fx["words"][i:i + 4] for i in range(0, len(fx["words"]), 4)]
+    for ph in phrases:   # 화자 규칙대로 편집한 '정답' 시퀀스
+        s, e = ph[0]["s"] - 0.1, ph[-1]["e"] + 0.1
+        length = timeline.to_frames(e, rate) - timeline.to_frames(s, rate)
+        for cam, piece in timeline.video_pieces(clips, s, e, rec, rate, mapping[ph[0]["spk"]]):
+            vtr.setdefault(cam, []).append(piece)
+        for name, piece in timeline.audio_pieces(tracks, s, e, rec, rate):
+            atr.setdefault(name, []).append(piece)
+        rec += length
+    tl = {"video": [], "audio": [], "markers": [], "duration": rec, "video_tracks": list(vtr.values()),
+          "audio_tracks": [{"name": k, "clips": v} for k, v in atr.items()]}
+    xml = fcpxml.write(str(tmp_path / "정답.xml"), tl, "정답", 23.976, 1920, 1080)
+
+    res = learn.analyze(xml, media_dir=fx["project"], log=lambda *_: None)
+    assert res["rules"]["speaker_cams"] == mapping
+    assert res["rules"]["camera_roles"]["C400"] == "front"
+    assert res["rules"]["sequence_fps"] == pytest.approx(23.976, abs=0.001)
+    style = learn.save(res, str(tmp_path / "스타일.json"))
+
+    out = run(fx["project"], style=style, **fx["quiet"])
+    shots = out["parts"][0]["shots"]
+    by_time = {}
+    for w in out["parts"][0]["plan"]["words"]:
+        for sh in shots:
+            if sh["s"] <= (w["s"] + w["e"]) / 2 < sh["e"]:
+                by_time[w["s"]] = (w.get("spk"), sh["camera"])
+    agree = sum(mapping.get(spk) == cam for spk, cam in by_time.values()) / len(by_time)
+    assert agree > 0.8                                                  # 학습한 대로 화자를 따라 앵글 전환
+    root = ET.parse(out["outputs"]["러프컷 XML"]).getroot()
+    assert root.findtext("sequence/rate/timebase") == "24"             # 시퀀스 23.976 도 학습대로

@@ -57,10 +57,14 @@ def build_data(project: str, parts: list[dict], tl: dict, rate: Fraction, caps: 
                           "sentence": it.get("sentence"), "topic": bool(it.get("topic_start")),
                           "segments": it["segments"], "emphasis": it.get("emphasis", []),
                           "spk": it.get("spk"), "chapter": it.get("chapter")})
-        tracks = [{"name": t["name"], "file": fid(t["file"]), "s": t["offset"],
-                   "e": t["offset"] + t["media"]["duration"] * t.get("rate", 1.0),
-                   "peaks": peaks.get(p["label"], {}).get(t["name"], "")}
-                  for t in ref.get("tracks") or []]
+        tracks: list[dict] = []
+        for t in ref.get("tracks") or []:   # 이름이 같은 트랙(쪼개진 녹음)은 한 줄에
+            lane = next((x for x in tracks if x["name"] == t["name"]), None)
+            if not lane:
+                lane = {"name": t["name"], "clips": [], "peaks": peaks.get(p["label"], {}).get(t["name"], "")}
+                tracks.append(lane)
+            lane["clips"].append({"file": fid(t["file"]), "s": t["offset"],
+                                  "e": t["offset"] + t["media"]["duration"] * t.get("rate", 1.0)})
         sessions.append({"label": p["label"], "place": p["place"], "duration": ref["duration"],
                          "ref": {"file": fid(ref["file"]), "source": ref.get("source", "recorder")},
                          "cameras": sorted(cams.values(), key=lambda c: ROLE_ORDER.get(c["role"], 5)),
@@ -356,10 +360,11 @@ function render() {
         const c = el("div", "clip", {...box(k.s, k.e), background: col(cam.role)}, esc(D.files[k.file].name));
         c.title = `offset ${k.s.toFixed(3)}s · 신뢰도 ${k.confidence}` + (k.rate !== 1 ? ` · 시계 오차 ${((k.rate - 1) * 1e6).toFixed(0)}ppm 보정` : ""); c.onclick = () => select({type:"camclip", cam, k}, c); l.append(c); });
       lanes.push(l); });
-    const tracks = S.tracks.length ? S.tracks : [{name: "녹음(기준)", file: S.ref.file, s: 0, e: S.duration, peaks: ""}];
+    const tracks = S.tracks.length ? S.tracks : [{name: "녹음(기준)", clips: [{file: S.ref.file, s: 0, e: S.duration}], peaks: ""}];
     tracks.forEach(tr => { const l = lane("🎙 " + tr.name);
-      const c = el("div", "clip mic", box(tr.s, tr.e), esc(D.files[tr.file].name)); c.title = `${D.files[tr.file].name}  ${tr.s >= 0 ? "+" : ""}${tr.s.toFixed(3)}s`;
-      l.append(c); if (tr.peaks) l.append(wave(tr.peaks, width)); lanes.push(l); });
+      tr.clips.forEach(k => { const c = el("div", "clip mic", box(k.s, k.e), esc(D.files[k.file].name));
+        c.title = `${D.files[k.file].name}  ${k.s >= 0 ? "+" : ""}${k.s.toFixed(3)}s`; l.append(c); });
+      if (tr.peaks) l.append(wave(tr.peaks, width)); lanes.push(l); });
     const tk = lane("테이크");
     S.items.forEach(it => {
       const c = el("div", "clip take " + (it.enabled ? "kept" : "off") + (changed[it.id] !== undefined ? " changed" : ""), box(it.s, it.e));

@@ -224,3 +224,53 @@ def build_dump(root: str, project: str = "강릉") -> dict:
             json.dump({"language": "ko", "duration": 60.0, "words": plain, "segments": []}, f, ensure_ascii=False)
     return {"project": proj, "work": os.path.join(root, "work"), "output": os.path.join(root, "output"),
             "truth": truth}
+
+
+# ─────────────────────────── 셀렉츠 실제 작업과 같은 구성 ───────────────────────────
+
+PODCAST_SPK = ["이형", "시온", "은비", "다인"]
+
+
+def build_podcast(root: str, project: str = "팟캐스트") -> dict:
+    """한 폴더에 카메라 3대(R3·C400·C50, 60초 연속) + 개인 마이크 4개가 두 파일로 쪼개진 녹음.
+
+    마이크 1.wav 는 기준 0~32초, 2.wav 는 32.5~60초. 카메라가 양쪽에 걸쳐 있어야 한 시간축으로 이어진다.
+    """
+    rng = np.random.default_rng(21)
+    proj = os.path.join(root, "input", project)
+    os.makedirs(proj, exist_ok=True)
+    words = []
+    t = 2.0
+    k = 0
+    while t < 57:
+        spk = PODCAST_SPK[k % 4]
+        for j in range(4):
+            dur = 0.35
+            w = ["방학에", "선생님도", "쉬어요", "진짜로", "여행을", "갔어요", "바다가", "좋았죠"][(k + j) % 8]
+            words.append({"w": w, "s": round(t, 3), "e": round(t + dur, 3), "p": 0.9, "spk": spk})
+            t += dur + 0.06
+        t += 0.8
+        k += 1
+    per = {s_: np.zeros(int(61 * SR)) for s_ in PODCAST_SPK}
+    for w in words:
+        a, b = int(w["s"] * SR), int(w["e"] * SR)
+        seg = np.convolve(rng.normal(size=b - a), rng.normal(size=32) / 8, mode="same")
+        per[w["spk"]][a:b] += 0.3 * seg * np.hanning(b - a)
+    scene = sum(per.values())
+    for spk in PODCAST_SPK:
+        own = per[spk] + 0.1 * (scene - per[spk]) + 0.002 * rng.normal(size=len(scene))
+        for part, (a, b) in ((1, (0.0, 32.0)), (2, (32.5, 60.0))):
+            path = os.path.join(proj, f"20260804_PD은비_MIC{spk}{part}.wav")
+            wavfile.write(path, SR, (np.clip(own[int(a * SR): int(b * SR)], -1, 1) * 32767).astype(np.int16))
+    for cam, off in (("R3", 0.7), ("C400", 1.2), ("C50", 0.4)):
+        seg = scene[int(off * SR): int((off + 58) * SR)]
+        audio = 0.5 * np.convolve(seg, [0.6, 0.3, 0.1], "same") + 0.01 * rng.normal(size=len(seg))
+        _video(os.path.join(proj, f"20260804_PD은비_{cam}.MP4"), audio, 58)
+    tdir = os.path.join(root, "work", "transcript", project)
+    os.makedirs(tdir, exist_ok=True)
+    plain = [{k_: w[k_] for k_ in ("w", "s", "e", "p")} for w in words]
+    label = f"{project}__20260804_PD은비_MIC{min(PODCAST_SPK)}1"   # 길이가 같으면 이름순 첫 파일이 기준
+    with open(os.path.join(tdir, f"{label}.json"), "w", encoding="utf-8") as f:
+        json.dump({"language": "ko", "duration": 60.0, "words": plain, "segments": []}, f, ensure_ascii=False)
+    return {"project": proj, "work": os.path.join(root, "work"), "output": os.path.join(root, "output"),
+            "words": words}
