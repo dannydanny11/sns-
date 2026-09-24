@@ -33,6 +33,9 @@
     "point_min": 1.5,
     "point_max": 5.0,
 
+    "proxy_height": 360,
+    "proxy_codec": "h264",
+
     "whisper_model": "large-v3",
     "llm_model": "claude-sonnet-5"
   },

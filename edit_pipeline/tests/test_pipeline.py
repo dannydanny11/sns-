@@ -8,7 +8,10 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from autocut import cut, fcpxml, target  # noqa: E402
+import json  # noqa: E402
+import re  # noqa: E402
+
+from autocut import cut, fcpxml, target, viewer  # noqa: E402
 from autocut.pipeline import load_rules, run  # noqa: E402
 from autocut.script import parse_script  # noqa: E402
 from autocut.sync import estimate_offset  # noqa: E402
@@ -129,3 +132,25 @@ def test_end_to_end(tmp_path):
     srt = open(res["outputs"]["대사 자막 SRT"], encoding="utf-8").read()
     assert "잠깐만요" not in srt and "살펴보겠습니다." in srt
     assert os.path.exists(res["outputs"]["포인트 자막 SRT"])
+
+
+def test_viewer_and_overrides(tmp_path):
+    fx = make_fixture.build(str(tmp_path))
+    quiet = dict(work_root=fx["work"], output_root=fx["output"], log=lambda *_: None)
+    res = run(fx["project"], "연수", fx["script"], **quiet)
+    html = open(res["outputs"]["타임라인 뷰어"], encoding="utf-8").read()
+    data = json.loads(re.search(r"const D = (.*?);\n", html).group(1).replace("<\\/", "</"))
+    assert len(data["shots"]) == len(res["timeline"]["video"])
+    assert {c["camera"] for c in data["sessions"][0]["cameras"]} == {"cam_front", "cam_side", "cam_tele"}
+    for f in data["files"]:  # 뷰어가 여는 상대 경로가 실제 파일을 가리킨다
+        assert os.path.exists(os.path.join(os.path.dirname(res["outputs"]["타임라인 뷰어"]), f["rel"]))
+
+    # 뷰어에서 재촬영 이전 테이크를 살렸다고 가정하고 다시 실행
+    items = res["parts"][0]["plan"]["items"]
+    k = next(i for i, it in enumerate(items) if it["reason"] == "재촬영 이전 테이크")
+    ov = tmp_path / "수정.json"
+    ov.write_text(json.dumps({"items": {f"{res['parts'][0]['label']}#{k}": True}}), encoding="utf-8")
+    res2 = run(fx["project"], "연수", fx["script"], overrides=str(ov), **quiet)
+    assert res2["parts"][0]["plan"]["items"][k]["enabled"]
+    assert res2["timeline"]["duration"] > res["timeline"]["duration"]
+    assert viewer.apply_overrides(res2["parts"], {"없는#0": True}) == 0

@@ -5,8 +5,8 @@ import json
 import os
 import re
 
-from . import angles, cut, fcpxml, report, subtitles, sync, target, timeline, transcribe
-from .media import frame_rate
+from . import angles, cut, fcpxml, report, subtitles, sync, target, timeline, transcribe, viewer
+from .media import frame_rate, make_proxy
 from .scan import scan_project
 from .script import parse_script
 
@@ -57,7 +57,8 @@ def _dedupe_across_sessions(parts: list[dict]) -> None:
 
 def run(project_dir: str, preset: str, script_path: str | None = None, target_len: str | None = None,
         until: str = "export", redo: set[str] | None = None, work_root: str | None = None,
-        output_root: str | None = None, log=print) -> dict:
+        output_root: str | None = None, overrides: str | None = None, proxy: bool = False,
+        log=print) -> dict:
     redo = redo or set()
     rules = load_rules(preset)
     project = os.path.basename(os.path.normpath(project_dir))
@@ -122,6 +123,11 @@ def run(project_dir: str, preset: str, script_path: str | None = None, target_le
         for p in parts:
             share = tsec * cut.kept_duration(p["plan"]) / total
             target.apply_target(p["plan"], share, rules["llm_model"], log)
+    if overrides:
+        n = viewer.apply_overrides(parts, viewer.load_overrides(overrides))
+        for p in parts:
+            cut.mark_topics(p["plan"]["items"], rules)
+        log(f"[3/5] 타임라인 뷰어에서 수정한 테이크 {n}개 반영")
     for p in parts:
         _dump(os.path.join(work, "plan", project, f"{p['label']}.json"), p["plan"])
     if stop_after == 2:
@@ -162,6 +168,18 @@ def run(project_dir: str, preset: str, script_path: str | None = None, target_le
         with open(chap, "w", encoding="utf-8") as f:
             f.write(subtitles.youtube_chapters(tl["markers"], rate))
         outputs["유튜브 챕터"] = chap
+    proxies = {}
+    if proxy:
+        used = sorted({c["file"] for p in parts for c in p["session"]["clips"] if c["status"] == "ok"})
+        ext = ".mp4" if rules.get("proxy_codec", "h264") == "h264" else ".webm"
+        for k, path in enumerate(used, 1):
+            log(f"  프록시 {k}/{len(used)}: {os.path.basename(path)}")
+            name = re.sub(r"[^\w가-힣.-]+", "_", os.path.relpath(path, project_dir))
+            proxies[path] = make_proxy(path, os.path.join(work, "proxy", project, os.path.splitext(name)[0] + ext),
+                                       rules.get("proxy_height", 360), rules.get("proxy_codec", "h264"))
+    outputs["타임라인 뷰어"] = viewer.write(
+        os.path.join(out_dir, f"{project}_타임라인.html"),
+        viewer.build_data(project, parts, tl, rate, caps, points, out_dir, proxies))
     rpath = os.path.join(out_dir, f"{project}_리포트.md")
     outputs["리포트"] = rpath
     with open(rpath, "w", encoding="utf-8") as f:

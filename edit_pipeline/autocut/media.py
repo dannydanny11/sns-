@@ -128,3 +128,19 @@ def timebase(fps: float | None) -> tuple[int, bool]:
 def frame_rate(fps: float | None) -> Fraction:
     base, ntsc = timebase(fps)
     return Fraction(base * 1000, 1001) if ntsc else Fraction(base)
+
+
+def make_proxy(path: str, out_path: str, height: int = 360, codec: str = "h264") -> str:
+    """브라우저 미리보기용 저해상도 프록시. 키프레임을 촘촘히 넣어 탐색을 빠르게 한다."""
+    if os.path.exists(out_path) and os.path.getmtime(out_path) >= os.path.getmtime(path):
+        return out_path
+    os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
+    vcodec = ["-c:v", "libx264", "-preset", "veryfast", "-crf", "28", "-pix_fmt", "yuv420p"] if codec == "h264" \
+        else ["-c:v", "libvpx-vp9", "-deadline", "realtime", "-cpu-used", "8", "-b:v", "600k"]
+    acodec = ["-c:a", "aac", "-b:a", "96k"] if codec == "h264" else ["-c:a", "libopus", "-b:a", "64k"]
+    cmd = [ffmpeg_exe(), "-hide_banner", "-loglevel", "error", "-nostdin", "-y", "-i", path,
+           "-vf", f"scale=-2:{height}", "-g", "15", *vcodec, *acodec, out_path]
+    proc = subprocess.run(cmd, capture_output=True)
+    if proc.returncode != 0:
+        raise MediaError(f"프록시 생성 실패: {path}: {proc.stderr.decode(errors='replace')[-300:]}")
+    return out_path
