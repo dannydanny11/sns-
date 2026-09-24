@@ -411,18 +411,37 @@ def truth_positions(path: str) -> dict[str, float]:
         return {k: v["pos"] for k, v in multicam_positions(path).items()}
     x = parse(path)
     R = x["rate"]
-    anchor = None
+    # 시간이 겹쳐 놓인 클립끼리의 상대 위치를 모두 이어서(그래프) 한 기준으로 맞춘다.
+    # 컷 편집 시퀀스(겹친 클립 = 같은 컷)와 싱크 타임라인(겹친 클립 = 동시에 녹화) 모두에 맞다.
+    clips = sorted(x["video"] + x["audio"], key=lambda c: c["start"])
     rel = defaultdict(list)
-    by_start = defaultdict(list)
-    for c in x["video"] + x["audio"]:
-        by_start[c["start"]].append(c)
-    for group in by_start.values():
-        pos = {os.path.basename(c["file"].replace("\\", "/")): float((c["start"] - c["in"]) / R) for c in group}
-        anchor = anchor or next(iter(sorted(pos)))
-        if anchor in pos:
-            for k, v in pos.items():
-                rel[k].append(v - pos[anchor])
-    return {k: st.median(v) for k, v in rel.items()}
+    for i, a in enumerate(clips):
+        fa = os.path.basename(a["file"].replace("\\", "/"))
+        pa = float((a["start"] - a["in"]) / R)
+        for b in clips[i + 1:]:
+            if b["start"] >= a["end"]:
+                break
+            fb = os.path.basename(b["file"].replace("\\", "/"))
+            if fa != fb and len(rel[(fa, fb)]) < 50:
+                d = float((b["start"] - b["in"]) / R) - pa
+                rel[(fa, fb)].append(d)
+                rel[(fb, fa)].append(-d)
+    edges = defaultdict(dict)
+    for (a, b), v in rel.items():
+        edges[a][b] = st.median(v)
+    out: dict[str, float] = {}
+    for start in sorted(edges):
+        if start in out:
+            continue
+        out[start] = 0.0 if not out else out.get(start, 0.0)
+        queue = [start]
+        while queue:
+            a = queue.pop(0)
+            for b, d in edges[a].items():
+                if b not in out:
+                    out[b] = out[a] + d
+                    queue.append(b)
+    return out
 
 
 def compare_sync(truth_path: str, sync_json: str) -> dict:
