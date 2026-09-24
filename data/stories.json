@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-24",
+    "slot": 7,
+    "name": "HULULU 대용량 4L 타이머 설정 건식사료 전용 강아지 고양이반려동물 자동 급식기",
+    "price": 42000,
+    "url": "https://link.coupang.com/a/hdlPqz7Ydg",
+    "image": "./stories/2026-09-21-s7.jpg"
+  },
+  {
+    "date": "2026-09-24",
     "slot": 6,
     "name": "뽀시래기 강아지 든든한 배변패드",
     "price": 39500,
@@ -230,13 +238,5 @@
     "price": 19500,
     "url": "https://link.coupang.com/a/gEvZTMKrdI",
     "image": "./stories/2026-08-31-s8.jpg"
-  },
-  {
-    "date": "2026-09-03",
-    "slot": 7,
-    "name": "로제코 반려동물 자동 급식기 3L + 급수기 2L 세트",
-    "price": 45900,
-    "url": "https://link.coupang.com/a/gEvZTGRVPo",
-    "image": "./stories/2026-08-31-s7.jpg"
   }
 ]
