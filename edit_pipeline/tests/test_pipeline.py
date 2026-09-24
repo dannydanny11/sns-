@@ -537,3 +537,18 @@ def test_angles_no_flash_cut_when_other_camera_covers():
     plan = {"items": [{"enabled": True, "segments": [{"s": 10, "e": 14}], "spk": None, "topic_start": True}], "words": []}
     shots = place_angles(plan, sess, {"min_shot": 2.0, "wide_hold": 4.0})
     assert min(s["e"] - s["s"] for s in shots) >= 2.0
+
+
+def test_pack_small_copies_still_sync(tmp_path):
+    from autocut import learn
+    from autocut.pack import pack
+    fx = _podcast(tmp_path)
+    orig = run(fx["project"], **fx["quiet"])
+    res = pack(fx["project"], str(tmp_path / "보낼자료" / "팟캐스트"), log=lambda *_: None)
+    assert res["files"] == 11 and not res["failed"]
+    assert sorted(os.path.splitext(f)[1] for f in os.listdir(res["out"])) == [".flac"] * 8 + [".mp4"] * 3
+    run(res["out"], until="sync", work_root=str(tmp_path / "w2"), output_root=str(tmp_path / "o2"), log=lambda *_: None)
+    cmp = learn.compare_sync(orig["outputs"]["싱크 타임라인 XML(촬영 전체 멀티캠)"],
+                             str(tmp_path / "w2" / "sync" / "팟캐스트.json"))
+    assert len(cmp["rows"]) == 10 and cmp["max_ms"] < 5          # 줄인 사본도 원본과 같은 싱크
+    assert cmp["rows"][0]["file"].endswith((".mp4", ".flac"))    # 표시는 원래 이름

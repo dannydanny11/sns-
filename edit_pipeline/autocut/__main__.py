@@ -11,6 +11,7 @@
   python -m autocut learn 셀렉츠편집.xml --media input/<프로젝트> --name 팟캐스트   # 편집 스타일 학습
   python -m autocut run input/<프로젝트> --style 팟캐스트                          # 학습한 스타일로 편집
   python -m autocut compare-sync 셀렉츠.fcpxml input/<프로젝트>                    # 셀렉츠 싱크와 비교
+  python -m autocut pack input/<프로젝트> --minutes 20                           # 보낼 자료 가볍게
 """
 from __future__ import annotations
 
@@ -47,7 +48,20 @@ def main(argv=None) -> int:
     cs.add_argument("project", help="input/<프로젝트> (먼저 run --until sync 로 싱크해 둘 것)")
     cs.add_argument("--work", help="작업 폴더(기본 edit_pipeline/work)")
     sub.add_parser("menu", help="번호로 고르는 실행 메뉴(실행.bat)")
+    pk = sub.add_parser("pack", help="보낼 자료 가볍게: 영상 180p·마이크 FLAC, 이름·폴더 구조 그대로")
+    pk.add_argument("project", help="촬영본 폴더")
+    pk.add_argument("--out", help="저장할 폴더(기본: 보낼자료/<폴더 이름>)")
+    pk.add_argument("--minutes", type=float, help="각 파일 앞부분 몇 분만(예: 20)")
     a = ap.parse_args(argv)
+    if a.cmd == "pack":
+        from .pack import pack
+        from .pipeline import ROOT
+        name = os.path.basename(os.path.normpath(a.project))
+        res = pack(a.project, a.out or os.path.join(ROOT, "보낼자료", name), a.minutes)
+        print(f"\n완료: 파일 {res['files']}개, {res['before_mb']}MB → {res['after_mb']}MB\n저장: {res['out']}")
+        if res["failed"]:
+            print("변환 실패: " + ", ".join(res["failed"]))
+        return 0
     if a.cmd == "menu":
         from .menu import main as menu_main
         return menu_main()

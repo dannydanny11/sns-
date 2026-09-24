@@ -28,3 +28,6 @@ __pycache__/
 # 학습한 편집 스타일(실제 작업 XML 에서 뽑은 것: 출연자 이름·프로젝트명 포함) — 공개 저장소에 올리지 않음
 edit_pipeline/config/styles/*
 !edit_pipeline/config/styles/.gitkeep
+
+# 보낼 자료(촬영본 사본) — 올리지 않음
+edit_pipeline/보낼자료/

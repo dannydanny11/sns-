@@ -168,7 +168,7 @@ def organize(project_dir: str, rules: dict, role_overrides: dict[str, str] | Non
         clip, ref = sync.sync_file(path, refs, coarse, rules)
         c = asdict(clip)
         synced.append((c, ref))
-        state = f"기준 {os.path.basename(ref['file'])} +{c['offset']:.3f}s" if ref else f"싱크 불가({c['reason']})"
+        state = f"기준 {os.path.basename(ref['file'])} {c['offset']:+.3f}s" if ref else f"싱크 불가({c['reason']})"
         if c.get("rate", 1.0) != 1.0:
             state += f", 시계 오차 {(c['rate'] - 1) * 1e6:+.0f}ppm 보정"
         log(f"  [{k}/{len(videos)}] {os.path.relpath(path, project_dir)} → {state}")

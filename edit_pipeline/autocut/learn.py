@@ -446,35 +446,41 @@ def truth_positions(path: str) -> dict[str, float]:
 
 def compare_sync(truth_path: str, sync_json: str) -> dict:
     """이 도구의 싱크(work/sync/<프로젝트>.json)와 정답 위치를 세션별로 비교한다."""
-    truth = truth_positions(truth_path)
+    # 이름은 확장자를 빼고 맞춘다(보낼 자료로 줄인 .mp4·.flac 도 원본 .MP4·.wav 와 짝지어지게)
+    key = lambda p: os.path.splitext(os.path.basename(p.replace("\\", "/")))[0].lower()  # noqa: E731
+    truth = {key(k): v for k, v in truth_positions(truth_path).items()}
     with open(sync_json, encoding="utf-8") as f:
         syncs = json.load(f)
     rows, missing = [], []
+    shown: dict[str, str] = {}   # 비교는 소문자·확장자 없이, 표시는 원래 파일 이름으로
     for sy in syncs:
         for sess in sy["sessions"]:
             ours = {}
             for t in sess["reference"].get("tracks") or [{"file": sess["reference"]["file"], "offset": 0.0}]:
-                ours[os.path.basename(t["file"])] = t["offset"]
+                ours[key(t["file"])] = t["offset"]
+                shown[key(t["file"])] = os.path.basename(t["file"])
             for c in sess["clips"]:
                 if c["status"] == "ok" and c["offset"] is not None:
-                    ours[os.path.basename(c["file"])] = c["offset"]
+                    ours[key(c["file"])] = c["offset"]
+                    shown[key(c["file"])] = os.path.basename(c["file"])
             common = [k for k in ours if k in truth]
             missing += [k for k in ours if k not in truth]
             if len(common) < 2:
                 continue
             # 기준: 세션 기준 녹음(없으면 첫 파일). 나머지 파일의 (우리 - 정답) 상대 오차
-            anchor = os.path.basename(sess["reference"]["file"])
+            anchor = key(sess["reference"]["file"])
             anchor = anchor if anchor in common else common[0]
             for k in common:
                 if k == anchor:
                     continue
                 err = (ours[k] - ours[anchor]) - (truth[k] - truth[anchor])
-                rows.append({"session": os.path.basename(sess["reference"]["file"]), "file": k, "anchor": anchor,
+                rows.append({"session": os.path.basename(sess["reference"]["file"]), "file": shown.get(k, k),
+                             "anchor": shown.get(anchor, anchor),
                              "ours": round(ours[k] - ours[anchor], 4), "truth": round(truth[k] - truth[anchor], 4),
                              "error_ms": round(err * 1000, 1)})
     errs = [abs(r["error_ms"]) for r in rows]
-    return {"rows": rows, "missing": sorted(set(missing)), "not_in_ours": sorted(set(truth) - {r["file"] for r in rows}
-                                                                              - {r["anchor"] for r in rows}),
+    used = {key(r["file"]) for r in rows} | {key(r["anchor"]) for r in rows}
+    return {"rows": rows, "missing": sorted({shown.get(m, m) for m in missing}), "not_in_ours": sorted(set(truth) - used),
             "max_ms": max(errs) if errs else None, "median_ms": st.median(errs) if errs else None}
 
 
