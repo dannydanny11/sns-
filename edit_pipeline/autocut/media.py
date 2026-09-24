@@ -46,6 +46,10 @@ class MediaInfo:
     sample_rate: int | None = None
     audio_channels: int | None = None
     start_tc: str | None = None  # 카메라가 기록한 시작 타임코드(있으면)
+    vcodec: str | None = None
+    created: str | None = None   # 촬영 시각(creation_time)
+    model: str | None = None     # 카메라 모델(메타데이터·소니 XML)
+    serial: str | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -56,6 +60,25 @@ _VID = re.compile(r"Stream #.*Video:.*?(\d{2,5})x(\d{2,5})")
 _FPS = re.compile(r"([\d.]+)\s*fps")
 _AUD = re.compile(r"Stream #.*Audio:.*?(\d+)\s*Hz,\s*([^,]+)")
 _TC = re.compile(r"timecode\s*:\s*(\d{2}:\d{2}:\d{2}[:;]\d{2})")
+_TAG = re.compile(r"^\s{4}([\w.:-]+)\s*:\s*(.+)$")
+_VCODEC = re.compile(r"Video:\s*([\w-]+)")
+_MODEL_KEYS = ("com.apple.quicktime.model", "model", "com.android.model", "product", "camera_model_name")
+
+
+def _sidecar(path: str) -> dict:
+    """소니 XML 사이드카(C0001M01.XML)에서 기종·시리얼을 읽는다."""
+    stem, _ = os.path.splitext(path)
+    for cand in (stem + "M01.XML", stem + "M01.xml"):
+        if os.path.exists(cand):
+            try:
+                with open(cand, encoding="utf-8", errors="replace") as f:
+                    text = f.read(20000)
+            except OSError:
+                return {}
+            m = re.search(r'<Device[^>]*modelName="([^"]+)"[^>]*?(?:serialNo="([^"]+)")?', text)
+            if m:
+                return {"model": m.group(1), "serial": m.group(2)}
+    return {}
 
 
 def probe(path: str) -> MediaInfo:
@@ -86,6 +109,21 @@ def probe(path: str) -> MediaInfo:
     tm = _TC.search(err)
     if tm:
         info.start_tc = tm.group(1)
+    vc = _VCODEC.search(err)
+    if vc:
+        info.vcodec = vc.group(1)
+    tags = {}
+    for line in err.splitlines():
+        m2 = _TAG.match(line)
+        if m2:
+            tags.setdefault(m2.group(1).lower(), m2.group(2).strip())
+    info.created = tags.get("creation_time")
+    info.model = next((tags[k] for k in _MODEL_KEYS if k in tags), None)
+    if not info.model and "make" in tags:
+        info.model = tags["make"]
+    side = _sidecar(path)
+    if side:
+        info.model, info.serial = side.get("model") or info.model, side.get("serial")
     return info
 
 

@@ -31,7 +31,7 @@ class CameraPool:
 
     def clip_covering(self, camera: str, s: float, e: float) -> dict | None:
         for c in self.clips:
-            if c["camera"] == camera and c["offset"] <= s + 1e-3 and c["offset"] + c["duration"] >= e - 1e-3:
+            if c["camera"] == camera and c["offset"] <= s + 1e-3 and c["offset"] + c["duration"] * c.get("rate", 1.0) >= e - 1e-3:
                 return c
         return None
 
@@ -146,7 +146,7 @@ def place_angles(plan: dict, session: dict, rules: dict) -> list[dict]:
 def _shot(s, e, got, why):
     cam, clip = got
     return {"s": round(s, 3), "e": round(e, 3), "camera": cam, "role": clip["role"], "file": clip["file"],
-            "offset": clip["offset"], "media": clip.get("media", {}), "why": why}
+            "offset": clip["offset"], "rate": clip.get("rate", 1.0), "media": clip.get("media", {}), "why": why}
 
 
 def _merge_short(shots: list[dict], min_shot: float) -> list[dict]:
@@ -158,7 +158,7 @@ def _merge_short(shots: list[dict], min_shot: float) -> list[dict]:
             continue
         if out and sh["e"] - sh["s"] < min_shot and abs(out[-1]["e"] - sh["s"]) < 1e-3 and not sh["why"]:
             prev = out[-1]
-            if prev["offset"] + prev["media"].get("duration", 1e9) >= sh["e"]:
+            if prev["offset"] + prev["media"].get("duration", 1e9) * prev["rate"] >= sh["e"]:
                 prev["e"] = sh["e"]
                 continue
         out.append(dict(sh))

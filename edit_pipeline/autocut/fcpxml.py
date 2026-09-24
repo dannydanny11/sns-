@@ -76,13 +76,25 @@ def sequence_xml(tl: dict, name: str, fps: float, width: int, height: int) -> st
     base, ntsc = timebase(fps)
     rate = Fraction(base * 1000, 1001) if ntsc else Fraction(base)
     files = _Files(fps, rate)
-    v = [_clip(f"clipitem-v{k + 1}", c, files, fps, "video") for k, c in enumerate(tl["video"])]
-    # 기준 녹음이 스테레오면 채널별로 A1/A2(모노 트랙 2개)에 배치한다.
-    channels = max((c["media"].get("audio_channels") or 1 for c in tl["audio"]), default=1)
+    n = 0
+
+    def cid(prefix):
+        nonlocal n
+        n += 1
+        return f"clipitem-{prefix}{n}"
+
+    v_tracks = []
+    for clips in tl.get("video_tracks") or [tl["video"]]:
+        v_tracks.append("<track>" + "".join(_clip(cid("v"), c, files, fps, "video") for c in clips) + "</track>")
     a_tracks = []
-    for ch in range(1, min(channels, 2) + 1):
-        clips = [_clip(f"clipitem-a{ch}-{k + 1}", c, files, fps, "audio", ch) for k, c in enumerate(tl["audio"])]
-        a_tracks.append("<track>" + "".join(clips) + "</track>")
+    tracks = tl.get("audio_tracks") or ([{"name": "녹음", "clips": tl["audio"]}] if tl["audio"] else [])
+    for tr in tracks:
+        # 트랙이 하나뿐이고 스테레오면 채널별로 A1/A2(모노 트랙 2개)에 배치한다.
+        channels = max((c["media"].get("audio_channels") or 1 for c in tr["clips"]), default=1)
+        chs = range(1, min(channels, 2) + 1) if len(tracks) == 1 else [1]
+        for ch in chs:
+            clips = "".join(_clip(cid("a"), c, files, fps, "audio", ch) for c in tr["clips"])
+            a_tracks.append("<track>" + clips + "</track>")
     markers = "".join(
         f"<marker><name>{escape(m['name'])}</name><comment>{escape(m.get('comment', ''))}</comment>"
         f"<in>{m['frame']}</in><out>-1</out></marker>" for m in tl["markers"])
@@ -94,7 +106,7 @@ def sequence_xml(tl: dict, name: str, fps: float, width: int, height: int) -> st
         "<media><video><format><samplecharacteristics>"
         f"{_rate(fps)}<width>{width}</width><height>{height}</height><pixelaspectratio>square</pixelaspectratio>"
         "</samplecharacteristics></format>"
-        f"<track>{''.join(v)}</track></video>"
+        f"{''.join(v_tracks)}</video>"
         f"<audio><numOutputChannels>2</numOutputChannels>{''.join(a_tracks)}</audio></media>"
         f"{markers}</sequence></xmeml>\n"
     )

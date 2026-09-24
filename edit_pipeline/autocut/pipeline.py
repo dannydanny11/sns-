@@ -5,7 +5,7 @@ import json
 import os
 import re
 
-from . import angles, cut, fcpxml, report, subtitles, sync, target, timeline, transcribe, viewer
+from . import angles, audio, autosort, cut, fcpxml, report, subtitles, sync, target, timeline, transcribe, viewer
 from .media import frame_rate, make_proxy
 from .scan import scan_project
 from .script import parse_script
@@ -28,6 +28,52 @@ def load_rules(preset: str, config_path: str | None = None) -> dict:
 
 def _label(place: str, ref_file: str) -> str:
     return re.sub(r"[^\w가-힣.-]+", "_", f"{place}__{os.path.splitext(os.path.basename(ref_file))[0]}")
+
+
+def _labels(sessions: list[tuple[str, dict]]) -> list[str]:
+    out: list[str] = []
+    for place, sess in sessions:
+        base = lab = _label(place, sess["reference"]["file"])
+        n = 2
+        while lab in out:
+            lab = f"{base}_{n}"
+            n += 1
+        out.append(lab)
+    return out
+
+
+def guess_preset(syncs: list[dict], script_path: str | None) -> tuple[str, str]:
+    """촬영 유형 자동 판정: (프리셋, 이유)."""
+    if script_path:
+        return "연수", "대본이 있음"
+    roles = {c["role"] for sy in syncs for s in sy["sessions"] for c in s["clips"] if c["status"] == "ok"}
+    n_sess = sum(len(sy["sessions"]) for sy in syncs)
+    if "two" in roles:
+        return "세미지", "2인 구도 카메라가 있음"
+    if len(syncs) > 1 or n_sess > 1:
+        return "교과서여행", f"녹음 세션 {n_sess}개(여러 장소·테이크)"
+    return "세미지", "단일 세션 대담·강의"
+
+
+def parse_roles(text: str | None) -> dict[str, str]:
+    """'카메라2=tele, A캠=front' → {'카메라2': 'tele', 'A캠': 'front'}"""
+    out = {}
+    for part in (text or "").split(","):
+        if "=" in part:
+            k, v = part.split("=", 1)
+            out[k.strip()] = v.strip()
+    return out
+
+
+def apply_roles(syncs: list[dict], roles: dict[str, str]) -> None:
+    for sy in syncs:
+        for s in sy["sessions"]:
+            for c in s["clips"]:
+                if c["camera"] in roles:
+                    c["role"] = roles[c["camera"]]
+        for ci in sy.get("cameras", []):
+            if ci["name"] in roles:
+                ci["role"], ci["evidence"] = roles[ci["name"]], "직접 지정(--roles)"
 
 
 def _dump(path: str, data) -> None:
@@ -55,12 +101,13 @@ def _dedupe_across_sessions(parts: list[dict]) -> None:
                 it["enabled"], it["reason"] = False, "재촬영 이전 테이크(다른 녹음 파일)"
 
 
-def run(project_dir: str, preset: str, script_path: str | None = None, target_len: str | None = None,
+def run(project_dir: str, preset: str | None = "auto", script_path: str | None = None, target_len: str | None = None,
         until: str = "export", redo: set[str] | None = None, work_root: str | None = None,
         output_root: str | None = None, overrides: str | None = None, proxy: bool = False,
-        log=print) -> dict:
+        roles: str | None = None, log=print) -> dict:
     redo = redo or set()
-    rules = load_rules(preset)
+    auto_preset = preset in (None, "", "auto")
+    rules = load_rules("default" if auto_preset else preset)
     project = os.path.basename(os.path.normpath(project_dir))
     work = os.path.join(work_root or os.path.join(ROOT, "work"))
     out_dir = os.path.join(output_root or os.path.join(ROOT, "output"), project)
@@ -68,18 +115,31 @@ def run(project_dir: str, preset: str, script_path: str | None = None, target_le
 
     # ── 1. 싱크 ─────────────────────────────
     places, scan_warnings = scan_project(project_dir)
+    auto_sort = not any(p.cameras for p in places)
+    if auto_sort:
+        scan_warnings = []
     sync_path = os.path.join(work, "sync", f"{project}.json")
     if os.path.exists(sync_path) and "sync" not in redo:
         syncs = _load(sync_path)
         log(f"[1/5] 싱크: 기존 결과 사용 ({sync_path})")
+    elif auto_sort:
+        log("[1/5] 싱크: 폴더 구조 없이 통째로 넣은 촬영본 → 자동 정리")
+        syncs = [autosort.organize(project_dir, rules, None, log)]
+        _dump(sync_path, syncs)
     else:
         log("[1/5] 싱크")
         syncs = [sync.sync_place(p, rules, log) for p in places]
         _dump(sync_path, syncs)
+    apply_roles(syncs, parse_roles(roles))
+    if auto_preset:
+        preset, why = guess_preset(syncs, script_path)
+        rules = load_rules(preset)
+        log(f"  촬영 유형 자동 판정: {preset} ({why})")
     if stop_after == 0:
-        return {"sync": syncs}
+        return {"sync": syncs, "preset": preset}
 
     sessions = [(sy["place"], s) for sy in syncs for s in sy["sessions"]]
+    labels = _labels(sessions)
 
     # ── 2. 전사 ─────────────────────────────
     sentences = None
@@ -88,24 +148,36 @@ def run(project_dir: str, preset: str, script_path: str | None = None, target_le
         with open(script_path, encoding="utf-8") as f:
             sentences = parse_script(f.read())
         prompt = " ".join(s.text for s in sentences[:20])[:800]  # 용어 인식 힌트
-    transcripts = {}
-    for place, sess in sessions:
-        label = _label(place, sess["reference"]["file"])
+    transcripts, peaks = {}, {}
+    for (place, sess), label in zip(sessions, labels):
+        tracks = sess["reference"].get("tracks") or []
         tpath = os.path.join(work, "transcript", project, f"{label}.json")
         if os.path.exists(tpath) and "transcribe" not in redo:
             log(f"[2/5] 전사: 기존 결과 사용 ({label})")
         else:
-            log(f"[2/5] 전사: {label}")
-            _dump(tpath, transcribe.transcribe(sess["reference"]["file"], rules["whisper_model"],
-                                               initial_prompt=prompt, log=log))
-        transcripts[label] = _load(tpath)
+            src = sess["reference"]["file"]
+            if len(tracks) > 1:   # 무선 마이크 여러 개: 모두 섞어서 전사(누구 말도 빠지지 않게)
+                src = audio.mix_tracks(tracks, sess["reference"]["duration"],
+                                       os.path.join(work, "mix", project, f"{label}.wav"))
+                log(f"[2/5] 전사: {label} (마이크 {len(tracks)}개 믹스)")
+            else:
+                log(f"[2/5] 전사: {label}")
+            _dump(tpath, transcribe.transcribe(src, rules["whisper_model"], initial_prompt=prompt, log=log))
+        tr = _load(tpath)
+        # 마이크별 음량: 화자 판정 + 뷰어 파형
+        if tracks:
+            envs = [audio.envelope(t, sess["reference"]["duration"]) for t in tracks]
+            n = audio.assign_speakers(tr["words"], tracks, envs)
+            if n:
+                log(f"  화자 판정: 마이크 {len(audio.speaker_tracks(tracks))}개 기준, 단어 {n}개")
+            peaks[label] = {t["name"]: audio.peaks(e) for t, e in zip(tracks, envs)}
+        transcripts[label] = tr
     if stop_after == 1:
         return {"sync": syncs, "transcripts": transcripts}
 
     # ── 3. 컷 선별 ───────────────────────────
     parts = []
-    for place, sess in sessions:
-        label = _label(place, sess["reference"]["file"])
+    for (place, sess), label in zip(sessions, labels):
         tr = transcripts[label]
         tr.setdefault("duration", sess["reference"]["duration"])
         plan = cut.plan_cuts(tr, rules, sentences)
@@ -152,7 +224,10 @@ def run(project_dir: str, preset: str, script_path: str | None = None, target_le
         return got[1] if got else None
 
     review = timeline.build_review(parts, rate, pick_base)
+    sync_tl = timeline.build_sync_timeline(syncs, rate)
     outputs = {
+        "싱크 타임라인 XML(촬영 전체 멀티캠)": fcpxml.write(
+            os.path.join(out_dir, f"{project}_싱크타임라인.xml"), sync_tl, f"{project} 싱크 타임라인", fps, w, h),
         "러프컷 XML": fcpxml.write(os.path.join(out_dir, f"{project}_러프컷.xml"), tl, f"{project} 러프컷", fps, w, h),
         "검토용 XML(탈락 테이크 포함)": fcpxml.write(os.path.join(out_dir, f"{project}_검토용.xml"), review,
                                           f"{project} 전체 테이크", fps, w, h),
@@ -179,7 +254,7 @@ def run(project_dir: str, preset: str, script_path: str | None = None, target_le
                                        rules.get("proxy_height", 360), rules.get("proxy_codec", "h264"))
     outputs["타임라인 뷰어"] = viewer.write(
         os.path.join(out_dir, f"{project}_타임라인.html"),
-        viewer.build_data(project, parts, tl, rate, caps, points, out_dir, proxies))
+        viewer.build_data(project, parts, tl, rate, caps, points, out_dir, proxies, peaks, syncs))
     rpath = os.path.join(out_dir, f"{project}_리포트.md")
     outputs["리포트"] = rpath
     with open(rpath, "w", encoding="utf-8") as f:
@@ -187,4 +262,5 @@ def run(project_dir: str, preset: str, script_path: str | None = None, target_le
     log(f"[5/5] 내보내기 완료 → {out_dir}")
     for k, v in outputs.items():
         log(f"  - {k}: {v}")
-    return {"sync": syncs, "parts": parts, "timeline": tl, "outputs": outputs}
+    return {"sync": syncs, "parts": parts, "timeline": tl, "sync_timeline": sync_tl, "outputs": outputs,
+            "preset": preset}

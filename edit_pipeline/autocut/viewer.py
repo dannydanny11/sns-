@@ -12,6 +12,10 @@ import os
 from fractions import Fraction
 
 
+ROLE_ORDER = {"front": 0, "side": 1, "wide": 2, "two": 3, "tele": 4}
+ROLE_KO = {"front": "정면", "side": "측면", "tele": "망원", "wide": "와이드", "two": "2인", "insert": "인서트"}
+
+
 def _src(path: str, out_dir: str) -> dict:
     """브라우저에서 원본을 열 경로: 상대 경로 우선, 드라이브가 다르면 절대 경로."""
     try:
@@ -23,8 +27,9 @@ def _src(path: str, out_dir: str) -> dict:
 
 
 def build_data(project: str, parts: list[dict], tl: dict, rate: Fraction, caps: list[dict],
-               points: list[dict], out_dir: str, proxies: dict[str, str] | None = None) -> dict:
-    proxies = proxies or {}
+               points: list[dict], out_dir: str, proxies: dict[str, str] | None = None,
+               peaks: dict | None = None, syncs: list[dict] | None = None) -> dict:
+    proxies, peaks = proxies or {}, peaks or {}
     files: dict[str, int] = {}
     file_list: list[dict] = []
 
@@ -42,29 +47,51 @@ def build_data(project: str, parts: list[dict], tl: dict, rate: Fraction, caps: 
         for c in sess["clips"]:
             cams.setdefault(c["camera"], {"camera": c["camera"], "role": c["role"], "clips": []})
             cams[c["camera"]]["clips"].append({
-                "file": fid(c["file"]), "s": c["offset"], "e": (c["offset"] + c["duration"]) if c["offset"] is not None else None,
+                "file": fid(c["file"]), "s": c["offset"], "rate": c.get("rate", 1.0),
+                "e": (c["offset"] + c["duration"] * c.get("rate", 1.0)) if c["offset"] is not None else None,
                 "status": c["status"], "reason": c["reason"], "confidence": c["confidence"], "dur": c["duration"]})
         items = []
         for k, it in enumerate(p["plan"]["items"]):
             items.append({"id": f"{p['label']}#{k}", "s": it["s"], "e": it["e"], "enabled": it["enabled"],
                           "reason": it["reason"], "text": it["text"], "script": it.get("script"),
                           "sentence": it.get("sentence"), "topic": bool(it.get("topic_start")),
-                          "segments": it["segments"], "emphasis": it.get("emphasis", [])})
+                          "segments": it["segments"], "emphasis": it.get("emphasis", []),
+                          "spk": it.get("spk"), "chapter": it.get("chapter")})
+        tracks = [{"name": t["name"], "file": fid(t["file"]), "s": t["offset"],
+                   "e": t["offset"] + t["media"]["duration"] * t.get("rate", 1.0),
+                   "peaks": peaks.get(p["label"], {}).get(t["name"], "")}
+                  for t in ref.get("tracks") or []]
         sessions.append({"label": p["label"], "place": p["place"], "duration": ref["duration"],
                          "ref": {"file": fid(ref["file"]), "source": ref.get("source", "recorder")},
-                         "cameras": list(cams.values()), "items": items})
+                         "cameras": sorted(cams.values(), key=lambda c: ROLE_ORDER.get(c["role"], 5)),
+                         "tracks": tracks, "items": items})
 
     fr = float(rate)
     shots = []
-    for v, a in zip(tl["video"], tl["audio"]):
+    label_idx = {p["label"]: i for i, p in enumerate(parts)}
+    for v, a, m in zip(tl["video"], tl["audio"], tl["mapping"]):
         shots.append({"s": v["start"] / fr, "e": v["end"] / fr, "camera": v["camera"], "role": v["role"],
                       "file": fid(v["file"]), "in": v["in"] / fr, "why": v["why"],
-                      "ref_file": fid(a["file"]), "ref_in": a["in"] / fr})
+                      "ref_file": fid(a["file"]), "ref_in": a["in"] / fr, "sess": label_idx[m["label"]]})
+    cams_info, inserts = [], 0
+    for sy in syncs or []:
+        inserts += len(sy.get("inserts", []))
+        for ci in sy.get("cameras", []):
+            cams_info.append({k: ci.get(k) for k in ("name", "role", "evidence", "model", "folder", "files")})
+    if not cams_info:
+        seen = {}
+        for p in parts:
+            for c in p["session"]["clips"]:
+                seen.setdefault(c["camera"], {"name": c["camera"], "role": c["role"], "evidence": "폴더 이름(cam_*)",
+                                              "model": c.get("media", {}).get("model"), "folder": c["camera"], "files": 0})
+                seen[c["camera"]]["files"] += 1
+        cams_info = list(seen.values())
+    speakers = sorted({it["spk"] for s_ in sessions for it in s_["items"] if it.get("spk")})
     return {
         "project": project, "fps": fr, "duration": tl["duration"] / fr, "files": file_list,
         "sessions": sessions, "shots": shots,
         "markers": [{"t": m["frame"] / fr, "name": m["name"]} for m in tl["markers"]],
-        "captions": caps, "points": points,
+        "captions": caps, "points": points, "cams": cams_info, "inserts": inserts, "speakers": speakers,
     }
 
 
@@ -106,7 +133,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   --bg:#141518; --panel:#1c1d21; --panel2:#23252a; --line:#2e3036; --text:#e7e8ea; --dim:#9a9ca3; --faint:#6b6e76;
   --accent:#f5c451; --kept:#3fb97a; --off:#c9534f; --off-bg:#3a2324; --play:#ff5b4f;
   --front:#4c8df6; --side:#2fb6a8; --tele:#e0a13a; --wide:#9b7cf2; --two:#e2699b; --other:#8a8f99;
-  --lane:44px; --label:112px;
+  --lane:44px; --label:150px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--text);font:13px/1.4 "Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
@@ -148,7 +175,7 @@ main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,1fr);gap:1
 .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 .tl{margin:0 16px 16px;border:1px solid var(--line);border-radius:10px;background:var(--panel);display:grid;grid-template-columns:var(--label) 1fr;overflow:hidden}
 .labels{border-right:1px solid var(--line);background:var(--panel)}
-.labels div{height:var(--lane);display:flex;align-items:center;padding:0 10px;border-bottom:1px solid var(--line);font-size:12px;color:var(--dim);gap:6px;cursor:default}
+.labels div{height:var(--lane);display:flex;align-items:center;padding:0 10px;white-space:nowrap;overflow:hidden;border-bottom:1px solid var(--line);font-size:12px;color:var(--dim);gap:6px;cursor:default}
 .labels div.ruler{height:26px}
 .labels div.mon{cursor:pointer}
 .labels div.mon.on{color:var(--text)}
@@ -174,6 +201,25 @@ main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,1fr);gap:1
 .wave{position:absolute;inset:0;pointer-events:none}
 .playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--play);pointer-events:none;z-index:5}
 .playhead::before{content:"";position:absolute;top:0;left:-5px;border:6px solid transparent;border-top-color:var(--play)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:-4px -4px 0}
+.tabs button{border:0;background:none;padding:6px 10px;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent}
+.tabs button.on{color:var(--text);border-bottom-color:var(--accent)}
+.pane{display:none;flex-direction:column;gap:10px;min-height:0;flex:1}
+.pane.on{display:flex}
+.tx{overflow:auto;flex:1;max-height:48vh;padding-right:4px}
+.tx .topic{color:var(--dim);font-size:11px;margin:10px 0 4px;font-weight:600}
+.tx .ln{display:flex;gap:8px;padding:4px 6px;border-radius:6px;cursor:pointer;align-items:flex-start}
+.tx .ln:hover{background:var(--panel2)}
+.tx .ln.cur{background:rgba(245,196,81,.12)}
+.tx .ln.off{color:var(--faint);text-decoration:line-through}
+.tx .ln .why{color:#ee8b87;font-size:10px;text-decoration:none;white-space:nowrap}
+.spk{flex:none;min-width:22px;height:18px;border-radius:9px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;color:#111}
+.camtbl{width:100%;border-collapse:collapse;font-size:12px}
+.camtbl td,.camtbl th{padding:5px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.camtbl th{color:var(--dim);font-weight:500}
+.camtbl i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+canvas.wave{position:absolute;left:0;top:0;height:100%;pointer-events:none}
+.mic{background:rgba(120,160,255,.10);border:1px solid rgba(120,160,255,.25)}
 @media (max-width:820px){main{grid-template-columns:1fr} :root{--label:84px} .legend{margin-left:0;width:100%} .labels div.mon.on::after{content:"●"}}
 </style>
 </head>
@@ -196,6 +242,10 @@ main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,1fr);gap:1
     </div>
   </div>
   <div class="side">
+    <div class="tabs" id="tabs"><button data-p="tx" class="on">전사</button><button data-p="sel">선택·수정</button><button data-p="cam">카메라</button></div>
+    <div class="pane on" id="p-tx"><div class="tx" id="tx"></div></div>
+    <div class="pane" id="p-cam"><div id="camlist" style="overflow:auto"></div></div>
+    <div class="pane" id="p-sel">
     <h2>선택</h2>
     <div class="detail" id="detail"><span style="color:var(--dim)">타임라인의 클립이나 테이크를 누르세요. 원본 배열에서 테이크를 두 번 누르면 채택/탈락이 바뀝니다.</span></div>
     <h2>수정한 테이크</h2>
@@ -205,6 +255,7 @@ main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,1fr);gap:1
       <button class="btn ghost" id="reset" disabled>되돌리기</button>
     </div>
     <div style="color:var(--faint);font-size:11px">저장한 파일을 <code>--overrides</code> 로 넘겨 다시 실행하면 XML·자막에 반영됩니다.</div>
+    </div>
   </div>
 </main>
 <div class="transport">
@@ -298,16 +349,17 @@ function render() {
   } else {
     const S = sess();
     if (!monitorCam || !S.cameras.some(c => c.camera === monitorCam)) monitorCam = (S.cameras.find(c => c.role === "front" && c.clips.some(k => k.status === "ok")) || S.cameras.find(c => c.clips.some(k => k.status === "ok")) || {}).camera;
-    S.cameras.forEach(cam => { const l = lane(cam.camera.replace(/^cam_/, ""), {cam: cam.camera});
+    S.cameras.forEach(cam => { const l = lane(cam.camera.replace(/^cam_/, "") + " · " + (ROLE_KO[cam.role] || cam.role), {cam: cam.camera});
       cam.clips.forEach(k => {
         if (k.status !== "ok") { const c = el("div", "clip failed", {left: "4px", width: Math.max(80, (k.dur || 10) * pps) + "px"}, "싱크 실패 · " + esc(D.files[k.file].name));
           c.title = k.reason; c.onclick = () => select({type:"camclip", cam, k}, c); l.append(c); return; }
         const c = el("div", "clip", {...box(k.s, k.e), background: col(cam.role)}, esc(D.files[k.file].name));
-        c.title = `offset ${k.s.toFixed(3)}s · 신뢰도 ${k.confidence}`; c.onclick = () => select({type:"camclip", cam, k}, c); l.append(c); });
+        c.title = `offset ${k.s.toFixed(3)}s · 신뢰도 ${k.confidence}` + (k.rate !== 1 ? ` · 시계 오차 ${((k.rate - 1) * 1e6).toFixed(0)}ppm 보정` : ""); c.onclick = () => select({type:"camclip", cam, k}, c); l.append(c); });
       lanes.push(l); });
-    const rl = lane("녹음(기준)");
-    rl.append(el("div", "clip ref", box(0, S.duration), esc(D.files[S.ref.file].name)));
-    lanes.push(rl);
+    const tracks = S.tracks.length ? S.tracks : [{name: "녹음(기준)", file: S.ref.file, s: 0, e: S.duration, peaks: ""}];
+    tracks.forEach(tr => { const l = lane("🎙 " + tr.name);
+      const c = el("div", "clip mic", box(tr.s, tr.e), esc(D.files[tr.file].name)); c.title = `${D.files[tr.file].name}  ${tr.s >= 0 ? "+" : ""}${tr.s.toFixed(3)}s`;
+      l.append(c); if (tr.peaks) l.append(wave(tr.peaks, width)); lanes.push(l); });
     const tk = lane("테이크");
     S.items.forEach(it => {
       const c = el("div", "clip take " + (it.enabled ? "kept" : "off") + (changed[it.id] !== undefined ? " changed" : ""), box(it.s, it.e));
@@ -326,8 +378,66 @@ function render() {
     labels.append(lab); });
   canvas.append(el("div", "playhead", {left: t * pps + "px"}));
   canvas.onclick = ev => { if (ev.target === canvas || ev.target.classList.contains("lane")) seek((ev.clientX - canvas.getBoundingClientRect().left) / pps); };
-  stats(); show();
+  stats(); renderTx(); curItem = undefined; show();
 }
+
+const ROLE_KO = {front:"정면", side:"측면", tele:"망원", wide:"와이드", two:"2인", insert:"인서트"};
+const SPK_COL = ["#f5c451","#6fd3a8","#8fb4ff","#f28fb1","#c6a0ff","#ffab70","#7fdbe6","#d4e157"];
+const spkCol = n => SPK_COL[Math.max(0, D.speakers.indexOf(n)) % SPK_COL.length];
+function wave(peaks, width) {
+  const cv = el("canvas", "wave"); const W = Math.min(width, 16000); cv.width = W; cv.height = 40; cv.style.width = width + "px";
+  const g = cv.getContext("2d"); g.fillStyle = "rgba(160,190,255,.55)"; const k = W / width;
+  for (let i = 0; i < peaks.length; i++) { const ch = peaks[i]; if (ch === ".") continue;
+    const h = (+ch + 1) / 10 * 34; g.fillRect(i / 5 * pps * k, 20 - h / 2, Math.max(1, pps / 5 * k - .5), h); }
+  return cv;
+}
+function sessionOfItem(id) { return D.sessions.findIndex(s => s.items.some(i => i.id === id)); }
+function recOf(si, refT) {
+  let best = null;
+  for (const sh of D.shots) { if (sh.sess !== si) continue; const len = sh.e - sh.s;
+    if (refT >= sh.ref_in - 1e-3 && refT < sh.ref_in + len) return sh.s + refT - sh.ref_in;
+    if (sh.ref_in > refT && (!best || sh.ref_in < best.ref_in)) best = sh; }
+  return best ? best.s : null;
+}
+function jumpTo(it) {
+  const si = sessionOfItem(it.id);
+  if (view === "rough") { const r = recOf(si, it.s); if (r != null) seek(r); }
+  else { if (si !== sessIdx) { sessIdx = si; $("#sess").value = si; fit(); render(); } seek(it.s); }
+}
+let curItem = null;
+function renderTx() {
+  const box_ = $("#tx"); box_.innerHTML = "";
+  const list = view === "source" ? [sess()] : D.sessions;
+  let n = 0;
+  list.forEach(S => S.items.forEach(it => {
+    if (view === "rough" && !it.enabled && changed[it.id] === undefined) return;
+    if (it.topic) { n++; box_.append(el("div", "topic", null, esc(it.chapter || it.script && it.script.slice(0, 20) || ("주제 " + n)))); }
+    const row = el("div", "ln" + (it.enabled ? "" : " off")); row.dataset.id = it.id;
+    if (it.spk) { const b = el("span", "spk", {background: spkCol(it.spk)}, esc(it.spk.replace(/^TX0?/, ""))); b.title = it.spk; row.append(b); }
+    else row.append(el("span", "spk", {background: "var(--line)", color: "var(--dim)"}, "·"));
+    row.append(el("span", "", null, esc(it.script || it.text) + (it.enabled ? "" : ` <span class="why">${esc(it.reason || "탈락")}</span>`)));
+    row.onclick = () => jumpTo(it); box_.append(row); }));
+}
+function markCurrent() {
+  let id = null;
+  if (view === "rough") { const sh = D.shots.find(s => t >= s.s && t < s.e); if (sh) { const rt = sh.ref_in + t - sh.s;
+      const it = D.sessions[sh.sess].items.find(i => rt >= i.s - .05 && rt <= i.e + .2); id = it && it.id; } }
+  else { const it = sess().items.find(i => t >= i.s && t <= i.e); id = it && it.id; }
+  if (id === curItem) return; curItem = id;
+  document.querySelectorAll(".tx .ln.cur").forEach(x => x.classList.remove("cur"));
+  const row = id && document.querySelector(`.tx .ln[data-id="${CSS.escape(id)}"]`);
+  if (row) { row.classList.add("cur"); if (playing) row.scrollIntoView({block: "nearest"}); }
+}
+function renderCams() {
+  const rows = D.cams.map(c => `<tr><td><i style="background:${col(c.role)}"></i>${esc(c.name)}</td><td>${esc(ROLE_KO[c.role] || c.role)}</td><td>${esc(c.evidence || "")}${c.model ? `<br><span style="color:var(--faint)">${esc(c.model)}</span>` : ""}</td><td>${c.files ?? ""}</td></tr>`).join("");
+  $("#camlist").innerHTML = `<table class="camtbl"><tr><th>카메라</th><th>역할</th><th>판정 근거</th><th>파일</th></tr>${rows}</table>`
+    + (D.inserts ? `<p style="color:var(--dim);font-size:12px">녹음과 소리가 맞지 않는 영상 ${D.inserts}개는 인서트로 분리했습니다(싱크 타임라인 XML 맨 뒤).</p>` : "")
+    + (D.speakers.length ? `<p style="color:var(--dim);font-size:12px">화자(마이크): ${D.speakers.map(n => `<span class="spk" style="background:${spkCol(n)}">${esc(n)}</span>`).join(" ")}</p>` : "")
+    + `<p style="color:var(--faint);font-size:11px">역할이 틀렸으면 <code>--roles "카메라이름=tele"</code> 로 다시 실행하세요. (front 정면 / side 측면 / tele 망원 / wide 와이드 / two 2인)</p>`;
+}
+document.querySelectorAll("#tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#tabs button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".pane").forEach(p => p.classList.toggle("on", p.id === "p-" + b.dataset.p)); });
 
 function select(obj, node) {
   document.querySelectorAll(".clip.sel").forEach(x => x.classList.remove("sel")); node.classList.add("sel"); selected = obj;
@@ -339,6 +449,7 @@ function select(obj, node) {
   else if (obj.type === "take") { const it = obj.it; seek(it.s);
     h = `<span class="pill ${it.enabled ? "k" : "o"}">${it.enabled ? "채택" : "탈락"}</span>${changed[it.id] !== undefined ? "직접 변경" + (it.reason ? " · 원래 사유: " + esc(it.reason) : "") : esc(it.reason || "")}${it.sentence != null ? ` · 대본 ${it.sentence + 1}번 문장` : ""}<div class="t">${esc(it.text)}</div>${it.script && it.script !== it.text ? `<div class="m">대본: ${esc(it.script)}</div>` : ""}<div class="m">원본 ${fmt(it.s)} – ${fmt(it.e)}</div><button class="btn ghost" style="margin-top:8px" id="tog">${it.enabled ? "탈락시키기" : "채택하기"}</button>`; }
   $("#detail").innerHTML = h;
+  if (obj.type !== "shot") document.querySelector('#tabs button[data-p="sel"]').click();
   if (obj.type === "take") $("#tog").onclick = () => toggleTake(obj.it);
 }
 
@@ -380,7 +491,7 @@ function at() {
     return {v: sh.file, vt: sh.in + d, a: sh.ref_file, at: sh.ref_in + d, cam: sh.camera, why: sh.why, key: sh}; }
   const S = sess(), cam = S.cameras.find(c => c.camera === monitorCam);
   const k = cam && cam.clips.find(k => k.status === "ok" && t >= k.s && t < k.e);
-  return {v: k ? k.file : null, vt: k ? t - k.s : 0, a: S.ref.file, at: t, cam: k ? monitorCam : monitorCam + " (촬영 없음)", why: ""};
+  return {v: k ? k.file : null, vt: k ? (t - k.s) / (k.rate || 1) : 0, a: S.ref.file, at: t, cam: k ? monitorCam : monitorCam + " (촬영 없음)", why: ""};
 }
 function overlay() {
   const list = view === "rough" ? D.captions : [], pts = view === "rough" ? D.points : [];
@@ -393,7 +504,7 @@ function overlay() {
 function show() {
   const p = at(); $("#time").textContent = fmt(t) + " / " + fmt(total());
   document.querySelector(".playhead") && (document.querySelector(".playhead").style.left = t * pps + "px");
-  overlay(); if (!p) return;
+  overlay(); markCurrent(); if (!p) return;
   $("#tag").textContent = (p.cam || "").replace(/^cam_/, "") + (p.why ? " · " + p.why : "");
   if (p.v != null) { vid.style.visibility = "visible"; load(vid, p.v, p.vt); } else vid.style.visibility = "hidden";
   load(aud, p.a, p.at);
@@ -410,7 +521,7 @@ document.addEventListener("keydown", e => { if (e.target.tagName === "INPUT" || 
   if (e.code === "Space") { e.preventDefault(); playing ? stop() : play(); }
   if (e.code === "ArrowLeft") seek(t - (e.shiftKey ? 5 : 1)); if (e.code === "ArrowRight") seek(t + (e.shiftKey ? 5 : 1)); });
 
-fit(); legend(); refreshChanges(); render();
+fit(); legend(); renderCams(); refreshChanges(); render();
 </script>
 </body>
 </html>

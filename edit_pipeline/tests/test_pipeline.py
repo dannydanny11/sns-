@@ -154,3 +154,83 @@ def test_viewer_and_overrides(tmp_path):
     assert res2["parts"][0]["plan"]["items"][k]["enabled"]
     assert res2["timeline"]["duration"] > res["timeline"]["duration"]
     assert viewer.apply_overrides(res2["parts"], {"없는#0": True}) == 0
+
+
+# ── 통째로 넣은 촬영본 ─────────────────────────
+
+def test_auto_sort_dump(tmp_path):
+    fx = make_fixture.build_dump(str(tmp_path))
+    res = run(fx["project"], work_root=fx["work"], output_root=fx["output"], log=lambda *_: None)
+    sy = res["sync"][0]
+    cams = {c["name"]: c for c in sy["cameras"]}
+    # 카드 폴더 4개 = 카메라 4대, 캐논 분할 파일 2개와 세션을 넘나드는 파일은 같은 카메라로
+    assert set(cams) == {"카드1", "측면캠", "카드3", "카드4"}
+    assert cams["카드3"]["files"] == 2 and cams["카드1"]["files"] == 2
+    assert cams["측면캠"]["role"] == "side" and cams["측면캠"]["evidence"] == "폴더 이름"
+    assert sum(c["role"] == "front" for c in cams.values()) == 1
+    # 무관한 소리의 영상은 인서트, 잡파일(.THM .LRV .XML ._*)은 무시
+    assert [os.path.basename(c["file"]) for c in sy["inserts"]] == ["MVI_0015.MP4"]
+    assert sy["skipped_files"] == [os.path.join("측면캠", "MISC", "info.bin")]
+    # 녹음 세션 2개, 세션마다 무선 마이크 4개가 오프셋과 함께 묶임
+    assert len(sy["sessions"]) == 2
+    for s in sy["sessions"]:
+        offs = {t["name"]: t["offset"] for t in s["reference"]["tracks"]}
+        assert offs == pytest.approx({"TX01": 0.0, "TX02": 0.4, "TX03": -0.3, "TX04": 0.25}, abs=0.002)
+    split = next(c for s in sy["sessions"] for c in s["clips"] if c["file"].endswith("A_0002C313A260711_101730EJ_CANON-008.MP4"))
+    assert split["offset"] == pytest.approx(31.0, abs=0.01) and "분할" in split["reason"]
+    assert res["preset"] == "교과서여행"
+    # 화자: 가장 크게 들어온 마이크
+    truth = {w["s"]: w["spk"] for ws in fx["truth"].values() for w in ws}
+    words = [w for p in res["parts"] for w in p["plan"]["words"]]
+    assert sum(truth[w["s"]] == w.get("spk") for w in words) / len(words) > 0.95
+    # 싱크 타임라인: 카메라 4대 + 인서트 트랙, 마이크 4개 + 카메라 오디오 4개
+    root = ET.parse(res["outputs"]["싱크 타임라인 XML(촬영 전체 멀티캠)"]).getroot()
+    assert len(root.findall(".//video/track")) == 5
+    assert len(root.findall(".//audio/track")) == 8
+    rough = ET.parse(res["outputs"]["러프컷 XML"]).getroot()
+    assert len(rough.findall(".//audio/track")) == 4
+
+
+def test_roles_override(tmp_path):
+    fx = make_fixture.build_dump(str(tmp_path))
+    quiet = dict(work_root=fx["work"], output_root=fx["output"], until="sync", log=lambda *_: None)
+    run(fx["project"], **quiet)
+    res = run(fx["project"], roles="카드4=tele", **quiet)
+    assert {c["role"] for s in res["sync"][0]["sessions"] for c in s["clips"] if c["camera"] == "카드4"} == {"tele"}
+
+
+def test_clock_drift_corrected(tmp_path):
+    from scipy.io import wavfile
+    from autocut.sync import refine_offset
+    sr, dur, off, ppm = 16000, 420, 5.0, 120
+    rng = np.random.default_rng(3)
+    t = np.arange(sr * dur) / sr
+    ref = rng.normal(size=len(t)) * (np.sin(2 * np.pi * 0.37 * t) > 0)
+    c_t = np.arange(sr * (dur - 20)) / sr
+    clip = np.interp(off + c_t * (1 + ppm * 1e-6), t, ref)   # 기준 = off + rate × 카메라 시각
+    wavfile.write(tmp_path / "ref.wav", sr, (ref * 8000).astype(np.int16))
+    wavfile.write(tmp_path / "cam.wav", sr, (clip * 8000).astype(np.int16))
+    o, rate = refine_offset(str(tmp_path / "ref.wav"), str(tmp_path / "cam.wav"), off + 0.01, dur - 20, dur)
+    assert o == pytest.approx(off, abs=0.003)
+    assert (rate - 1) * 1e6 == pytest.approx(ppm, abs=10)
+
+
+def test_split_overlap_and_prefix():
+    from autocut.autosort import _prefix, role_from_words, split_overlaps
+    assert _prefix("A_0001C313A260711_101700EJ_CANON-008.MP4") == _prefix("A_0002C313A260711_101730EJ_CANON-008.MP4")
+    assert role_from_words("B캠_측면 DCIM") == "side" and role_from_words("정면카메라") == "front"
+    assert role_from_words("network") is None
+    clips = [{"offset": 0, "duration": 10}, {"offset": 2, "duration": 10}, {"offset": 10.2, "duration": 5}]
+    assert [len(ch) for ch in split_overlaps(clips)] == [2, 1]
+
+
+def test_role_decision_from_faces():
+    from autocut.visual import decide
+    f = lambda fr, pr, size, people=1.0: {"frontal_rate": fr, "profile_rate": pr, "face_rate": max(fr, pr), "size": size, "people": people}  # noqa: E731
+    cams = [{"name": "a", "coverage": 10, "faces": f(0.9, 0.0, 0.02)},
+            {"name": "b", "coverage": 10, "faces": f(0.1, 0.8, 0.02)},
+            {"name": "c", "coverage": 10, "faces": f(0.8, 0.0, 0.08)},
+            {"name": "d", "coverage": 10, "faces": f(0.6, 0.0, 0.005)},
+            {"name": "e", "coverage": 10, "faces": f(0.9, 0.0, 0.01, people=2.0)}]
+    decide(cams)
+    assert [c["role"] for c in cams] == ["front", "side", "tele", "wide", "two"]

@@ -2,5 +2,6 @@ numpy>=1.24
 scipy>=1.10
 faster-whisper>=1.0      # 2단계 전사
 anthropic>=0.115         # 목표 길이 모드의 중요도 판정(선택, ANTHROPIC_API_KEY 필요)
+opencv-python-headless>=4.8,<5   # 카메라 역할 자동 판정(얼굴 분석)
 imageio-ffmpeg>=0.5      # ffmpeg 가 PATH 에 없을 때 대체 실행 파일
 pytest>=8                # 테스트

@@ -203,7 +203,15 @@ def free_items(words: list[dict], rules: dict) -> list[dict]:
 def _item(ws: list[dict], enabled: bool, reason: str) -> dict:
     return {"s": ws[0]["s"], "e": ws[-1]["e"], "w0": ws[0]["i"], "w1": ws[-1]["i"],
             "word_ids": [w["i"] for w in ws], "text": " ".join(w["w"] for w in ws),
-            "enabled": enabled, "reason": reason}
+            "enabled": enabled, "reason": reason, "spk": _main_speaker(ws)}
+
+
+def _main_speaker(ws: list[dict]) -> str | None:
+    counts: dict[str, float] = {}
+    for w in ws:
+        if w.get("spk"):
+            counts[w["spk"]] = counts.get(w["spk"], 0) + w["e"] - w["s"]
+    return max(counts, key=counts.get) if counts else None
 
 
 def segments_for(item: dict, words: list[dict], rules: dict) -> list[dict]:
@@ -288,7 +296,7 @@ def plan_cuts(transcript: dict, rules: dict, sentences: list[Sentence] | None = 
     mark_topics(items, rules)
     dropped = [{"i": w["i"], "w": w["w"], "s": w["s"], "reason": w["drop"]} for w in words if w["drop"]]
     return {"mode": mode, "items": items, "missing_sentences": missing, "dropped_words": dropped,
-            "words": [{k: w[k] for k in ("w", "s", "e")} for w in words]}
+            "words": [{k: w[k] for k in ("w", "s", "e", "spk") if k in w} for w in words]}
 
 
 def kept_duration(plan: dict) -> float:
