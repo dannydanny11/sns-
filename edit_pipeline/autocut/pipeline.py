@@ -66,20 +66,23 @@ def parse_roles(text: str | None) -> dict[str, str]:
 
 
 def apply_roles(syncs: list[dict], roles: dict[str, str], by_file: bool = False) -> None:
-    """카메라 이름(by_file 이면 파일 이름 일부로도)이 맞으면 역할을 바꾼다."""
-    def hit(key, cam, path):
-        return key == cam or (by_file and key.lower() in os.path.basename(path).lower())
-    renamed = {}
+    """카메라 이름(by_file 이면 그 카메라 파일 이름 일부로도)이 맞으면 그 카메라 전체의 역할을 바꾼다."""
+    cam_role = {}
     for sy in syncs:
         for s in sy["sessions"]:
             for c in s["clips"]:
                 for key, role in roles.items():
-                    if hit(key, c["camera"], c["file"]):
-                        c["role"] = role
-                        renamed[c["camera"]] = role
+                    base = os.path.splitext(os.path.basename(c["file"]))[0].lower()
+                    if key == c["camera"] or (by_file and key.lower() in base):
+                        cam_role[c["camera"]] = role
+    for sy in syncs:
+        for s in sy["sessions"]:
+            for c in s["clips"]:
+                if c["camera"] in cam_role:
+                    c["role"] = cam_role[c["camera"]]
         for ci in sy.get("cameras", []):
-            if ci["name"] in renamed or ci["name"] in roles:
-                ci["role"] = renamed.get(ci["name"]) or roles[ci["name"]]
+            if ci["name"] in cam_role:
+                ci["role"] = cam_role[ci["name"]]
                 ci["evidence"] = "학습한 스타일" if by_file else "직접 지정(--roles)"
 
 

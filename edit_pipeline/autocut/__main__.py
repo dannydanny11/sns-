@@ -10,6 +10,7 @@
   python -m autocut run input/<프로젝트> --overrides output/<프로젝트>/<프로젝트>_수정.json
   python -m autocut learn 셀렉츠편집.xml --media input/<프로젝트> --name 팟캐스트   # 편집 스타일 학습
   python -m autocut run input/<프로젝트> --style 팟캐스트                          # 학습한 스타일로 편집
+  python -m autocut compare-sync 셀렉츠.fcpxml input/<프로젝트>                    # 셀렉츠 싱크와 비교
 """
 from __future__ import annotations
 
@@ -37,10 +38,24 @@ def main(argv=None) -> int:
     r.add_argument("--work", help="작업 폴더(기본 edit_pipeline/work)")
     r.add_argument("--output", help="출력 폴더(기본 edit_pipeline/output)")
     le = sub.add_parser("learn", help="셀렉츠·프리미어에서 편집한 XML 로 편집 스타일 학습")
-    le.add_argument("xml", help="FCP7 XML(프리미어/셀렉츠 '내보내기 → Final Cut Pro XML')")
+    le.add_argument("xml", help="편집 파일: FCP7 XML(프리미어) 또는 .fcpxml(파이널컷 X·셀렉츠)")
     le.add_argument("--media", help="원본 폴더(마이크 파일을 찾아 화자 → 카메라까지 학습)")
     le.add_argument("--name", help="저장 이름(기본: XML 파일 이름) → config/styles/<이름>.json")
+    cs = sub.add_parser("compare-sync", help="셀렉츠·파이널컷 멀티캠(정답)과 이 도구의 싱크 결과를 파일별로 비교")
+    cs.add_argument("truth", help="정답 파일: .fcpxml(멀티캠) 또는 FCP7 XML")
+    cs.add_argument("project", help="input/<프로젝트> (먼저 run --until sync 로 싱크해 둘 것)")
+    cs.add_argument("--work", help="작업 폴더(기본 edit_pipeline/work)")
     a = ap.parse_args(argv)
+    if a.cmd == "compare-sync":
+        from . import learn
+        from .pipeline import ROOT
+        proj = os.path.basename(os.path.normpath(a.project))
+        path = os.path.join(a.work or os.path.join(ROOT, "work"), "sync", f"{proj}.json")
+        if not os.path.exists(path):
+            print(f"싱크 결과가 없습니다. 먼저: python -m autocut run {a.project} --until sync")
+            return 1
+        print(learn.compare_summary(learn.compare_sync(a.truth, path)))
+        return 0
     if a.cmd == "learn":
         from . import learn
         from .pipeline import ROOT

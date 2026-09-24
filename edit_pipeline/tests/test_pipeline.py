@@ -316,3 +316,54 @@ def test_learn_style_roundtrip(tmp_path):
     assert agree > 0.8                                                  # 학습한 대로 화자를 따라 앵글 전환
     root = ET.parse(out["outputs"]["러프컷 XML"]).getroot()
     assert root.findtext("sequence/rate/timebase") == "24"             # 시퀀스 23.976 도 학습대로
+
+
+def _fcpxml_multicam(path, placements):
+    """테스트용 최소 FCPXML: 멀티캠 각도마다 파일을 placements[이름] 초에 놓는다(파일 앞 1초는 잘라 둠)."""
+    res, angles = [], []
+    for i, (name, pos) in enumerate(placements.items()):
+        video = "1" if name.lower().endswith((".mp4", ".mov")) else "0"
+        res.append(f'<asset id="a{i}" name="{name}" start="3600s" duration="100s" hasVideo="{video}" hasAudio="1">'
+                   f'<media-rep kind="original-media" src="file:///x/{name}"/></asset>')
+        # 파일 1초 지점부터 쓰면 멀티캠 위치는 pos+1, asset 안 시작점은 3600+1
+        angles.append(f'<mc-angle name="{name}" angleID="g{i}"><asset-clip ref="a{i}" name="{name}" '
+                      f'offset="{pos + 1}s" start="3601s" duration="50s"/></mc-angle>')
+    xml = ('<?xml version="1.0" encoding="UTF-8"?><fcpxml version="1.10"><resources>'
+           '<format id="f1" frameDuration="1001/24000s" width="1920" height="1080"/>' + "".join(res) +
+           '<media id="m1" name="Synced Sequence"><multicam format="f1">' + "".join(angles) + '</multicam></media>'
+           '</resources><library><event name="e"><project name="p"><sequence format="f1" duration="10s"><spine>'
+           '<mc-clip ref="m1" offset="0s" start="5s" duration="4s"><mc-source angleID="g0" srcEnable="video"/></mc-clip>'
+           '</spine></sequence></project></event></library></fcpxml>')
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(xml)
+    return path
+
+
+def test_compare_sync_with_fcpxml_truth(tmp_path):
+    from autocut import learn
+    fx = make_fixture.build_dump(str(tmp_path))
+    run(fx["project"], until="sync", work_root=fx["work"], output_root=fx["output"], log=lambda *_: None)
+    sync_json = os.path.join(fx["work"], "sync", "강릉.json")
+    # 정답: 셀렉츠가 첫 녹음 세션을 멀티캠 100초 지점에 놓았다고 가정(파일 이름으로 맞춘다)
+    truth = {"TX01_MIC028_20260711_101626_edit.WAV": 100.0, "TX02_MIC028_20260711_101626_edit.WAV": 100.4,
+             "MVI_9447.MP4": 101.5, "MVI_0014.MP4": 102.0, "CJ_19485.MP4": 100.5,
+             "A_0001C313A260711_101700EJ_CANON-008.MP4": 101.0}
+    res = learn.compare_sync(_fcpxml_multicam(str(tmp_path / "정답.fcpxml"), truth), sync_json)
+    assert len(res["rows"]) == 5 and res["max_ms"] < 3
+    truth["MVI_0014.MP4"] += 0.1                      # 정답과 100ms 어긋난 파일은 오차로 잡혀야 한다
+    res = learn.compare_sync(_fcpxml_multicam(str(tmp_path / "정답2.fcpxml"), truth), sync_json)
+    worst = max(res["rows"], key=lambda r: abs(r["error_ms"]))
+    assert worst["file"] == "MVI_0014.MP4" and abs(worst["error_ms"] + 100) < 3
+    assert "오차" in learn.compare_summary(res)
+
+
+def test_learn_reads_fcpxml(tmp_path):
+    from autocut import learn
+    path = _fcpxml_multicam(str(tmp_path / "e.fcpxml"), {"MVI_1.MP4": 0.0, "CJ_1.MP4": 0.5, "TX01.wav": 0.0})
+    ed = learn.load_edit(path)
+    assert ed["stacked"] and ed["fps"] == pytest.approx(23.976, abs=0.001)
+    assert [s["cam"] for s in ed["segs"]] == ["MVI"]
+    from autocut.learn import camera_keys
+    assert camera_keys(["a_R3.MP4", "a_C400.MP4"]) == {"a_R3.MP4": "R3", "a_C400.MP4": "C400"}
+    assert len(set(camera_keys(["MVI_9447.MP4", "MVI_0014.MP4", "CJ_1.MP4"]).values())) == 3
+    assert learn.multicam_positions(path)["CJ_1.MP4"]["pos"] == pytest.approx(0.5)

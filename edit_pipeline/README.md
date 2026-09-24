@@ -119,7 +119,8 @@ python -m autocut run input/강릉여행 --target shorts          # 쇼츠 구�
 
 ## 편집 스타일 학습 (셀렉츠·프리미어 작업 XML)
 
-직접 편집한(또는 셀렉츠로 만든) 시퀀스를 **Final Cut Pro XML** 로 내보내서 학습시키면, 다음부터 같은 스타일로 자른다.
+직접 편집한(또는 셀렉츠로 만든) 시퀀스를 내보내서 학습시키면, 다음부터 같은 스타일로 자른다.
+두 형식 모두 읽는다: **FCP7 XML**(프리미어 '내보내기 → Final Cut Pro XML', `.xml`)과 **FCPXML**(파이널컷 X·셀렉츠 '파이널컷' 내보내기, `.fcpxml`).
 
 ```bash
 python -m autocut learn 풀버전_팟캐스트.xml --media input/은비쌤_0804 --name 팟캐스트
@@ -137,6 +138,19 @@ python -m autocut run input/새촬영 --style 팟캐스트
 | 화자 → 카메라 | `--media` 로 원본 폴더를 주면 마이크 음량으로 구간 화자를 찾아 "이형→C400" 처럼 학습 |
 
 `--media` 없이도 되지만, 그러면 화자 → 카메라 짝은 빠진다. 결과는 `config/styles/<이름>.json`.
+FCPXML 에 들어 있는 주제 마커(예: 강릉 여행 시작, 경포호·경포대 소개 …)도 함께 읽어 요약에 보여 준다.
+
+## 셀렉츠 싱크와 비교 (`compare-sync`)
+
+셀렉츠가 만든 멀티캠('Synced Sequence' 가 들어 있는 `.fcpxml`)을 정답으로 삼아, 이 도구의 싱크가 맞는지 파일별로 확인한다.
+
+```bash
+python -m autocut run input/강릉 --until sync                  # 먼저 싱크만
+python -m autocut compare-sync 강릉_셀렉츠.fcpxml input/강릉
+```
+
+파일마다 셀렉츠 대비 오차(ms, 프레임)를 보여 주고 1프레임 이상 어긋난 파일에 `← 확인` 표시,
+셀렉츠는 맞췄는데 이 도구가 못 맞춘 파일, 반대로 이 도구만 맞춘 파일도 알려 준다. 파일 이름으로 짝을 짓는다.
 여러 작업 XML 로 각각 학습해 두고 촬영 성격에 맞춰 `--style` 로 골라 쓰면 된다.
 
 ## 타임라인 뷰어 (`_타임라인.html`)
