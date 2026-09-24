@@ -20,7 +20,9 @@ def pathurl(path: str) -> str:
         p = os.path.abspath(path).replace("\\", "/")
     if re.match(r"^[A-Za-z]:/", p):      # 윈도우 드라이브 경로 → /C:/...
         p = "/" + p
-    return "file://localhost" + quote(p, safe="/:")
+    # 프리미어가 쓰는 표기 그대로: 드라이브 콜론은 %3a, 퍼센트 코드는 소문자(file://localhost/N%3a/…)
+    enc = quote(p, safe="/()!'*-_.~")
+    return "file://localhost" + re.sub(r"%[0-9A-F]{2}", lambda m: m.group(0).lower(), enc)
 
 
 def _rate(fps: float | None) -> str:
@@ -44,8 +46,10 @@ class _Files:
         file_fps = media.get("fps") if media.get("has_video") and media.get("fps") else self.fps
         base, ntsc = timebase(file_fps)
         dur = int(round(media.get("duration", 0) * (Fraction(base * 1000, 1001) if ntsc else Fraction(base))))
+        tc = (f"<timecode>{_rate(file_fps)}<string>{'00;00;00;00' if ntsc and base in (30, 60) else '00:00:00:00'}</string>"
+              f"<frame>0</frame><displayformat>{'DF' if ntsc and base in (30, 60) else 'NDF'}</displayformat></timecode>")
         parts = [f'<file id="{fid}">', f"<name>{escape(os.path.basename(path))}</name>",
-                 f"<pathurl>{escape(pathurl(path))}</pathurl>", _rate(file_fps), f"<duration>{dur}</duration>",
+                 f"<pathurl>{escape(pathurl(path))}</pathurl>", _rate(file_fps), f"<duration>{dur}</duration>", tc,
                  "<media>"]
         if media.get("has_video"):
             parts.append("<video><samplecharacteristics>"
@@ -55,7 +59,10 @@ class _Files:
         if media.get("has_audio"):
             parts.append("<audio><samplecharacteristics><depth>16</depth>"
                          f"<samplerate>{media.get('sample_rate') or 48000}</samplerate></samplecharacteristics>"
-                         f"<channelcount>{media.get('audio_channels') or 2}</channelcount></audio>")
+                         f"<channelcount>{media.get('audio_channels') or 2}</channelcount>"
+                         + ("<audiochannel><sourcechannel>1</sourcechannel></audiochannel>"
+                            if not media.get("has_video") and (media.get("audio_channels") or 2) == 1 else "")
+                         + "</audio>")
         parts.append("</media></file>")
         return "".join(parts)
 

@@ -103,7 +103,8 @@ def test_parse_target(value, sec):
 
 
 def test_pathurl_windows_and_korean():
-    assert fcpxml.pathurl("C:\\촬영\\a b.mp4") == "file://localhost/C:/%EC%B4%AC%EC%98%81/a%20b.mp4"
+    # 프리미어가 내보내는 표기와 같게: 콜론 %3a, 소문자 퍼센트 코드, 괄호는 그대로
+    assert fcpxml.pathurl("C:\\촬영\\a b(1).mp4") == "file://localhost/C%3a/%ec%b4%ac%ec%98%81/a%20b(1).mp4"
 
 
 # ── 전체 흐름 ─────────────────────────────────
