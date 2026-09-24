@@ -389,3 +389,38 @@ def test_speaker_subtitles(tmp_path):
     assert "[00:00:00] 채연" in script
     full = open(out["전체 전사(원본·뺀 부분 표시)"], encoding="utf-8").read()
     assert full.count("\n[") >= len(res["parts"][0]["plan"]["items"])
+
+
+def test_premiere_job_file(tmp_path):
+    import json
+    fx = _podcast(tmp_path)
+    res = run(fx["project"], **fx["quiet"])
+    job_path = res["outputs"]["프리미어 작업 목록(패널용)"]
+    job = json.load(open(job_path, encoding="utf-8"))
+    base = os.path.dirname(job_path)
+    assert job["prproj"] == "팟캐스트.prproj"
+    for rel in [job["rough_xml"], *job["extra_xml"], job["captions"], *job["speaker_captions"].values()]:
+        assert not os.path.isabs(rel) and os.path.exists(os.path.join(base, rel))   # 폴더를 옮겨도 되는 상대 경로
+    assert set(job["speaker_captions"]) == set(make_fixture.PODCAST_SPK)
+    root = ET.parse(os.path.join(base, job["rough_xml"])).getroot()
+    assert root.findtext("sequence/name") == "팟캐스트 러프컷"      # 패널이 캡션을 붙일 시퀀스 이름
+
+
+@pytest.mark.skipif(not __import__("shutil").which("node"), reason="node 없음")
+def test_premiere_panel_host_script(tmp_path):
+    """프리미어 ExtendScript API 흉내로 host.jsx 가 XML→.prproj, 시퀀스 추가, 화자별 캡션 트랙, 저장을 순서대로 부르는지."""
+    import json
+    import subprocess
+    here = os.path.dirname(os.path.abspath(__file__))
+    host = os.path.join(os.path.dirname(here), "premiere_panel", "host.jsx")
+    job = {"project": "팟캐스트", "prproj": "F:/a/팟캐스트.prproj", "rough_xml": "F:/a/팟캐스트_러프컷.xml",
+           "extra_xml": ["F:/a/팟캐스트_싱크타임라인.xml"], "captions": "F:/a/팟캐스트_자막.srt",
+           "speaker_captions": {"이형": "F:/a/s/팟캐스트_이형.srt", "시온": "F:/a/s/팟캐스트_시온.srt"}, "point_captions": None}
+    out = subprocess.run(["node", os.path.join(here, "panel", "check_host.cjs"), host, json.dumps(job, ensure_ascii=False)],
+                         capture_output=True, text=True, check=True).stdout
+    res = json.loads(out)
+    assert res["result"].startswith("OK:")
+    names = [c[0] for c in res["calls"]]
+    assert names == ["openFCPXML", "importFiles", "createBin", "importFiles", "createCaptionTrack", "createCaptionTrack", "save"]
+    assert res["calls"][0][1] == "F:\\a\\팟캐스트_러프컷.xml"                     # 윈도우 경로로 변환
+    assert [c[2] for c in res["calls"] if c[0] == "createCaptionTrack"] == ["팟캐스트_이형.srt", "팟캐스트_시온.srt"]

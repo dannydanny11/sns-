@@ -77,6 +77,8 @@ def main() -> int:
     else:
         viewer = res.get("outputs", {}).get("타임라인 뷰어")
         print(f"\n완료! 결과 폴더: {out_dir}")
+        print("프리미어 프로젝트(.prproj)는 프리미어의 [창 > 확장 > 영상 자동 컷편집] 패널에서 [프로젝트 만들기]"
+              "\n(자동 만들기를 켜 두었다면 프리미어가 알아서 만듭니다).")
         _open(out_dir)
         if viewer:
             _open(viewer)

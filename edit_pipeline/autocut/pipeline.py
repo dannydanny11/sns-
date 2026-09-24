@@ -297,6 +297,30 @@ def run(project_dir: str, preset: str | None = "auto", script_path: str | None =
     outputs["타임라인 뷰어"] = viewer.write(
         os.path.join(out_dir, f"{project}_타임라인.html"),
         viewer.build_data(project, parts, tl, rate, caps, points, out_dir, proxies, peaks, syncs))
+    # 프리미어 패널이 읽는 작업 목록: 이 파일이 있으면 패널이 .prproj 를 만든다(프리미어가 직접 변환)
+    speaker_dir = os.path.join(out_dir, f"{project}_자막_화자별")
+    job = {
+        "project": project,
+        "prproj": os.path.join(out_dir, f"{project}.prproj"),
+        "rough_xml": outputs["러프컷 XML"],
+        "extra_xml": [outputs["싱크 타임라인 XML(촬영 전체 멀티캠)"], outputs["검토용 XML(탈락 테이크 포함)"]],
+        "captions": outputs["대사 자막 SRT"],
+        "speaker_captions": {os.path.splitext(f)[0].split("_", 1)[-1]: os.path.join(speaker_dir, f)
+                             for f in sorted(os.listdir(speaker_dir))} if os.path.isdir(speaker_dir) else {},
+        "point_captions": outputs.get("포인트 자막 SRT"),
+    }
+    def rel(v):   # 폴더를 옮겨도 되도록 이 JSON 기준 상대 경로
+        if isinstance(v, str) and os.path.isabs(v):
+            return os.path.relpath(v, out_dir).replace("\\", "/")
+        if isinstance(v, list):
+            return [rel(x) for x in v]
+        if isinstance(v, dict):
+            return {k: rel(x) for k, x in v.items()}
+        return v
+    job_path = os.path.join(out_dir, f"{project}_프리미어.json")
+    with open(job_path, "w", encoding="utf-8") as f:
+        json.dump({k: rel(v) for k, v in job.items()}, f, ensure_ascii=False, indent=1)
+    outputs["프리미어 작업 목록(패널용)"] = job_path
     rpath = os.path.join(out_dir, f"{project}_리포트.md")
     outputs["리포트"] = rpath
     with open(rpath, "w", encoding="utf-8") as f:
