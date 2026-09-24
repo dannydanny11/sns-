@@ -50,10 +50,31 @@ class CameraPool:
                 return cam, clip
         if candidates:
             return candidates[0]
-        for c in self.clips:  # 최후 수단: 아무 카메라나
-            if self.clip_covering(c["camera"], s, e):
-                return c["camera"], c
+        for c in self.clips:  # 최후 수단: 아무 카메라나(그 구간을 실제로 담은 파일로)
+            clip = self.clip_covering(c["camera"], s, e)
+            if clip:
+                return c["camera"], clip
         return None
+
+    def boundaries(self) -> list[float]:
+        """파일이 시작·끝나는 기준 시각(분할 녹화 경계 포함)."""
+        out = set()
+        for c in self.clips:
+            out.add(round(c["offset"], 4))
+            out.add(round(c["offset"] + c["duration"] * c.get("rate", 1.0), 4))
+        return sorted(out)
+
+
+def name_matches(key: str, camera: str, path: str) -> bool:
+    """카메라 이름이 같거나, 파일 이름의 어절(_·-·공백 구분)에 key 가 통째로 들어 있으면 참.
+    'R3' 는 20260804_PD_R3.MP4 와 맞지만 'A' 가 cam_a7s.MP4 와 맞지는 않는다."""
+    import re
+    if key == camera:
+        return True
+    toks = [t for t in re.split(r"[_\s.-]+", os.path.splitext(os.path.basename(path))[0].lower()) if t]
+    ktoks = [t for t in re.split(r"[_\s.-]+", key.lower()) if t]
+    n = len(ktoks)
+    return n > 0 and any(toks[i:i + n] == ktoks for i in range(len(toks) - n + 1))
 
 
 def resolve_speaker_cams(mapping: dict[str, str], pool: "CameraPool") -> dict[str, str]:
@@ -61,7 +82,7 @@ def resolve_speaker_cams(mapping: dict[str, str], pool: "CameraPool") -> dict[st
     out = {}
     for spk, key in mapping.items():
         for c in pool.clips:
-            if c["camera"] == key or key.lower() in os.path.basename(c["file"]).lower():
+            if name_matches(key, c["camera"], c["file"]):
                 out[spk] = c["camera"]
                 break
     return out
@@ -125,13 +146,29 @@ def place_angles(plan: dict, session: dict, rules: dict) -> list[dict]:
                 t = b
             if e - t > 0.01:
                 requests.append({"s": t, "e": e, "slots": None, "why": "", "jump": jump and first})
-            if k == 0:
-                for rq in requests[::-1]:
-                    if rq["s"] >= s - 1e-6:
-                        rq["spk"], rq["spk_change"] = spk, spk_change and rq["s"] == s
-                    else:
-                        break
+            for rq in requests[::-1]:   # 이 구간의 요청 모두에 화자, 화자 전환 표시는 항목 첫 요청에만
+                if rq["s"] >= s - 1e-6 and "spk" not in rq:
+                    rq["spk"] = spk
+                    rq["spk_change"] = k == 0 and spk_change and abs(rq["s"] - s) < 1e-6
+                else:
+                    break
             prev_e = e
+
+    # 1-1) 어느 카메라도 한 파일로 통째로 담지 못한 요청만 파일 경계에서 나눈다
+    #      (카메라 1대가 4GB 조각으로 나뉜 경우 등). 다른 카메라가 담고 있으면 나누지 않는다(짧은 튀는 컷 방지).
+    cuts = pool.boundaries()
+    split = []
+    for rq in requests:
+        whole = any(pool.clip_covering(c["camera"], rq["s"], rq["e"]) for c in pool.clips)
+        inner = [] if whole else [b for b in cuts if rq["s"] + 1e-3 < b < rq["e"] - 1e-3]
+        t = rq["s"]
+        for k, b in enumerate(inner + [rq["e"]]):
+            piece = dict(rq, s=t, e=b)
+            if k:
+                piece["jump"] = piece["spk_change"] = False
+            split.append(piece)
+            t = b
+    requests = split
 
     # 2) 자동 구간에 기본/측면 배정, 오래 머물면 측면으로 끊기
     shots: list[dict] = []
@@ -141,14 +178,14 @@ def place_angles(plan: dict, session: dict, rules: dict) -> list[dict]:
         if rq["slots"]:
             prev_cam = shots[-1]["camera"] if shots and rq["jump"] else None
             got = pool.pick(rq["slots"] + ["base", "alt"], rq["s"], rq["e"], avoid=prev_cam)
-            if got:
-                shots.append(_shot(rq["s"], rq["e"], got, rq["why"]))
+            shots.append(_shot(rq["s"], rq["e"], got, rq["why"]))
             hold = 0.0
             cur_auto = "base"
             continue
         s = rq["s"]
         want = speaker_cam.get(rq.get("spk"))
-        if rq.get("spk_change") and follow_speaker and shots and hold >= min_shot:
+        if rq.get("spk_change") and follow_speaker and shots and (want or hold >= min_shot):
+            # 학습한 '화자 → 카메라' 가 있으면 점프컷 덮기보다 우선한다
             # 화자가 바뀌면 앵글도 바꾼다(셀렉츠 실작업에서 연속 발화 중 컷의 95%가 앵글 전환)
             cur_auto = "base" if want else ("alt" if cur_auto == "base" else "base")
             hold = 0.0
@@ -157,6 +194,13 @@ def place_angles(plan: dict, session: dict, rules: dict) -> list[dict]:
             hold = 0.0
         while s < rq["e"] - 1e-3:
             limit = (alt_hold if cur_auto == "alt" else max_hold) - hold
+            left = rq["e"] - s
+            cant_split = left > limit and left <= 2 * min_shot     # 나누면 최소 샷보다 짧은 조각이 생김
+            if hold >= min_shot and (limit < min_shot or cant_split):
+                # 한도까지 여유가 없거나, 이 요청을 끝까지 두면 한도를 넘는다 → 여기서 바로 다른 앵글로
+                cur_auto = "alt" if cur_auto == "base" else "base"
+                hold = 0.0
+                limit = alt_hold if cur_auto == "alt" else max_hold
             end = rq["e"]
             if end - s > limit and limit > 0:
                 end = _snap(s + limit, bounds, s + min_shot, rq["e"] - min_shot) if rq["e"] - s > 2 * min_shot else rq["e"]
@@ -168,9 +212,8 @@ def place_angles(plan: dict, session: dict, rules: dict) -> list[dict]:
                 got = (want, clip) if clip else None
             if not got:
                 got = pool.pick(slots, s, end, avoid=prev_cam if cur_auto == "alt" else None)
-            if got:
-                why = f"화자 {rq.get('spk')}" if want and got[0] == want else ("측면 전환" if cur_auto == "alt" else "")
-                shots.append(_shot(s, end, got, why))
+            why = f"화자 {rq.get('spk')}" if got and want and got[0] == want else ("측면 전환" if cur_auto == "alt" else "")
+            shots.append(_shot(s, end, got, why))
             hold += end - s
             if end < rq["e"] - 1e-3:
                 cur_auto = "alt" if cur_auto == "base" else "base"
@@ -180,6 +223,10 @@ def place_angles(plan: dict, session: dict, rules: dict) -> list[dict]:
 
 
 def _shot(s, e, got, why):
+    """got 이 None 이면 그 시각을 찍은 카메라가 없다 → 영상 없이 소리·자막만 남긴다(말이 사라지지 않게)."""
+    if not got:
+        return {"s": round(s, 3), "e": round(e, 3), "camera": None, "role": "none", "file": None,
+                "offset": 0.0, "rate": 1.0, "media": {}, "why": "영상 없음"}
     cam, clip = got
     return {"s": round(s, 3), "e": round(e, 3), "camera": cam, "role": clip["role"], "file": clip["file"],
             "offset": clip["offset"], "rate": clip.get("rate", 1.0), "media": clip.get("media", {}), "why": why}
@@ -189,12 +236,15 @@ def _merge_short(shots: list[dict], min_shot: float) -> list[dict]:
     """짧은 샷을 이웃과 합친다. 원본상 이어진(점프 없는) 샷끼리만 카메라를 바꿔 합칠 수 있다."""
     out: list[dict] = []
     for sh in shots:
-        if out and out[-1]["camera"] == sh["camera"] and abs(out[-1]["e"] - sh["s"]) < 1e-3:
+        if out and out[-1]["camera"] == sh["camera"] and out[-1]["file"] == sh["file"] \
+                and abs(out[-1]["e"] - sh["s"]) < 1e-3:   # 같은 카메라라도 다른 파일(분할 녹화)이면 합치지 않는다
             out[-1]["e"] = sh["e"]
+            out[-1]["why"] = out[-1]["why"] or sh["why"]
             continue
-        if out and sh["e"] - sh["s"] < min_shot and abs(out[-1]["e"] - sh["s"]) < 1e-3 and not sh["why"]:
+        if out and sh["e"] - sh["s"] < min_shot and abs(out[-1]["e"] - sh["s"]) < 1e-3 and not sh["why"] \
+                and out[-1]["file"]:
             prev = out[-1]
-            if prev["offset"] + prev["media"].get("duration", 1e9) * prev["rate"] >= sh["e"]:
+            if prev["offset"] + prev["media"].get("duration", 1e9) * prev["rate"] >= sh["e"] - 1e-3:
                 prev["e"] = sh["e"]
                 continue
         out.append(dict(sh))
@@ -204,8 +254,8 @@ def _merge_short(shots: list[dict], min_shot: float) -> list[dict]:
         a, b = out[k], out[k + 1]
         before = out[k - 1] if k > 0 else None
         same_across_jump = before is not None and before["camera"] == b["camera"] and abs(before["e"] - a["s"]) > 1e-3
-        if a["e"] - a["s"] < min_shot and abs(a["e"] - b["s"]) < 1e-3 and not a["why"] \
-                and b["offset"] <= a["s"] and not same_across_jump:
+        if a["e"] - a["s"] < min_shot and abs(a["e"] - b["s"]) < 1e-3 and not a["why"] and b["file"] \
+                and b["offset"] <= a["s"] + 1e-3 and not same_across_jump:
             b["s"] = a["s"]
             out.pop(k)
             continue

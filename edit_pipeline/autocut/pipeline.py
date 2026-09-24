@@ -72,8 +72,7 @@ def apply_roles(syncs: list[dict], roles: dict[str, str], by_file: bool = False)
         for s in sy["sessions"]:
             for c in s["clips"]:
                 for key, role in roles.items():
-                    base = os.path.splitext(os.path.basename(c["file"]))[0].lower()
-                    if key == c["camera"] or (by_file and key.lower() in base):
+                    if key == c["camera"] or (by_file and angles.name_matches(key, c["camera"], c["file"])):
                         cam_role[c["camera"]] = role
     for sy in syncs:
         for s in sy["sessions"]:
@@ -128,8 +127,8 @@ def run(project_dir: str, preset: str | None = "auto", script_path: str | None =
     rules = load_rules("default" if auto_preset else preset)
     learned = load_style(style) if style else {}
     project = os.path.basename(os.path.normpath(project_dir))
-    work = os.path.join(work_root or os.path.join(ROOT, "work"))
-    out_dir = os.path.join(output_root or os.path.join(ROOT, "output"), project)
+    work = os.path.abspath(work_root or os.path.join(ROOT, "work"))
+    out_dir = os.path.abspath(os.path.join(output_root or os.path.join(ROOT, "output"), project))
     stop_after = STAGES.index(until)
 
     # ── 1. 싱크 ─────────────────────────────
@@ -197,6 +196,8 @@ def run(project_dir: str, preset: str | None = "auto", script_path: str | None =
                 for w in tr["words"]:
                     if w.get("spk") in names:
                         w["spk"] = names[w["spk"]]
+                if rules.get("speaker_cams"):   # 학습한 '화자 → 카메라' 도 같은 이름으로
+                    rules["speaker_cams"] = {names.get(k, k): v for k, v in rules["speaker_cams"].items()}
             if n:
                 log(f"  화자 판정: 마이크 {len(audio.speaker_names(list(named)))}개 기준, 단어 {n}개")
             peaks[label] = {name: audio.peaks(e) for name, e in named.items()}
@@ -238,6 +239,9 @@ def run(project_dir: str, preset: str | None = "auto", script_path: str | None =
     for p in parts:
         p["shots"] = angles.place_angles(p["plan"], p["session"], rules)
         log(f"[4/5] 앵글 배치: {p['label']} — 샷 {len(p['shots'])}개")
+        blank = sum(sh["e"] - sh["s"] for sh in p["shots"] if not sh["file"])
+        if blank:
+            log(f"  ⚠ 어느 카메라도 찍지 않은 구간 {blank:.1f}초: 소리·자막만 넣고 영상은 비워 둠(리포트 '(영상 없음)')")
 
     # ── 5. 내보내기 ─────────────────────────
     base_media = next((c["media"] for p in parts for c in p["session"]["clips"]
@@ -267,7 +271,12 @@ def run(project_dir: str, preset: str | None = "auto", script_path: str | None =
     if any(c.get("spk") for c in caps):   # 셀렉츠처럼 화자별로
         outputs["화자 표시 자막 SRT"] = subtitles.write_srt(
             os.path.join(out_dir, f"{project}_자막_화자표시.srt"), caps, speaker_prefix=True)
-        per = subtitles.write_speaker_srts(os.path.join(out_dir, f"{project}_자막_화자별"), project, caps)
+        spk_dir = os.path.join(out_dir, f"{project}_자막_화자별")
+        if os.path.isdir(spk_dir):   # 이전 실행에서 남은 화자 파일(이름을 바꾸기 전 TX01.srt 등) 정리
+            for old in os.listdir(spk_dir):
+                if old.lower().endswith(".srt"):
+                    os.remove(os.path.join(spk_dir, old))
+        per = subtitles.write_speaker_srts(spk_dir, project, caps)
         outputs["화자별 자막 SRT"] = os.path.join(out_dir, f"{project}_자막_화자별") + os.sep
         log("  화자별 자막: " + ", ".join(f"{k} {sum(1 for c in caps if (c.get('spk') or '미확인') == k)}줄" for k in per))
     with open(os.path.join(out_dir, f"{project}_대본.txt"), "w", encoding="utf-8") as f:
@@ -298,15 +307,13 @@ def run(project_dir: str, preset: str | None = "auto", script_path: str | None =
         os.path.join(out_dir, f"{project}_타임라인.html"),
         viewer.build_data(project, parts, tl, rate, caps, points, out_dir, proxies, peaks, syncs))
     # 프리미어 패널이 읽는 작업 목록: 이 파일이 있으면 패널이 .prproj 를 만든다(프리미어가 직접 변환)
-    speaker_dir = os.path.join(out_dir, f"{project}_자막_화자별")
     job = {
         "project": project,
         "prproj": os.path.join(out_dir, f"{project}.prproj"),
         "rough_xml": outputs["러프컷 XML"],
         "extra_xml": [outputs["싱크 타임라인 XML(촬영 전체 멀티캠)"], outputs["검토용 XML(탈락 테이크 포함)"]],
         "captions": outputs["대사 자막 SRT"],
-        "speaker_captions": {os.path.splitext(f)[0].split("_", 1)[-1]: os.path.join(speaker_dir, f)
-                             for f in sorted(os.listdir(speaker_dir))} if os.path.isdir(speaker_dir) else {},
+        "speaker_captions": dict(sorted(per.items())) if any(c.get("spk") for c in caps) else {},
         "point_captions": outputs.get("포인트 자막 SRT"),
     }
     def rel(v):   # 폴더를 옮겨도 되도록 이 JSON 기준 상대 경로

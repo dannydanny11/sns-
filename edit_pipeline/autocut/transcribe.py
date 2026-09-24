@@ -30,7 +30,8 @@ def transcribe(audio_path: str, model_size: str = "large-v3", device: str = "aut
             wav,
             language="ko",                 # 언어 자동감지 끄기: 한국어 정확도에 필수
             word_timestamps=True,
-            vad_filter=False,              # 무음 판정은 3단계에서 직접 한다
+            vad_filter=True,               # 긴 잡음·무음 구간에서 없는 말을 지어내지 않게(타임코드는 그대로)
+            vad_parameters={"min_silence_duration_ms": 700, "speech_pad_ms": 300},
             condition_on_previous_text=False,  # 반복 테이크에서 환각 반복 방지
             initial_prompt=initial_prompt,
         )

@@ -424,3 +424,116 @@ def test_premiere_panel_host_script(tmp_path):
     assert names == ["openFCPXML", "importFiles", "createBin", "importFiles", "createCaptionTrack", "createCaptionTrack", "save"]
     assert res["calls"][0][1] == "F:\\a\\팟캐스트_러프컷.xml"                     # 윈도우 경로로 변환
     assert [c[2] for c in res["calls"] if c[0] == "createCaptionTrack"] == ["팟캐스트_이형.srt", "팟캐스트_시온.srt"]
+
+
+# ── 검수에서 찾은 버그 회귀 테스트 ─────────────────────
+
+def _clip(cam, f, off, dur, role="front"):
+    return {"camera": cam, "role": role, "file": f, "offset": off, "duration": dur, "rate": 1.0,
+            "status": "ok", "media": {"duration": dur}}
+
+
+def _plan(segs, spk=None, words=None):
+    return {"items": [{"enabled": True, "segments": segs, "spk": spk, "topic_start": False}], "words": words or []}
+
+
+def test_angles_single_camera_split_file_keeps_speech():
+    from autocut.angles import place_angles
+    sess = {"clips": [_clip("A", "a1.mp4", 0, 100), _clip("A", "a2.mp4", 100, 100)]}
+    shots = place_angles(_plan([{"s": 95, "e": 105}]), sess, {"min_shot": 2.0})
+    assert [(s["s"], s["e"], s["file"]) for s in shots] == [(95, 100, "a1.mp4"), (100, 105, "a2.mp4")]
+
+
+def test_angles_fallback_uses_covering_file():
+    from autocut.angles import CameraPool
+    pool = CameraPool({"clips": [_clip("B", "b1.mp4", 0, 50, "side"), _clip("B", "b2.mp4", 50, 150, "side")]},
+                      {"base": ["front"]})
+    cam, clip = pool.pick(["base"], 95, 105)
+    assert clip["file"] == "b2.mp4"
+
+
+def test_angles_gap_without_camera_keeps_audio():
+    from autocut.angles import place_angles
+    sess = {"clips": [_clip("A", "a1.mp4", 0, 10)]}
+    shots = place_angles(_plan([{"s": 5, "e": 15}]), sess, {"min_shot": 2.0})
+    assert shots[-1]["file"] is None and shots[-1]["e"] == 15          # 카메라가 없는 5초도 남는다
+
+
+def test_angles_speaker_cam_applies_to_all_segments():
+    from autocut.angles import place_angles
+    sess = {"clips": [_clip("C400", "x_C400.mp4", 0, 100), _clip("C50", "x_C50.mp4", 0, 100, "side")]}
+    plan = _plan([{"s": 1, "e": 4}, {"s": 6, "e": 9}], spk="이형")
+    shots = place_angles(plan, sess, {"min_shot": 2.0, "speaker_cams": {"이형": "C50"}, "cover_jump_cuts": False})
+    assert {s["camera"] for s in shots} == {"C50"}
+
+
+def test_angles_hold_limit_always_splits():
+    from autocut.angles import place_angles
+    sess = {"clips": [_clip("F", "f.mp4", 0, 200), _clip("S", "s.mp4", 0, 200, "side")]}
+    segs = [{"s": 0, "e": 13}, {"s": 13, "e": 16.5}, {"s": 16.5, "e": 76.5}]
+    shots = place_angles(_plan(segs), sess, {"min_shot": 2.0, "max_hold": 15.0, "alt_hold": 5.0, "cover_jump_cuts": False})
+    assert max(s["e"] - s["s"] for s in shots) <= 15.0 + 1e-6
+
+
+def test_merge_short_never_joins_different_files():
+    from autocut.angles import _merge_short
+    a = {"s": 0, "e": 10, "camera": "X", "file": "x1.mp4", "offset": 0, "rate": 1.0, "media": {"duration": 10}, "why": ""}
+    b = {**a, "s": 10, "e": 11, "file": "x2.mp4", "offset": 10}
+    out = _merge_short([a, b], 2.0)
+    assert all(sh["e"] <= sh["offset"] + sh["media"]["duration"] + 1e-6 for sh in out)
+
+
+def test_name_matches_tokens():
+    from autocut.angles import name_matches
+    assert name_matches("R3", "cam", "20260804_PD_R3.MP4")
+    assert name_matches("MVI_9447", "cam", "MVI_9447.MP4")
+    assert not name_matches("A", "cam", "cam_a7s.MP4") and not name_matches("A", "x", "A7S_0001.MP4")
+
+
+def test_relative_output_and_speaker_renames(tmp_path, monkeypatch):
+    import json
+    fx = _podcast(tmp_path)
+    monkeypatch.chdir(tmp_path)
+    style = tmp_path / "s.json"
+    style.write_text(json.dumps({"rules": {"speaker_cams": {"이형": "C50"}}}), encoding="utf-8")
+    quiet = dict(work_root="work", output_root="output", log=lambda *_: None)          # 상대 경로
+    run(fx["project"], **quiet)
+    res = run(fx["project"], speakers="이형=리형", style=str(style), **quiet)
+    job_path = res["outputs"]["프리미어 작업 목록(패널용)"]
+    job = json.load(open(job_path, encoding="utf-8"))
+    base = os.path.dirname(job_path)
+    assert os.path.exists(os.path.join(base, job["rough_xml"]))
+    assert "리형" in job["speaker_captions"] and "이형" not in job["speaker_captions"]     # 이전 실행 파일 안 남음
+    spk_dir = os.path.join(base, "팟캐스트_자막_화자별")
+    assert not any("이형" in f for f in os.listdir(spk_dir))
+    p = res["parts"][0]
+    on = [next(sh["camera"] for sh in p["shots"] if sh["s"] <= (w["s"] + w["e"]) / 2 < sh["e"])
+          for w in p["plan"]["words"] if w.get("spk") == "리형"
+          and any(sh["s"] <= (w["s"] + w["e"]) / 2 < sh["e"] for sh in p["shots"])]
+    assert on and on.count("C50") / len(on) > 0.6                                       # 이름 바꿔도 화자 → 카메라 유지
+
+
+def test_time_prefilter_seoul(monkeypatch):
+    import time
+    from autocut.sync import split_by_time
+    monkeypatch.setenv("TZ", "Asia/Seoul")
+    time.tzset()
+    try:
+        refs = [{"file": "TX01_MIC028_20260711_101626_edit.wav", "duration": 1800, "media": {}},
+                {"file": "TX01_MIC031_20260711_114802_edit.wav", "duration": 1800, "media": {}},
+                {"file": "rec.wav", "duration": 100, "media": {}}]            # 시각 모름 → 항상 후보
+        near, far = split_by_time({"created": "2026-07-11T01:17:00Z", "duration": 300}, "A.MP4", refs)
+        assert [r["file"][:12] for r in near] == ["TX01_MIC028_", "rec.wav"]
+        near, far = split_by_time({"duration": 300}, "cam.MP4", refs)       # 카메라 시각 모름 → 전부
+        assert len(near) == 3
+    finally:
+        monkeypatch.delenv("TZ")
+        time.tzset()
+
+
+def test_angles_no_flash_cut_when_other_camera_covers():
+    from autocut.angles import place_angles
+    sess = {"clips": [_clip("F", "f.mp4", 0, 100), _clip("W", "w.mp4", 10.5, 90, "wide")]}
+    plan = {"items": [{"enabled": True, "segments": [{"s": 10, "e": 14}], "spk": None, "topic_start": True}], "words": []}
+    shots = place_angles(plan, sess, {"min_shot": 2.0, "wide_hold": 4.0})
+    assert min(s["e"] - s["s"] for s in shots) >= 2.0

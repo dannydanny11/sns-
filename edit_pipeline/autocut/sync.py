@@ -172,6 +172,46 @@ def _probe_safe(path: str) -> tuple[dict | None, str]:
     return info.to_dict(), ""
 
 
+_NAME_TIME = re.compile(r"(20\d{2})(\d{2})(\d{2})[_-]?(\d{2})(\d{2})(\d{2})")
+
+
+def media_time(info: dict | None, path: str):
+    """촬영 시작 시각(이 PC 현지 시각, naive): 메타데이터 creation_time(UTC→현지) → 파일 이름의 20260711_101626."""
+    from datetime import datetime
+    t = (info or {}).get("created")
+    if t:
+        try:
+            dt = datetime.fromisoformat(t.replace("Z", "+00:00"))
+            return (dt.astimezone() if dt.tzinfo else dt).replace(tzinfo=None)
+        except ValueError:
+            pass
+    m = _NAME_TIME.search(os.path.basename(path))
+    if m:
+        try:
+            return datetime(*map(int, m.groups()))
+        except ValueError:
+            return None
+    return None
+
+
+def split_by_time(info: dict | None, path: str, refs: list[dict], window_min: float = 20) -> tuple[list, list]:
+    """(촬영 시각이 겹치거나 시각을 모르는 녹음, 나머지)."""
+    t = media_time(info, path)
+    if t is None:
+        return list(refs), []
+    dur = (info or {}).get("duration", 0)
+    w = window_min * 60
+    near, far = [], []
+    for ref in refs:
+        rt = media_time(ref.get("media"), ref["file"])
+        if rt is None:
+            near.append(ref)
+            continue
+        d = (t - rt).total_seconds()                  # 녹음 시작 기준 카메라 시작
+        (near if -dur - w <= d <= ref["duration"] + w else far).append(ref)
+    return near, far
+
+
 def sync_file(path: str, refs: list[dict], coarse_refs: dict, rules: dict,
               camera: str = "", role: str = "") -> tuple[ClipSync, dict | None]:
     """파일 하나를 모든 기준 트랙과 상관해 가장 잘 맞는 기준과 오프셋을 찾는다."""
@@ -190,12 +230,18 @@ def sync_file(path: str, refs: list[dict], coarse_refs: dict, rules: dict,
     sig = load_audio(path, COARSE_SR)
     best = None
     min_conf, min_z = rules.get("min_confidence", 0.25), rules.get("min_zscore", 8.0)
-    for ref in refs:
-        off, conf, z = estimate_offset(coarse_refs[ref["file"]], sig, COARSE_SR)
-        if conf >= min_conf and z >= min_z:
-            clip.matches.append({"ref": ref["file"], "offset": round(off, 4), "confidence": round(conf, 3)})
-        if best is None or (conf, z) > (best[1], best[2]):
-            best = (off, conf, z, ref)
+    # 촬영 시각이 가까운 녹음부터 맞춰 보고, 거기서 맞으면 나머지는 건너뛴다(긴 촬영에서 수십 배 빠름).
+    # 시계가 틀린 카메라도 있으니 못 찾으면 나머지 녹음 전부와 다시 맞춘다.
+    near, far = split_by_time(info, path, refs, rules.get("time_window_min", 20))
+    for group in (near, far):
+        for ref in group:
+            off, conf, z = estimate_offset(coarse_refs[ref["file"]], sig, COARSE_SR)
+            if conf >= min_conf and z >= min_z:
+                clip.matches.append({"ref": ref["file"], "offset": round(off, 4), "confidence": round(conf, 3)})
+            if best is None or (conf, z) > (best[1], best[2]):
+                best = (off, conf, z, ref)
+        if clip.matches:
+            break
     if best is None:
         clip.status, clip.reason = "failed", "기준 트랙 없음"
         return clip, None
@@ -251,7 +297,9 @@ def choose_references(candidates: list[str], rules: dict, source: str, log=print
     for path, info in sorted(infos, key=pref):
         sig = load_audio(path, COARSE_SR)
         hit = None
-        for ref in refs:
+        # 촬영 시각이 먼 녹음과는 맞춰 보지 않는다(시계가 다른 장비라 놓치더라도 뒤에서 카메라로 다시 이어짐)
+        near, _ = split_by_time(info, path, refs, rules.get("time_window_min", 20))
+        for ref in near:
             off, conf, z = estimate_offset(coarse[ref["file"]], sig, COARSE_SR)
             if conf >= min_conf and z >= rules.get("min_zscore", 8.0):
                 hit = (ref, off)

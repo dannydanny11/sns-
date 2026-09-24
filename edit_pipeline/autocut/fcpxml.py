@@ -95,7 +95,7 @@ def sequence_xml(tl: dict, name: str, fps: float, width: int, height: int) -> st
 
     v_tracks = []
     for clips in tl.get("video_tracks") or [tl["video"]]:
-        v_tracks.append("<track>" + "".join(_clip(cid("v"), c, files, fps, "video") for c in clips) + "</track>")
+        v_tracks.append("<track>" + "".join(_clip(cid("v"), c, files, fps, "video") for c in clips if c["file"]) + "</track>")
     a_tracks = []
     tracks = tl.get("audio_tracks") or ([{"name": "녹음", "clips": tl["audio"]}] if tl["audio"] else [])
     for tr in tracks:

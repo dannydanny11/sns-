@@ -95,8 +95,8 @@ def build_timeline(parts: list[dict], rate: Fraction, stack: bool = True, camera
             if f_e <= f_s:
                 continue
             length = f_e - f_s
-            src_in = to_frames((sh["s"] - sh["offset"]) / sh.get("rate", 1.0), rate)
-            video.append({"file": sh["file"], "camera": sh["camera"], "role": sh["role"], "media": sh["media"],
+            src_in = to_frames((sh["s"] - sh["offset"]) / sh.get("rate", 1.0), rate) if sh["file"] else 0
+            video.append({"file": sh["file"], "camera": sh["camera"] or "(영상 없음)", "role": sh["role"], "media": sh["media"],
                           "start": rec, "end": rec + length, "in": src_in, "out": src_in + length,
                           "why": sh["why"], "enabled": True})
             pieces = audio_pieces(tracks, f_s / rate, f_e / rate, rec, rate)

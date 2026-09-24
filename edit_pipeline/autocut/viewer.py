@@ -75,8 +75,9 @@ def build_data(project: str, parts: list[dict], tl: dict, rate: Fraction, caps: 
     label_idx = {p["label"]: i for i, p in enumerate(parts)}
     for v, a, m in zip(tl["video"], tl["audio"], tl["mapping"]):
         shots.append({"s": v["start"] / fr, "e": v["end"] / fr, "camera": v["camera"], "role": v["role"],
-                      "file": fid(v["file"]), "in": v["in"] / fr, "why": v["why"],
-                      "ref_file": fid(a["file"]), "ref_in": a["in"] / fr, "sess": label_idx[m["label"]]})
+                      "file": fid(v["file"]) if v["file"] else None, "in": v["in"] / fr, "why": v["why"],
+                      "ref_file": fid(a["file"]), "ref_in": a["in"] / fr, "rt": m["ref_s"],
+                      "sess": label_idx[m["label"]]})   # ref_in = 녹음 파일 안 시각(재생용), rt = 세션 기준 시각(이동용)
     cams_info, inserts = [], 0
     for sy in syncs or []:
         inserts += len(sy.get("inserts", []))
@@ -400,8 +401,8 @@ function sessionOfItem(id) { return D.sessions.findIndex(s => s.items.some(i => 
 function recOf(si, refT) {
   let best = null;
   for (const sh of D.shots) { if (sh.sess !== si) continue; const len = sh.e - sh.s;
-    if (refT >= sh.ref_in - 1e-3 && refT < sh.ref_in + len) return sh.s + refT - sh.ref_in;
-    if (sh.ref_in > refT && (!best || sh.ref_in < best.ref_in)) best = sh; }
+    if (refT >= sh.rt - 1e-3 && refT < sh.rt + len) return sh.s + refT - sh.rt;
+    if (sh.rt > refT && (!best || sh.rt < best.rt)) best = sh; }
   return best ? best.s : null;
 }
 function jumpTo(it) {
@@ -425,7 +426,7 @@ function renderTx() {
 }
 function markCurrent() {
   let id = null;
-  if (view === "rough") { const sh = D.shots.find(s => t >= s.s && t < s.e); if (sh) { const rt = sh.ref_in + t - sh.s;
+  if (view === "rough") { const sh = D.shots.find(s => t >= s.s && t < s.e); if (sh) { const rt = sh.rt + t - sh.s;
       const it = D.sessions[sh.sess].items.find(i => rt >= i.s - .05 && rt <= i.e + .2); id = it && it.id; } }
   else { const it = sess().items.find(i => t >= i.s && t <= i.e); id = it && it.id; }
   if (id === curItem) return; curItem = id;
@@ -448,7 +449,7 @@ function select(obj, node) {
   document.querySelectorAll(".clip.sel").forEach(x => x.classList.remove("sel")); node.classList.add("sel"); selected = obj;
   let h = "";
   if (obj.type === "shot") { const sh = D.shots[obj.i]; seek(sh.s);
-    h = `<span class="pill k">${esc(sh.camera)}</span>${sh.why ? esc(sh.why) : "기본 배치"}<div class="t">${fmt(sh.s)} – ${fmt(sh.e)} (${(sh.e - sh.s).toFixed(1)}초)</div><div class="m">${esc(D.files[sh.file].name)} · 원본 ${fmt(sh.in)}부터</div>`; }
+    h = `<span class="pill k">${esc(sh.camera)}</span>${sh.why ? esc(sh.why) : "기본 배치"}<div class="t">${fmt(sh.s)} – ${fmt(sh.e)} (${(sh.e - sh.s).toFixed(1)}초)</div><div class="m">${sh.file != null ? esc(D.files[sh.file].name) + " · 원본 " + fmt(sh.in) + "부터" : "이 구간을 찍은 카메라가 없어 소리·자막만 들어감"}</div>`; }
   else if (obj.type === "camclip") { const k = obj.k;
     h = `<span class="pill ${k.status === "ok" ? "k" : "o"}">${esc(obj.cam.camera)}</span>${esc(D.files[k.file].name)}<div class="m">${k.status === "ok" ? `오프셋 ${k.s.toFixed(3)}초 · 신뢰도 ${k.confidence} · 길이 ${fmt(k.dur)}` : "제외 사유: " + esc(k.reason)}</div>`; }
   else if (obj.type === "take") { const it = obj.it; seek(it.s);
