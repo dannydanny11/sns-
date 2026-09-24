@@ -1,0 +1,57 @@
+{
+  "_설명": "촬영 유형별 규칙. default 를 깔고 각 프리셋 값을 덮어쓴다. 시간 단위는 초.",
+  "default": {
+    "min_confidence": 0.25,
+    "min_zscore": 8.0,
+
+    "phrase_gap": 0.5,
+    "join_gap": 0.35,
+    "pad_before": 0.08,
+    "pad_after": 0.15,
+    "topic_gap": 2.5,
+    "fillers": ["어", "음", "으", "엄", "흠", "에", "어어", "음음", "아아", "으음"],
+    "soft_fillers": ["그", "저", "아", "뭐", "이제", "그러니까", "막"],
+    "soft_filler_gap": 0.3,
+
+    "min_precision": 0.6,
+    "min_coverage": 0.7,
+    "restart_tolerance_chars": 2,
+    "keep_off_script": false,
+    "repeat_window": 10.0,
+    "repeat_ratio": 0.8,
+
+    "roles": {"base": ["front"], "wide": ["wide"], "tele": ["tele"], "alt": ["side"]},
+    "min_shot": 2.0,
+    "max_hold": 15.0,
+    "alt_hold": 5.0,
+    "wide_hold": 4.0,
+    "cover_jump_cuts": true,
+
+    "caption_max_chars": 20,
+    "point_pad_before": 0.2,
+    "point_pad_after": 0.5,
+    "point_min": 1.5,
+    "point_max": 5.0,
+
+    "whisper_model": "large-v3",
+    "llm_model": "claude-sonnet-5"
+  },
+  "연수": {
+    "_설명": "대본 낭독. 정면 1 + 측면 1~2. 와이드·망원이 없으므로 측면으로 대체.",
+    "roles": {"base": ["front"], "wide": ["side"], "tele": ["side"], "alt": ["side"]},
+    "max_hold": 18.0
+  },
+  "세미지": {
+    "_설명": "정면 1 + 2인 구도 2 (폴더명 cam_two, cam_two2 등).",
+    "roles": {"base": ["front"], "wide": ["two"], "tele": ["front"], "alt": ["two", "side"]},
+    "keep_off_script": true,
+    "max_hold": 12.0
+  },
+  "교과서여행": {
+    "_설명": "장소별 폴더, 3~4대(정면·측면·망원·와이드).",
+    "roles": {"base": ["front"], "wide": ["wide"], "tele": ["tele"], "alt": ["side", "wide"]},
+    "keep_off_script": true,
+    "max_hold": 10.0,
+    "alt_hold": 4.0
+  }
+}

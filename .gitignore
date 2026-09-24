@@ -16,3 +16,12 @@ published/poc/
 # OS
 .DS_Store
 Thumbs.db
+
+# 영상 자동 컷편집(edit_pipeline) — 촬영본·중간 결과·출력은 커밋하지 않음
+edit_pipeline/input/*
+edit_pipeline/work/*
+edit_pipeline/output/*
+edit_pipeline/index/*
+!edit_pipeline/**/.gitkeep
+__pycache__/
+.pytest_cache/
