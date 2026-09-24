@@ -82,7 +82,7 @@ def build(root: str, project: str = "테스트세미지") -> dict:
     total = 60.0
     ref = speech_like(words, total, rng)
     ref_path = os.path.join(proj, "audio", "rec01.wav")
-    wavfile.write(ref_path, SR, np.stack([ref, 0.7 * ref], axis=1).astype(np.float32))
+    wavfile.write(ref_path, SR, (np.clip(np.stack([ref, 0.7 * ref], axis=1), -1, 1) * 32767).astype(np.int16))
 
     tmp = os.path.join(root, "tmp")
     os.makedirs(tmp, exist_ok=True)
