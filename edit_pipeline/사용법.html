@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>영상 자동 컷편집 사용법</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d1f23;--sub:#5b6068;--line:#e3e5e9;--soft:#f5f6f8;--accent:#c8871a;--accent-bg:#fdf4e3;--blue:#2f6fd6;--code:#f1f2f5}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--ink);font:15px/1.7 "Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+.wrap{max-width:860px;margin:0 auto;padding:40px 20px 80px}
+header{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:28px}
+header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.02em}
+header p{margin:0;color:var(--sub)}
+h2{font-size:21px;margin:44px 0 12px;padding-top:6px;letter-spacing:-.01em;border-top:1px solid var(--line)}
+h2 .n{display:inline-block;min-width:30px;color:var(--accent)}
+h3{font-size:16.5px;margin:24px 0 8px}
+p{margin:8px 0}
+code,kbd{font-family:Consolas,"D2Coding",Menlo,monospace;font-size:.92em;background:var(--code);padding:1px 6px;border-radius:4px}
+kbd{border:1px solid var(--line);background:#fff}
+pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto;font:13.5px/1.6 Consolas,"D2Coding",Menlo,monospace;margin:10px 0}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px 8px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600}
+.tip{background:var(--accent-bg);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0}
+.note{background:var(--soft);padding:10px 14px;border-radius:8px;margin:12px 0;color:var(--sub)}
+ol,ul{padding-left:22px;margin:8px 0}
+li{margin:4px 0}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:14px 0}
+.flow span{background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:14px}
+.flow i{color:var(--sub);font-style:normal}
+.tree{font:13.5px/1.55 Consolas,"D2Coding",Menlo,monospace;background:var(--code);padding:12px 14px;border-radius:8px;white-space:pre;overflow-x:auto}
+.toc{columns:2;gap:24px;background:var(--soft);padding:14px 18px 14px 34px;border-radius:8px;margin:0}
+.toc li{break-inside:avoid}
+a{color:var(--blue)}
+@media (max-width:640px){.toc{columns:1}.wrap{padding:24px 16px 60px}header h1{font-size:25px}}
+@media print{body{font-size:12.5px}.wrap{padding:0;max-width:none}h2{break-after:avoid;margin-top:28px}pre,table,.tip,.tree{break-inside:avoid}a{color:inherit}}
+@page{size:A4;margin:16mm 15mm}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>영상 자동 컷편집 사용법</h1>
+  <p>촬영본을 폴더째 넣으면 싱크 → 전사 → 컷 선별 → 앵글 배치 → 프리미어 XML·화자별 자막까지 만들어 주는 프로그램</p>
+</header>
+
+<ol class="toc">
+  <li><a href="#s1">무엇을 해 주나</a></li>
+  <li><a href="#s2">폴더 구성</a></li>
+  <li><a href="#s3">처음 한 번: 설치</a></li>
+  <li><a href="#s4">매번 쓰는 법</a></li>
+  <li><a href="#s5">결과물</a></li>
+  <li><a href="#s6">프리미어에서 열기</a></li>
+  <li><a href="#s7">화자별 자막</a></li>
+  <li><a href="#s8">타임라인 뷰어</a></li>
+  <li><a href="#s9">셀렉츠 편집으로 스타일 학습</a></li>
+  <li><a href="#s10">셀렉츠 싱크와 비교</a></li>
+  <li><a href="#s11">옵션 모음(명령어)</a></li>
+  <li><a href="#s12">문제가 생기면</a></li>
+</ol>
+
+<h2 id="s1"><span class="n">1</span>무엇을 해 주나</h2>
+<div class="flow"><span>촬영본 폴더째 넣기</span><i>→</i><span>카메라·마이크 자동 정리</span><i>→</i><span>소리로 싱크</span><i>→</i><span>전사·화자 판정</span><i>→</i><span>컷 선별</span><i>→</i><span>앵글 배치</span><i>→</i><span>XML·자막·대본</span></div>
+<ul>
+  <li><b>정리하지 않아도 됩니다.</b> 카드 폴더(DCIM, PRIVATE 등), 무선 마이크 파일, 녹음기 파일을 그대로 넣으면 어떤 파일이 어느 카메라인지, 어느 게 녹음인지 알아서 가립니다.</li>
+  <li><b>무엇이든 소리로 싱크</b>합니다. 연수·세미지·여행 촬영 모두 됩니다. 녹음이 1.wav·2.wav 로 쪼개져도 이어 붙입니다.</li>
+  <li><b>셀렉츠처럼</b> 컷마다 모든 카메라를 쌓아 두고 한 대만 켠 멀티캠 XML, 화자별 자막, 화자·시각이 붙은 대본을 만듭니다.</li>
+  <li>결과는 완성본이 아니라 <b>1차 컷(러프컷)</b>입니다. 마무리는 프리미어에서 합니다.</li>
+</ul>
+
+<h2 id="s2"><span class="n">2</span>폴더 구성</h2>
+<p>zip 파일을 <code>F:\클로드자료</code> 에 풀면 아래처럼 됩니다(다른 위치에 풀어도 똑같이 동작합니다).</p>
+<div class="tree">F:\클로드자료\영상자동컷편집\
+├─ 설치.bat            ← 처음 한 번 더블클릭
+├─ 실행.bat            ← 편집할 때마다 더블클릭
+├─ 스타일학습.bat       ← 셀렉츠/프리미어 XML 을 끌어다 놓기
+├─ 사용법.html / 사용법.pdf
+├─ input\             ← 여기에 프로젝트 폴더를 만들고 촬영본을 통째로
+│   └─ 강릉여행\  (카드 폴더, 마이크 파일 그대로)
+├─ script\            ← 연수 대본(.txt), 있을 때만
+├─ output\            ← 결과물(프로젝트별 폴더)
+├─ work\              ← 중간 결과(싱크·전사). 지우면 처음부터 다시 계산
+├─ config\            ← 규칙(presets.json), 학습한 스타일(styles\)
+└─ 예시\               ← 연습용 예시 두 개(팟캐스트, 강릉)</div>
+
+<h2 id="s3"><span class="n">3</span>처음 한 번: 설치</h2>
+<h3>윈도우</h3>
+<ol>
+  <li><a href="https://www.python.org/downloads/">python.org</a> 에서 <b>Python 3.12</b> 를 받아 설치합니다. 설치 첫 화면 아래 <b>“Add python.exe to PATH” 를 꼭 체크</b>하세요.</li>
+  <li><code>영상자동컷편집</code> 폴더의 <b>설치.bat</b> 을 더블클릭합니다. 필요한 것을 알아서 받습니다(5~10분).</li>
+  <li>“설치 완료!” 가 나오면 끝입니다.</li>
+</ol>
+<div class="tip">파란 “Windows의 PC 보호” 창이 뜨면 <b>추가 정보 → 실행</b>을 누르세요. 직접 만든 배치 파일이라 뜨는 안내입니다.</div>
+<h3>맥</h3>
+<ol>
+  <li>python.org 에서 Python 3.12 설치</li>
+  <li><b>설치_맥.command</b> 더블클릭(처음엔 우클릭 → 열기)</li>
+</ol>
+<div class="note">NVIDIA 그래픽카드가 있으면 전사가 빨라집니다. 없어도 동작합니다(CPU 사용, 더 오래 걸림). 첫 전사 때 음성 인식 모델(약 3GB)을 한 번 내려받습니다.</div>
+
+<h2 id="s4"><span class="n">4</span>매번 쓰는 법</h2>
+<ol>
+  <li><b>촬영본 넣기</b> — <code>input</code> 안에 프로젝트 이름으로 폴더를 하나 만들고(예: <code>강릉여행</code>), 카드와 녹음기 파일을 <b>정리하지 말고 통째로</b> 복사합니다.</li>
+  <li><b>(연수라면) 대본 넣기</b> — 최종 대본을 <code>script\강릉여행.txt</code> 처럼 텍스트로 저장합니다. 쓰는 법은 아래 <a href="#script">대본 작성법</a>.</li>
+  <li><b>실행.bat 더블클릭</b> — 번호로 고릅니다.
+    <table>
+      <tr><th style="width:26%">묻는 것</th><th>답</th></tr>
+      <tr><td>어떤 프로젝트?</td><td>번호</td></tr>
+      <tr><td>대본 파일</td><td>연수면 번호, 아니면 <kbd>0</kbd></td></tr>
+      <tr><td>목표 길이</td><td><code>20m</code>(20분), <code>90s</code>, <code>shorts</code>(쇼츠) — 원본 흐름대로 자르려면 엔터</td></tr>
+      <tr><td>화자 이름</td><td><code>TX01=이형,TX02=시온</code> 처럼 마이크 이름을 사람 이름으로. 파일 이름에 이미 이름이 있으면(MIC이형1.wav) 엔터</td></tr>
+      <tr><td>편집 스타일</td><td>셀렉츠 작업에서 학습한 스타일 번호, 없으면 <kbd>0</kbd></td></tr>
+      <tr><td>싱크까지만?</td><td>처음 보는 촬영이면 <kbd>y</kbd> 로 싱크·카메라 판정만 먼저 확인해도 좋습니다</td></tr>
+    </table>
+  </li>
+  <li><b>끝나면</b> 결과 폴더와 타임라인 뷰어가 자동으로 열립니다.</li>
+</ol>
+<div class="tip">싱크·전사 결과는 <code>work</code> 에 남아서, 옵션만 바꿔 다시 실행하면 몇 초면 끝납니다. 처음부터 다시 하려면 <code>work\sync</code>, <code>work\transcript</code> 안의 해당 프로젝트 파일을 지우세요.</div>
+
+<h3 id="script">대본 작성법(연수)</h3>
+<pre># 들어가며
+안녕하세요 선생님 여러분. 오늘은 **수업 설계의 세 가지 원칙**을 살펴보겠습니다.
+
+# 첫 번째 원칙
+첫 번째는 학습 목표를 먼저 정하는 것입니다.</pre>
+<ul>
+  <li><code># 제목</code> 이나 빈 줄 → 주제가 바뀌는 곳(챕터 마커, 와이드 샷)</li>
+  <li><code>**문구**</code> → 포인트 자막 + 망원 샷</li>
+  <li>같은 문장을 다시 읽으면 <b>마지막으로 끝까지 읽은 테이크</b>만 쓰고, 앞 테이크는 꺼진 클립으로 남깁니다.</li>
+</ul>
+
+<h2 id="s5"><span class="n">5</span>결과물 (<code>output\프로젝트\</code>)</h2>
+<table>
+  <tr><th style="width:34%">파일</th><th>내용</th></tr>
+  <tr><td><code>_러프컷.xml</code></td><td>1차 컷 시퀀스. 셀렉츠처럼 컷마다 <b>모든 카메라가 트랙별로 쌓여 있고 한 대만 켜져</b> 있습니다. 개인 마이크 켜짐, 카메라 소리는 꺼진 채 포함, 주제 마커</td></tr>
+  <tr><td><code>_싱크타임라인.xml</code></td><td>촬영 전체를 녹음 시간축에 펼친 멀티캠(셀렉츠 ‘싱크 타임라인’). 싱크가 안 된 인서트 영상은 맨 뒤에</td></tr>
+  <tr><td><code>_검토용.xml</code></td><td>모든 테이크를 원래 순서대로. 뺀 테이크는 꺼진 클립 + 이유 마커</td></tr>
+  <tr><td><code>_자막.srt</code></td><td>대사 자막(러프컷 기준)</td></tr>
+  <tr><td><code>_자막_화자표시.srt</code></td><td>줄마다 <code>[이형]</code> 처럼 화자 표시</td></tr>
+  <tr><td><code>_자막_화자별\</code></td><td>화자마다 SRT 하나(<code>강릉여행_이형.srt</code> …)</td></tr>
+  <tr><td><code>_대본.txt</code></td><td>러프컷 대본: 주제 제목 아래 <code>[00:03:12] 이형  문장</code></td></tr>
+  <tr><td><code>_전체전사.txt</code></td><td>촬영 전체 전사. 러프컷에서 뺀 부분은 <code>✂(이유)</code></td></tr>
+  <tr><td><code>_포인트자막.srt</code></td><td>대본의 <code>**강조**</code> 문구(연수)</td></tr>
+  <tr><td><code>_챕터.txt</code></td><td>유튜브 설명란용 타임스탬프</td></tr>
+  <tr><td><code>_타임라인.html</code></td><td>결과를 눈으로 확인하는 뷰어(크롬·엣지)</td></tr>
+  <tr><td><code>_리포트.md</code></td><td>카메라 판정 근거, 마이크 오프셋, 싱크 신뢰도, 뺀 테이크 목록 등</td></tr>
+</table>
+
+<h2 id="s6"><span class="n">6</span>프리미어에서 열기</h2>
+<ol>
+  <li><b>파일 → 가져오기</b> → <code>_러프컷.xml</code>(또는 <code>_싱크타임라인.xml</code>) 선택</li>
+  <li>“미디어 오프라인” 이 뜨면 원본 폴더를 옮겼기 때문입니다. <b>미디어 연결</b>로 원본 폴더를 지정하세요.</li>
+  <li><b>앵글 바꾸기</b>: 같은 자리에 쌓인 다른 카메라 클립을 선택하고 <kbd>Shift</kbd>+<kbd>E</kbd>(사용) 로 켜고, 원래 켜져 있던 클립은 같은 키로 끕니다.</li>
+  <li><b>자막</b>: 파일 → 가져오기 → SRT → 타임라인으로 끌어다 놓으면 캡션 트랙이 됩니다. 화자별 SRT 를 각각 올리면 화자마다 트랙·색을 따로 줄 수 있습니다.</li>
+</ol>
+<div class="note">파이널컷 프로 X 는 이 XML(FCP7 형식)을 바로 열지 못합니다. 프리미어·다빈치 리졸브는 바로 열립니다.</div>
+
+<h2 id="s7"><span class="n">7</span>화자별 자막</h2>
+<ul>
+  <li>무선 마이크가 여러 개면 <b>단어마다 가장 크게 들어온 마이크</b>를 화자로 봅니다.</li>
+  <li>화자가 바뀌면 자막도 끊어서, 한 줄에 두 사람 말이 섞이지 않습니다.</li>
+  <li>화자 이름은 마이크 파일 이름에서 가져옵니다(<code>MIC이형1.wav</code> → 이형, <code>TX01_…</code> → TX01). 사람 이름으로 바꾸려면 실행할 때 <code>TX01=이형,TX02=시온</code> 처럼 입력하세요.</li>
+  <li>대본 대조 모드(연수)는 한 문장을 한 사람으로 봅니다.</li>
+</ul>
+
+<h2 id="s8"><span class="n">8</span>타임라인 뷰어 (<code>_타임라인.html</code>)</h2>
+<ul>
+  <li><b>러프컷</b> 탭: 컷마다 쓴 카메라와 이유, 자막, 주제 마커</li>
+  <li><b>원본 배열</b> 탭: 녹음 기준으로 카메라별 파일 배치, 마이크별 파형, 테이크(초록 = 씀, 빨강 = 뺌)</li>
+  <li><b>전사</b> 패널: 화자 배지 + 문장. 누르면 그 자리로 이동</li>
+  <li><b>카메라</b> 패널: 카메라마다 역할과 판정 근거</li>
+  <li>재생 <kbd>Space</kbd>, 이동 <kbd>←</kbd><kbd>→</kbd>(<kbd>Shift</kbd> 누르면 5초)</li>
+  <li><b>테이크 고치기</b>: 원본 배열에서 테이크를 두 번 누르면 씀/뺌이 바뀝니다 → <b>수정 저장(JSON)</b> → 명령어 <code>--overrides 저장한파일.json</code> 로 다시 실행하면 XML·자막에 반영됩니다.</li>
+</ul>
+<div class="note">영상이 안 나오면 원본이 MXF·HEVC·4K 처럼 브라우저가 못 여는 형식이라서입니다. 명령어에 <code>--proxy</code> 를 붙여 다시 실행하면 저화질 미리보기 파일을 만들어 씁니다.</div>
+
+<h2 id="s9"><span class="n">9</span>셀렉츠 편집으로 스타일 학습</h2>
+<p>셀렉츠(또는 프리미어·파이널컷)에서 편집한 결과를 내보내 학습시키면, 다음부터 같은 스타일로 자릅니다.</p>
+<ol>
+  <li>셀렉츠에서 <b>내보내기 → 어도비 프리미어</b>(.xml) 또는 <b>파이널컷</b>(.fcpxml)</li>
+  <li>그 파일을 <b>스타일학습.bat</b> 아이콘 위로 끌어다 놓기</li>
+  <li>다음 실행 때 “편집 스타일” 에서 고르기</li>
+</ol>
+<p>학습하는 것: 카메라별 사용 비율과 샷 길이(→ 정면·측면·컷어웨이), 한 앵글 최대 유지 시간, 화자가 바뀔 때 앵글 전환 여부, 카메라 쌓기·오디오 켜고 끄기, 시퀀스 설정(23.976fps 4K 등).</p>
+<p>이미 들어 있는 스타일: <b>셀렉츠_팟캐스트25분</b>(카메라 3대·개인 마이크 4개 팟캐스트 편집), <b>셀렉츠_강릉교육여행</b>(카메라 5대 여행 촬영 편집) — 받은 zip 에만 들어 있습니다.</p>
+<div class="tip">“누가 말할 때 어느 카메라” 까지 배우려면 마이크 원본이 있는 PC 에서, 명령어로 원본 폴더를 알려 주세요:<br><code>.venv\Scripts\python -m autocut learn 편집.xml --media "N:\원본폴더" --name 팟캐스트</code></div>
+
+<h2 id="s10"><span class="n">10</span>셀렉츠 싱크와 비교</h2>
+<p>같은 촬영을 셀렉츠로도 맞춰 둔 경우, 셀렉츠 결과를 정답으로 삼아 이 프로그램의 싱크가 맞는지 파일별로 확인합니다.</p>
+<pre>.venv\Scripts\python -m autocut run input\강릉여행 --until sync
+.venv\Scripts\python -m autocut compare-sync 강릉_셀렉츠.fcpxml input\강릉여행</pre>
+<p>파일마다 오차(ms·프레임)를 보여 주고, 1프레임 넘게 어긋나면 <code>← 확인</code> 표시를 합니다.</p>
+
+<h2 id="s11"><span class="n">11</span>옵션 모음(명령어)</h2>
+<p><code>영상자동컷편집</code> 폴더에서 주소창에 <code>cmd</code> 를 입력해 명령 창을 열고 씁니다. 앞부분은 항상 <code>.venv\Scripts\python -m autocut run input\프로젝트</code> 입니다.</p>
+<table>
+  <tr><th style="width:38%">옵션</th><th>쓰임</th></tr>
+  <tr><td><code>--script script\대본.txt</code></td><td>대본 대조(연수)</td></tr>
+  <tr><td><code>--target 20m</code> / <code>shorts</code></td><td>목표 길이로 줄이기(중요한 주제 우선)</td></tr>
+  <tr><td><code>--speakers "TX01=이형,TX02=시온"</code></td><td>화자 이름</td></tr>
+  <tr><td><code>--roles "카드3=tele,C400=front"</code></td><td>카메라 역할 직접 지정(front 정면 / side 측면 / tele 망원 / wide 와이드 / two 2인)</td></tr>
+  <tr><td><code>--style 셀렉츠_팟캐스트25분</code></td><td>학습한 편집 스타일</td></tr>
+  <tr><td><code>--until sync</code></td><td>싱크·카메라 판정까지만</td></tr>
+  <tr><td><code>--redo sync,transcribe</code></td><td>싱크·전사를 처음부터 다시</td></tr>
+  <tr><td><code>--overrides 수정.json</code></td><td>뷰어에서 고친 테이크 반영</td></tr>
+  <tr><td><code>--proxy</code></td><td>뷰어용 저화질 미리보기 파일 만들기</td></tr>
+  <tr><td><code>--preset 연수</code></td><td>촬영 유형 직접 지정(보통은 자동: 대본 있음→연수, 2인 구도→세미지, 녹음 여러 번→교과서여행)</td></tr>
+</table>
+<div class="tip">카드 폴더 이름에 <code>정면</code>, <code>측면</code>, <code>망원</code>, <code>와이드</code> 를 넣어 두면(예: <code>A캠_정면</code>) 카메라 역할 판정이 가장 확실합니다.</div>
+
+<h2 id="s12"><span class="n">12</span>문제가 생기면</h2>
+<table>
+  <tr><th style="width:34%">증상</th><th>해결</th></tr>
+  <tr><td>설치.bat 에서 “파이썬이 없습니다”</td><td>Python 3.12 설치 때 “Add python.exe to PATH” 체크 → 설치.bat 다시</td></tr>
+  <tr><td>전사가 너무 오래 걸림</td><td><code>config\presets.json</code> 의 <code>"whisper_model": "large-v3"</code> 를 <code>"large-v3-turbo"</code> 나 <code>"medium"</code> 으로(빠르지만 조금 덜 정확)</td></tr>
+  <tr><td>어떤 파일이 “인서트” 로 빠짐</td><td>녹음과 소리가 안 맞는 영상(따로 찍은 풍경 등). 싱크 타임라인 맨 뒤에 모여 있습니다</td></tr>
+  <tr><td>카메라 역할이 틀림</td><td>리포트의 카메라 표를 보고 <code>--roles</code> 로 지정</td></tr>
+  <tr><td>화자가 틀림</td><td>마이크끼리 소리가 많이 섞이면 생깁니다. 뷰어 전사 패널로 확인</td></tr>
+  <tr><td>프리미어에서 “미디어 오프라인”</td><td>원본 폴더 위치가 바뀜 → 미디어 연결</td></tr>
+  <tr><td>뷰어에서 영상이 검은 화면</td><td><code>--proxy</code> 로 다시 실행</td></tr>
+  <tr><td>그 밖의 오류</td><td>명령 창의 빨간 글자와 <code>_리포트.md</code> 를 캡처해서 보내 주세요</td></tr>
+</table>
+</div>
+</body>
+</html>

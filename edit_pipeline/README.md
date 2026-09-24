@@ -1,5 +1,7 @@
 # 영상 자동 컷편집 파이프라인
 
+> 처음 쓰는 분은 **사용법.pdf**(또는 사용법.html)를 먼저 보세요. 윈도우는 `설치.bat` → `실행.bat` 더블클릭으로 씁니다.
+
 촬영본 폴더를 **통째로** 넣으면 알아서 정리 → 싱크 → 전사 → 컷 선별 → 앵글 배치 → 프리미어 XML 까지 만든다.
 연수든 세미지든 여행 촬영이든 파일이 무엇이든 소리로 싱크를 맞춘다.
 출력은 완성본이 아니라 1차 컷(러프컷)이고, 최종 편집은 프리미어에서 사람이 마무리한다.
@@ -123,7 +125,7 @@ python -m autocut run input/강릉여행 --target shorts          # 쇼츠 구�
 두 형식 모두 읽는다: **FCP7 XML**(프리미어 '내보내기 → Final Cut Pro XML', `.xml`)과 **FCPXML**(파이널컷 X·셀렉츠 '파이널컷' 내보내기, `.fcpxml`).
 
 ```bash
-python -m autocut learn 풀버전_팟캐스트.xml --media input/은비쌤_0804 --name 팟캐스트
+python -m autocut learn 풀버전_팟캐스트.xml --media input/팟캐스트_0804 --name 팟캐스트
 python -m autocut run input/새촬영 --style 팟캐스트
 ```
 

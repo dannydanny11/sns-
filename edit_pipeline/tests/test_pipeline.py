@@ -367,3 +367,24 @@ def test_learn_reads_fcpxml(tmp_path):
     assert camera_keys(["a_R3.MP4", "a_C400.MP4"]) == {"a_R3.MP4": "R3", "a_C400.MP4": "C400"}
     assert len(set(camera_keys(["MVI_9447.MP4", "MVI_0014.MP4", "CJ_1.MP4"]).values())) == 3
     assert learn.multicam_positions(path)["CJ_1.MP4"]["pos"] == pytest.approx(0.5)
+
+
+def test_speaker_subtitles(tmp_path):
+    fx = make_fixture.build_dump(str(tmp_path))
+    names = "TX01=채연,TX02=지우,TX03=영민,TX04=진행"
+    res = run(fx["project"], speakers=names, work_root=fx["work"], output_root=fx["output"], log=lambda *_: None)
+    out = res["outputs"]
+    tagged = open(out["화자 표시 자막 SRT"], encoding="utf-8").read()
+    assert "[채연]" in tagged and "[진행]" in tagged and "TX01" not in tagged
+    folder = out["화자별 자막 SRT"]
+    assert sorted(os.listdir(folder)) == sorted(f"강릉_{n}.srt" for n in ["채연", "지우", "영민", "진행"])
+    # 자막 한 줄에 두 사람 말이 섞이지 않는다(정답 화자 기준)
+    truth = {w["s"]: w["spk"] for ws in fx["truth"].values() for w in ws}
+    rename = dict(p.split("=") for p in names.split(","))
+    for p in res["parts"]:
+        for w in p["plan"]["words"]:
+            assert w["spk"] == rename[truth[w["s"]]]
+    script = open(out["러프컷 대본(화자·시각)"], encoding="utf-8").read()
+    assert "[00:00:00] 채연" in script
+    full = open(out["전체 전사(원본·뺀 부분 표시)"], encoding="utf-8").read()
+    assert full.count("\n[") >= len(res["parts"][0]["plan"]["items"])

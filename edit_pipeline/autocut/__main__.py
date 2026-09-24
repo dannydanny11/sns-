@@ -35,6 +35,7 @@ def main(argv=None) -> int:
     r.add_argument("--proxy", action="store_true", help="타임라인 뷰어 미리보기용 저해상도 프록시 생성(MXF·HEVC·4K 원본일 때)")
     r.add_argument("--roles", help="카메라 역할 직접 지정: '카메라2=tele,A캠=front' (front/side/tele/wide/two)")
     r.add_argument("--style", help="learn 으로 만든 편집 스타일(JSON 경로 또는 config/styles/ 의 이름)")
+    r.add_argument("--speakers", help="마이크 이름을 사람 이름으로: 'TX01=이형,TX02=시온'")
     r.add_argument("--work", help="작업 폴더(기본 edit_pipeline/work)")
     r.add_argument("--output", help="출력 폴더(기본 edit_pipeline/output)")
     le = sub.add_parser("learn", help="셀렉츠·프리미어에서 편집한 XML 로 편집 스타일 학습")
@@ -45,7 +46,11 @@ def main(argv=None) -> int:
     cs.add_argument("truth", help="정답 파일: .fcpxml(멀티캠) 또는 FCP7 XML")
     cs.add_argument("project", help="input/<프로젝트> (먼저 run --until sync 로 싱크해 둘 것)")
     cs.add_argument("--work", help="작업 폴더(기본 edit_pipeline/work)")
+    sub.add_parser("menu", help="번호로 고르는 실행 메뉴(실행.bat)")
     a = ap.parse_args(argv)
+    if a.cmd == "menu":
+        from .menu import main as menu_main
+        return menu_main()
     if a.cmd == "compare-sync":
         from . import learn
         from .pipeline import ROOT
@@ -67,7 +72,7 @@ def main(argv=None) -> int:
         return 0
     redo = {x.strip() for x in a.redo.split(",") if x.strip()}
     run(a.project, a.preset, a.script, a.target, a.until, redo, a.work, a.output, a.overrides, a.proxy, a.roles,
-        a.style)
+        a.style, a.speakers)
     return 0
 
 

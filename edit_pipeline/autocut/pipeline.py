@@ -122,7 +122,7 @@ def _dedupe_across_sessions(parts: list[dict]) -> None:
 def run(project_dir: str, preset: str | None = "auto", script_path: str | None = None, target_len: str | None = None,
         until: str = "export", redo: set[str] | None = None, work_root: str | None = None,
         output_root: str | None = None, overrides: str | None = None, proxy: bool = False,
-        roles: str | None = None, style: str | None = None, log=print) -> dict:
+        roles: str | None = None, style: str | None = None, speakers: str | None = None, log=print) -> dict:
     redo = redo or set()
     auto_preset = preset in (None, "", "auto")
     rules = load_rules("default" if auto_preset else preset)
@@ -192,6 +192,11 @@ def run(project_dir: str, preset: str | None = "auto", script_path: str | None =
         if tracks:
             named = audio.by_name(tracks, [audio.envelope(t, sess["reference"]["duration"]) for t in tracks])
             n = audio.assign_speakers(tr["words"], named)
+            names = {**(rules.get("speaker_names") or {}), **parse_roles(speakers)}   # TX01=이형
+            if names:
+                for w in tr["words"]:
+                    if w.get("spk") in names:
+                        w["spk"] = names[w["spk"]]
             if n:
                 log(f"  화자 판정: 마이크 {len(audio.speaker_names(list(named)))}개 기준, 단어 {n}개")
             peaks[label] = {name: audio.peaks(e) for name, e in named.items()}
@@ -259,6 +264,18 @@ def run(project_dir: str, preset: str | None = "auto", script_path: str | None =
     }
     caps = subtitles.captions(parts, tl["mapping"], rules["caption_max_chars"])
     outputs["대사 자막 SRT"] = subtitles.write_srt(os.path.join(out_dir, f"{project}_자막.srt"), caps)
+    if any(c.get("spk") for c in caps):   # 셀렉츠처럼 화자별로
+        outputs["화자 표시 자막 SRT"] = subtitles.write_srt(
+            os.path.join(out_dir, f"{project}_자막_화자표시.srt"), caps, speaker_prefix=True)
+        per = subtitles.write_speaker_srts(os.path.join(out_dir, f"{project}_자막_화자별"), project, caps)
+        outputs["화자별 자막 SRT"] = os.path.join(out_dir, f"{project}_자막_화자별") + os.sep
+        log("  화자별 자막: " + ", ".join(f"{k} {sum(1 for c in caps if (c.get('spk') or '미확인') == k)}줄" for k in per))
+    with open(os.path.join(out_dir, f"{project}_대본.txt"), "w", encoding="utf-8") as f:
+        f.write(subtitles.transcript_text(caps, tl["markers"], rate, project))
+    outputs["러프컷 대본(화자·시각)"] = os.path.join(out_dir, f"{project}_대본.txt")
+    with open(os.path.join(out_dir, f"{project}_전체전사.txt"), "w", encoding="utf-8") as f:
+        f.write(subtitles.full_transcript(parts))
+    outputs["전체 전사(원본·뺀 부분 표시)"] = os.path.join(out_dir, f"{project}_전체전사.txt")
     points = subtitles.point_subtitles(parts, tl["mapping"], rules)
     if points:
         outputs["포인트 자막 SRT"] = subtitles.write_srt(os.path.join(out_dir, f"{project}_포인트자막.srt"), points)
