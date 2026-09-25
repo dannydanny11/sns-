@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-25",
+    "slot": 8,
+    "name": "댕냥픽 터그볼 움직이는 장난감 강아지 터그 공",
+    "price": 14500,
+    "url": "https://link.coupang.com/a/hdlPqFNsYK",
+    "image": "./stories/2026-09-21-s8.jpg"
+  },
+  {
     "date": "2026-09-24",
     "slot": 7,
     "name": "HULULU 대용량 4L 타이머 설정 건식사료 전용 강아지 고양이반려동물 자동 급식기",
@@ -230,13 +238,5 @@
     "price": 39900,
     "url": "https://link.coupang.com/a/gEvZTR1rzg",
     "image": "./stories/2026-08-31-s9.jpg"
-  },
-  {
-    "date": "2026-09-04",
-    "slot": 8,
-    "name": "네오핏 강아지 에어 X 하네스",
-    "price": 19500,
-    "url": "https://link.coupang.com/a/gEvZTMKrdI",
-    "image": "./stories/2026-08-31-s8.jpg"
   }
 ]
