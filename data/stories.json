@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-28",
+    "slot": 0,
+    "name": "버디부 버디볼 프로 - 강아지 움직이는장난감 간식공 노즈워크 분리불안 산책공",
+    "price": 36800,
+    "url": "https://link.coupang.com/a/ho0E1INAKz",
+    "image": "./stories/2026-09-28-s0.jpg"
+  },
+  {
     "date": "2026-09-25",
     "slot": 9,
     "name": "스페이스 캡슐 & 스크래처 기둥 프리미엄 캣타워",
@@ -230,13 +238,5 @@
     "price": 34900,
     "url": "https://link.coupang.com/a/gP6yYAkEAS",
     "image": "./stories/2026-09-07-s1.jpg"
-  },
-  {
-    "date": "2026-09-07",
-    "slot": 0,
-    "name": "멍템 강아지 앞섬방지 팔레트 하네스",
-    "price": 18400,
-    "url": "https://link.coupang.com/a/gP6yYuGFA4",
-    "image": "./stories/2026-09-07-s0.jpg"
   }
 ]
