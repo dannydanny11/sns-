@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-29",
+    "slot": 1,
+    "name": "FLAKE 혼자노는 고양이 캣타워 스트레스 해소 장난감 스크래쳐",
+    "price": 25900,
+    "url": "https://link.coupang.com/a/ho0E1M9hsW",
+    "image": "./stories/2026-09-28-s1.jpg"
+  },
+  {
     "date": "2026-09-28",
     "slot": 0,
     "name": "버디부 버디볼 프로 - 강아지 움직이는장난감 간식공 노즈워크 분리불안 산책공",
@@ -230,13 +238,5 @@
     "price": 33000,
     "url": "https://link.coupang.com/a/gP6yYEZ7Lw",
     "image": "./stories/2026-09-07-s2.jpg"
-  },
-  {
-    "date": "2026-09-08",
-    "slot": 1,
-    "name": "리스펫 고양이 멀티꼬리잡기 자동 장난감",
-    "price": 34900,
-    "url": "https://link.coupang.com/a/gP6yYAkEAS",
-    "image": "./stories/2026-09-07-s1.jpg"
   }
 ]

@@ -1,7 +1,17 @@
 {
   "weekKey": "2026-09-28",
-  "generatedAt": "2026-09-28T09:28:50.049Z",
-  "items": [],
-  "storyCount": 0,
-  "storyPageUrl": null
+  "generatedAt": "2026-09-28T17:57:30.150Z",
+  "items": [
+    {
+      "type": "reel",
+      "slot": 1,
+      "productIdx": 1,
+      "runId": "2026-09-28-r1",
+      "reelFile": "2026-09-28-r1/reel.mp4",
+      "caption": "냥이 혼자 놀기\n\n스크래쳐랑 장난감이 한 몸에 붙었다\n\n🛒 바로 구매: https://link.coupang.com/a/ho0E1M9hsW\n👉 이번 주 추천템 전체는 프로필 링크\n\n이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\n\n#고양이장난감 #캣타워 #스크래쳐 #냥집사 #고양이용품 #가성비템 #혼자노는장난감 #가성비",
+      "name": "FLAKE 혼자노는 고양이 캣타워 스트레스 해소 장난감 스크래쳐"
+    }
+  ],
+  "storyCount": 1,
+  "storyPageUrl": "https://dannydanny11.github.io/sns-/story.html"
 }
