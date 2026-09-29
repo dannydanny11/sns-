@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-29",
+    "slot": 2,
+    "name": "JCCOMPANY 소모 배변패드 15g",
+    "price": 19800,
+    "url": "https://link.coupang.com/a/ho0E1Qqm9k",
+    "image": "./stories/2026-09-28-s2.jpg"
+  },
+  {
+    "date": "2026-09-29",
     "slot": 1,
     "name": "FLAKE 혼자노는 고양이 캣타워 스트레스 해소 장난감 스크래쳐",
     "price": 25900,
@@ -230,13 +238,5 @@
     "price": 46890,
     "url": "https://link.coupang.com/a/gP6yYK7pxk",
     "image": "./stories/2026-09-07-s3.jpg"
-  },
-  {
-    "date": "2026-09-08",
-    "slot": 2,
-    "name": "강아지 배변패드 고흡수 탈취 애견패드",
-    "price": 33000,
-    "url": "https://link.coupang.com/a/gP6yYEZ7Lw",
-    "image": "./stories/2026-09-07-s2.jpg"
   }
 ]
