@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-30",
+    "slot": 3,
+    "name": "Star Fun 스테인리스 후드형 악취 제거 향균 특대 고양이 화장실",
+    "price": 59990,
+    "url": "https://link.coupang.com/a/ho0E1Us4qq",
+    "image": "./stories/2026-09-28-s3.jpg"
+  },
+  {
     "date": "2026-09-29",
     "slot": 2,
     "name": "JCCOMPANY 소모 배변패드 15g",
@@ -230,13 +238,5 @@
     "price": 20500,
     "url": "https://link.coupang.com/a/gP6yYQggOi",
     "image": "./stories/2026-09-07-s4.jpg"
-  },
-  {
-    "date": "2026-09-08",
-    "slot": 3,
-    "name": "슈퍼인 초대형 서랍식 악취방지 고양이화장실 모래똥 유출방지형",
-    "price": 46890,
-    "url": "https://link.coupang.com/a/gP6yYK7pxk",
-    "image": "./stories/2026-09-07-s3.jpg"
   }
 ]
