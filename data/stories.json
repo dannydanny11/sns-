@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-30",
+    "slot": 4,
+    "name": "강아지 이갈이 장난감 애견 삑삑이 장난감 세트",
+    "price": 19800,
+    "url": "https://link.coupang.com/a/ho0E10GjWC",
+    "image": "./stories/2026-09-28-s4.jpg"
+  },
+  {
+    "date": "2026-09-30",
     "slot": 3,
     "name": "Star Fun 스테인리스 후드형 악취 제거 향균 특대 고양이 화장실",
     "price": 59990,
@@ -230,13 +238,5 @@
     "price": 62800,
     "url": "https://link.coupang.com/a/gP6yYUNLy0",
     "image": "./stories/2026-09-07-s5.jpg"
-  },
-  {
-    "date": "2026-09-09",
-    "slot": 4,
-    "name": "강아지 소형견 하네스 여름 경량 하네스 리드줄 세트",
-    "price": 20500,
-    "url": "https://link.coupang.com/a/gP6yYQggOi",
-    "image": "./stories/2026-09-07-s4.jpg"
   }
 ]
