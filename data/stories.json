@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-10-01",
+    "slot": 6,
+    "name": "포포몽 강아지 냄새잡는 대나무 배변패드",
+    "price": 14900,
+    "url": "https://link.coupang.com/a/ho0E190G7M",
+    "image": "./stories/2026-09-28-s6.jpg"
+  },
+  {
+    "date": "2026-10-01",
     "slot": 5,
     "name": "온리상점 고양이 수직 기둥 스크래쳐 장난감",
     "price": 21900,
@@ -230,13 +238,5 @@
     "price": 34670,
     "url": "https://link.coupang.com/a/gP6yY6OOvQ",
     "image": "./stories/2026-09-07-s7.jpg"
-  },
-  {
-    "date": "2026-09-10",
-    "slot": 6,
-    "name": "steelhug 고양이 강아지 반려동물 자동 급식기",
-    "price": 39800,
-    "url": "https://link.coupang.com/a/gP6yY0rKyO",
-    "image": "./stories/2026-09-07-s6.jpg"
   }
 ]
