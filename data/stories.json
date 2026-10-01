@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-10-02",
+    "slot": 7,
+    "name": "2도어 완전 밀폐형 고양이 화장실",
+    "price": 28500,
+    "url": "https://link.coupang.com/a/ho0E2eUbM4",
+    "image": "./stories/2026-09-28-s7.jpg"
+  },
+  {
     "date": "2026-10-01",
     "slot": 6,
     "name": "포포몽 강아지 냄새잡는 대나무 배변패드",
@@ -230,13 +238,5 @@
     "price": 18000,
     "url": "https://link.coupang.com/a/gP6yZdxntA",
     "image": "./stories/2026-09-07-s8.jpg"
-  },
-  {
-    "date": "2026-09-10",
-    "slot": 7,
-    "name": "파우시 강아지 고양이 자동급식기 3L",
-    "price": 34670,
-    "url": "https://link.coupang.com/a/gP6yY6OOvQ",
-    "image": "./stories/2026-09-07-s7.jpg"
   }
 ]
