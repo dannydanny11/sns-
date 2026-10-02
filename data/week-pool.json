@@ -410,15 +410,21 @@
       "slot": 9,
       "label": "금 저녁",
       "productIdx": 9,
-      "posted": false,
-      "reelId": null,
-      "postedAt": null
+      "posted": true,
+      "reelId": "18198762211376240",
+      "postedAt": "2026-10-02T16:37:52.252Z"
     }
   ],
   "carousel": {
-    "picks": [],
-    "posted": false,
-    "postId": null,
-    "postedAt": null
+    "picks": [
+      2,
+      4,
+      5,
+      6,
+      8
+    ],
+    "posted": true,
+    "postId": "18039362552831743",
+    "postedAt": "2026-10-02T16:37:52.252Z"
   }
 }
