@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-10-03",
+    "slot": 9,
+    "name": "고양이 자동 장난감 전자동 로프 낚싯대 장난감 움직이는 사냥 놀이 꼬리잡기 줄 낚시 로프 롤러 반려묘 스트레스 해소 혼자 노는 놀이기구",
+    "price": 29900,
+    "url": "https://link.coupang.com/a/ho0E2pk19g",
+    "image": "./stories/2026-09-28-s9.jpg"
+  },
+  {
     "date": "2026-10-02",
     "slot": 8,
     "name": "로채언니네 강아지 장난감 삑삑이 라텍스볼 5종세트",
@@ -230,13 +238,5 @@
     "price": 39990,
     "url": "https://link.coupang.com/a/g1IOTJU3mC",
     "image": "./stories/2026-09-14-s0.jpg"
-  },
-  {
-    "date": "2026-09-11",
-    "slot": 9,
-    "name": "고양이 휴식&스크래칭  캣 타워",
-    "price": 33000,
-    "url": "https://link.coupang.com/a/gP6yZiD4uq",
-    "image": "./stories/2026-09-07-s9.jpg"
   }
 ]
