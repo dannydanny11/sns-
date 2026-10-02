@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-10-02",
+    "slot": 8,
+    "name": "로채언니네 강아지 장난감 삑삑이 라텍스볼 5종세트",
+    "price": 19900,
+    "url": "https://link.coupang.com/a/ho0E2jY2M0",
+    "image": "./stories/2026-09-28-s8.jpg"
+  },
+  {
+    "date": "2026-10-02",
     "slot": 7,
     "name": "2도어 완전 밀폐형 고양이 화장실",
     "price": 28500,
@@ -230,13 +238,5 @@
     "price": 33000,
     "url": "https://link.coupang.com/a/gP6yZiD4uq",
     "image": "./stories/2026-09-07-s9.jpg"
-  },
-  {
-    "date": "2026-09-11",
-    "slot": 8,
-    "name": "베니즈 베이직 하네스",
-    "price": 18000,
-    "url": "https://link.coupang.com/a/gP6yZdxntA",
-    "image": "./stories/2026-09-07-s8.jpg"
   }
 ]
