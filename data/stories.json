@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-10-05",
+    "slot": 0,
+    "name": "움직이는 강아지 장난감 자동 공",
+    "price": 27800,
+    "url": "https://link.coupang.com/a/hADCLkuo5A",
+    "image": "./stories/2026-10-05-s0.jpg"
+  },
+  {
     "date": "2026-10-03",
     "slot": 9,
     "name": "고양이 자동 장난감 전자동 로프 낚싯대 장난감 움직이는 사냥 놀이 꼬리잡기 줄 낚시 로프 롤러 반려묘 스트레스 해소 혼자 노는 놀이기구",
@@ -230,13 +238,5 @@
     "price": 16800,
     "url": "https://link.coupang.com/a/g1IOTOphE4",
     "image": "./stories/2026-09-14-s1.jpg"
-  },
-  {
-    "date": "2026-09-14",
-    "slot": 0,
-    "name": "Qdan 강아지 장난감 공 축구공 끈 달린 펌프 포함 내구성 가죽",
-    "price": 39990,
-    "url": "https://link.coupang.com/a/g1IOTJU3mC",
-    "image": "./stories/2026-09-14-s0.jpg"
   }
 ]
