@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-10-05",
+    "slot": 1,
+    "name": "고냥냥 수제 마따따비 캣닢 고양이 장난감",
+    "price": 29000,
+    "url": "https://link.coupang.com/a/hADCLqlqQm",
+    "image": "./stories/2026-10-05-s1.jpg"
+  },
+  {
+    "date": "2026-10-05",
     "slot": 0,
     "name": "움직이는 강아지 장난감 자동 공",
     "price": 27800,
@@ -230,13 +238,5 @@
     "price": 54900,
     "url": "https://link.coupang.com/a/g1IOTTir48",
     "image": "./stories/2026-09-14-s2.jpg"
-  },
-  {
-    "date": "2026-09-15",
-    "slot": 1,
-    "name": "고양이 자동 낚싯대 장난감 움직이는 줄잡기 놀이",
-    "price": 16800,
-    "url": "https://link.coupang.com/a/g1IOTOphE4",
-    "image": "./stories/2026-09-14-s1.jpg"
   }
 ]
