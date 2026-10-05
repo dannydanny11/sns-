@@ -338,9 +338,9 @@
       "slot": 0,
       "label": "월 오전",
       "productIdx": 0,
-      "posted": false,
-      "reelId": null,
-      "postedAt": null
+      "posted": true,
+      "reelId": "18111115877174168",
+      "postedAt": "2026-10-05T01:33:15.913Z"
     },
     {
       "slot": 1,
