@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-10-07",
+    "slot": 3,
+    "name": "딩동펫 고양이 프라이빗 스윗룸 화장실",
+    "price": 17800,
+    "url": "https://link.coupang.com/a/hADCLCmtNc",
+    "image": "./stories/2026-10-05-s3.jpg"
+  },
+  {
     "date": "2026-10-06",
     "slot": 2,
     "name": "웁쉬 스며들개 고흡수 강아지 배변패드 두툼형 피톤치드향",
@@ -230,13 +238,5 @@
     "price": 22500,
     "url": "https://link.coupang.com/a/g1IOT4VmZo",
     "image": "./stories/2026-09-14-s4.jpg"
-  },
-  {
-    "date": "2026-09-15",
-    "slot": 3,
-    "name": "고양이 사발 미끄럼 방지 초대형 반폐쇄 서랍형 고양이 화장실",
-    "price": 68900,
-    "url": "https://link.coupang.com/a/g1IOTYJfNs",
-    "image": "./stories/2026-09-14-s3.jpg"
   }
 ]
