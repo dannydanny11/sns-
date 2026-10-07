@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-10-08",
+    "slot": 5,
+    "name": "묘메이트 고양이 자동 장난감 스마트 혼자 사냥 놀이 치즈",
+    "price": 39900,
+    "url": "https://link.coupang.com/a/hADCLKMyc0",
+    "image": "./stories/2026-10-05-s5.jpg"
+  },
+  {
     "date": "2026-10-07",
     "slot": 4,
     "name": "터그놀이 흡착식 강아지 로프 이갈이 장난감",
@@ -230,13 +238,5 @@
     "price": 59900,
     "url": "https://link.coupang.com/a/g1IOUdanbE",
     "image": "./stories/2026-09-14-s6.jpg"
-  },
-  {
-    "date": "2026-09-16",
-    "slot": 5,
-    "name": "GERDU 고양이 캣타워 대형 튼튼한 다층 놀이터 스크래쳐 숨숨집",
-    "price": 39900,
-    "url": "https://link.coupang.com/a/g1IOT7qpno",
-    "image": "./stories/2026-09-14-s5.jpg"
   }
 ]
