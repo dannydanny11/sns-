@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-10-07",
+    "slot": 4,
+    "name": "터그놀이 흡착식 강아지 로프 이갈이 장난감",
+    "price": 15800,
+    "url": "https://link.coupang.com/a/hADCLGKkLI",
+    "image": "./stories/2026-10-05-s4.jpg"
+  },
+  {
+    "date": "2026-10-07",
     "slot": 3,
     "name": "딩동펫 고양이 프라이빗 스윗룸 화장실",
     "price": 17800,
@@ -230,13 +238,5 @@
     "price": 39900,
     "url": "https://link.coupang.com/a/g1IOT7qpno",
     "image": "./stories/2026-09-14-s5.jpg"
-  },
-  {
-    "date": "2026-09-16",
-    "slot": 4,
-    "name": "온댕 야광 빛반사 티타늄 강아지 하네스 리드줄 세트",
-    "price": 22500,
-    "url": "https://link.coupang.com/a/g1IOT4VmZo",
-    "image": "./stories/2026-09-14-s4.jpg"
   }
 ]
