@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-10-08",
+    "slot": 6,
+    "name": "탐사 실속형 배변패드",
+    "price": 12000,
+    "url": "https://link.coupang.com/a/hADCLOihKm",
+    "image": "./stories/2026-10-05-s6.jpg"
+  },
+  {
+    "date": "2026-10-08",
     "slot": 5,
     "name": "묘메이트 고양이 자동 장난감 스마트 혼자 사냥 놀이 치즈",
     "price": 39900,
@@ -230,13 +238,5 @@
     "price": 39100,
     "url": "https://link.coupang.com/a/g1IOUiSL12",
     "image": "./stories/2026-09-14-s7.jpg"
-  },
-  {
-    "date": "2026-09-17",
-    "slot": 6,
-    "name": "페키움 정량 배식 강아지 고양이 분리불안해소 자동 급식기",
-    "price": 59900,
-    "url": "https://link.coupang.com/a/g1IOUdanbE",
-    "image": "./stories/2026-09-14-s6.jpg"
   }
 ]
