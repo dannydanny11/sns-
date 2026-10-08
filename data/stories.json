@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-10-08",
+    "slot": 7,
+    "name": "뚜또가또 고양이 초대형 사막화 방지 화장실",
+    "price": 20900,
+    "url": "https://link.coupang.com/a/hADCLUOpfo",
+    "image": "./stories/2026-10-05-s7.jpg"
+  },
+  {
+    "date": "2026-10-08",
     "slot": 6,
     "name": "탐사 실속형 배변패드",
     "price": 12000,
@@ -230,13 +238,5 @@
     "price": 13840,
     "url": "https://link.coupang.com/a/g1IOUnETzE",
     "image": "./stories/2026-09-14-s8.jpg"
-  },
-  {
-    "date": "2026-09-17",
-    "slot": 7,
-    "name": "내꼬냥 고양이 프리미엄 두부벤토 모래 6in1 MAXMI6",
-    "price": 39100,
-    "url": "https://link.coupang.com/a/g1IOUiSL12",
-    "image": "./stories/2026-09-14-s7.jpg"
   }
 ]
