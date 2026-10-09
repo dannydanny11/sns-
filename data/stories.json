@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-10-09",
+    "slot": 9,
+    "name": "고양이 꼬리잡기 자동 장난감 움직이는 사냥 놀이",
+    "price": 12600,
+    "url": "https://link.coupang.com/a/hADCL4Etjw",
+    "image": "./stories/2026-10-05-s9.jpg"
+  },
+  {
+    "date": "2026-10-09",
     "slot": 8,
     "name": "닥터메디펫 강아지 초경량 하네스 리드줄 세트",
     "price": 36900,
@@ -230,13 +238,5 @@
     "price": 45900,
     "url": "https://link.coupang.com/a/hdlPp1ZL5g",
     "image": "./stories/2026-09-21-s0.jpg"
-  },
-  {
-    "date": "2026-09-18",
-    "slot": 9,
-    "name": "포조이 캣타워 캣폴 튼튼한 다기능 고양이 캣타워 원목 대형 멀티 클라이밍 놀이터 링트리",
-    "price": 79000,
-    "url": "https://link.coupang.com/a/g1IOUs6kIm",
-    "image": "./stories/2026-09-14-s9.jpg"
   }
 ]
