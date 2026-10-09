@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-10-09",
+    "slot": 8,
+    "name": "닥터메디펫 강아지 초경량 하네스 리드줄 세트",
+    "price": 36900,
+    "url": "https://link.coupang.com/a/hADCLZcgdU",
+    "image": "./stories/2026-10-05-s8.jpg"
+  },
+  {
     "date": "2026-10-08",
     "slot": 7,
     "name": "뚜또가또 고양이 초대형 사막화 방지 화장실",
@@ -230,13 +238,5 @@
     "price": 79000,
     "url": "https://link.coupang.com/a/g1IOUs6kIm",
     "image": "./stories/2026-09-14-s9.jpg"
-  },
-  {
-    "date": "2026-09-18",
-    "slot": 8,
-    "name": "푸키 강아지 중형견 대형견 이중잠금 리지드 하네스 가슴줄",
-    "price": 13840,
-    "url": "https://link.coupang.com/a/g1IOUnETzE",
-    "image": "./stories/2026-09-14-s8.jpg"
   }
 ]
