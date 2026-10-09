@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>영상 자동 컷편집</title>
+<script src="config.js"></script>
+<style>
+:root{--bg:#232323;--panel:#2c2c2c;--line:#3a3a3a;--text:#dcdcdc;--dim:#9a9a9a;--accent:#2d8ceb;--ok:#4caf7a;--warn:#e0a13a;--err:#e0605a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:12px/1.5 "Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif}
+header{padding:10px 12px 8px;border-bottom:1px solid var(--line)}
+h1{font-size:13px;margin:0 0 6px;font-weight:600}
+.root{display:flex;gap:6px;align-items:center}
+.root input{flex:1;min-width:0;background:#1b1b1b;border:1px solid var(--line);color:var(--text);padding:4px 6px;border-radius:3px;font-size:11px}
+button{background:#3a3a3a;border:1px solid #4a4a4a;color:var(--text);padding:4px 10px;border-radius:3px;cursor:pointer;font:inherit}
+button:hover{background:#454545}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button:disabled{opacity:.45;cursor:default}
+.bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line)}
+.bar label{display:flex;align-items:center;gap:5px;color:var(--dim);cursor:pointer}
+.bar .sp{flex:1}
+ul{list-style:none;margin:0;padding:0}
+li{padding:9px 12px;border-bottom:1px solid var(--line)}
+li .row{display:flex;align-items:center;gap:6px}
+li .name{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+li .meta{color:var(--dim);font-size:11px;margin-top:2px}
+.st{font-size:10.5px;padding:1px 6px;border-radius:9px;white-space:nowrap}
+.st.done{background:rgba(76,175,122,.18);color:var(--ok)}
+.st.todo{background:rgba(224,161,58,.16);color:var(--warn)}
+.st.run{background:rgba(45,140,235,.18);color:var(--accent)}
+.st.fail{background:rgba(224,96,90,.18);color:var(--err)}
+.empty{padding:24px 14px;color:var(--dim)}
+#log{margin:0;padding:8px 12px;color:var(--dim);font-size:11px;white-space:pre-wrap;border-top:1px solid var(--line);max-height:140px;overflow:auto}
+</style>
+</head>
+<body>
+<header>
+  <h1>영상 자동 컷편집 → 프리미어 프로젝트</h1>
+  <div class="root"><input id="root" placeholder="영상자동컷편집 폴더 (예: F:/클로드자료/영상자동컷편집)"><button id="pick">찾기</button></div>
+</header>
+<div class="bar">
+  <label><input type="checkbox" id="auto"> 새 결과 자동으로 프로젝트 만들기</label>
+  <span class="sp"></span>
+  <button id="refresh">새로고침</button>
+</div>
+<ul id="list"></ul>
+<pre id="log"></pre>
+<script>
+(function () {
+  var cep = window.cep, host = window.__adobe_cep__;
+  var $ = function (s) { return document.querySelector(s); };
+  var busy = {}, failed = {};
+
+  function norm(p) { return String(p || "").replace(/\\/g, "/").replace(/\/+$/, ""); }
+  function join(a, b) { return /^([A-Za-z]:)?\//.test(b) ? b : norm(a) + "/" + b; }
+  function log(msg) { var el = $("#log"); el.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg + "\n" + el.textContent; }
+  function exists(p) { var r = cep.fs.stat(p); return r.err === 0; }
+  function readJSON(p) { var r = cep.fs.readFile(p); if (r.err) return null; try { return JSON.parse(r.data); } catch (e) { return null; } }
+  function evalJSX(code) { return new Promise(function (res) { host.evalScript(code, res); }); }
+
+  function getRoot() {
+    var v = norm($("#root").value);
+    try { localStorage.setItem("autocutRoot", v); } catch (e) {}
+    return v;
+  }
+  function jobs() {
+    var root = getRoot(), out = root + "/output", r = cep.fs.readdir(out), list = [];
+    if (!root || r.err) return null;
+    (r.data || []).sort().forEach(function (d) {
+      var dir = out + "/" + d, jp = dir + "/" + d + "_프리미어.json", job = exists(jp) ? readJSON(jp) : null;
+      if (!job) return;
+      var abs = {
+        project: job.project, prproj: join(dir, job.prproj), rough_xml: join(dir, job.rough_xml),
+        extra_xml: (job.extra_xml || []).map(function (x) { return join(dir, x); }),
+        captions: job.captions ? join(dir, job.captions) : null,
+        point_captions: job.point_captions ? join(dir, job.point_captions) : null, speaker_captions: {}
+      };
+      Object.keys(job.speaker_captions || {}).forEach(function (k) { abs.speaker_captions[k] = join(dir, job.speaker_captions[k]); });
+      var xmlTime = cep.fs.stat(abs.rough_xml), prTime = cep.fs.stat(abs.prproj);
+      abs.done = prTime.err === 0;
+      abs.stale = abs.done && xmlTime.err === 0 && xmlTime.data.mtime > prTime.data.mtime;   // XML 이 더 새로우면 다시 만들 수 있게
+      list.push(abs);
+    });
+    return list;
+  }
+
+  function status(j) {
+    if (busy[j.project]) return '<span class="st run">만드는 중…</span>';
+    if (failed[j.project]) return '<span class="st fail">실패</span>';
+    if (j.stale) return '<span class="st todo">결과가 새로 바뀜</span>';
+    return j.done ? '<span class="st done">프로젝트 있음</span>' : '<span class="st todo">프로젝트 없음</span>';
+  }
+
+  var current = [], lastHtml = "";
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]; }); }
+
+  // 내용이 같으면 목록을 다시 그리지 않는다(입력칸에서 바로 버튼을 누를 때 클릭이 사라지지 않게)
+  function render() {
+    var list = jobs(), html;
+    if (list === null) html = '<div class="empty">위에 영상자동컷편집 폴더를 지정하세요.<br>(output 폴더가 들어 있는 폴더)</div>';
+    else if (!list.length) html = '<div class="empty">아직 결과가 없습니다. 실행.bat 으로 편집을 먼저 돌리세요.</div>';
+    else html = list.map(function (j, i) {
+      var spk = Object.keys(j.speaker_captions);
+      return '<li><div class="row"><span class="name">' + esc(j.project) + '</span>' + status(j) +
+        '<button class="make primary" data-i="' + i + '"' + (busy[j.project] ? " disabled" : "") + '>' + (j.done ? "다시 만들기" : "프로젝트 만들기") + '</button>' +
+        '<button class="open" data-i="' + i + '"' + (j.done ? "" : " disabled") + '>열기</button></div>' +
+        '<div class="meta">러프컷 + 싱크 타임라인 + 검토용' + (spk.length ? " · 화자별 캡션 " + esc(spk.join(", ")) : "") + '</div></li>';
+    }).join("");
+    current = list || [];
+    if (html !== lastHtml) { $("#list").innerHTML = html; lastHtml = html; }
+    return current;
+  }
+
+  $("#list").addEventListener("click", function (e) {
+    var btn = e.target.closest("button");
+    if (!btn || btn.disabled) return;
+    var j = current[+btn.getAttribute("data-i")];
+    if (!j) return;
+    if (btn.classList.contains("make")) make(j);
+    else evalJSX("autocutOpen(" + JSON.stringify(j.prproj) + ")").then(function (r) { log(j.project + ": " + r); });
+  });
+
+  function make(j) {
+    if (busy[j.project]) return Promise.resolve();
+    if (j.done && !confirm(j.project + ".prproj 가 이미 있습니다. 덮어써서 다시 만들까요?")) return Promise.resolve();
+    busy[j.project] = true; delete failed[j.project]; render();
+    log(j.project + ": 프로젝트 만드는 중…");
+    var arg = JSON.stringify(JSON.stringify(j));
+    return evalJSX("autocutMake(" + arg + ")").then(function (r) {
+      delete busy[j.project];
+      if (String(r).indexOf("OK:") !== 0) failed[j.project] = true;
+      log(j.project + ": " + r);
+      render();
+    });
+  }
+
+  function autoTick() {
+    if (!$("#auto").checked || Object.keys(busy).length) return;
+    var list = jobs() || [];
+    var next = list.filter(function (j) { return !j.done && !failed[j.project]; })[0];
+    if (next) make(next);
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem("autocutRoot"); } catch (e) {}
+  $("#root").value = saved || window.AUTOCUT_ROOT || "";
+  try { $("#auto").checked = localStorage.getItem("autocutAuto") === "1"; } catch (e) {}
+  $("#auto").onchange = function () { try { localStorage.setItem("autocutAuto", this.checked ? "1" : "0"); } catch (e) {} autoTick(); };
+  $("#root").onchange = render;
+  $("#refresh").onclick = render;
+  $("#pick").onclick = function () {
+    var r = cep.fs.showOpenDialogEx ? cep.fs.showOpenDialogEx(false, true, "영상자동컷편집 폴더 선택", getRoot()) : cep.fs.showOpenDialog(false, true, "영상자동컷편집 폴더 선택", getRoot());
+    if (r && !r.err && r.data && r.data.length) { $("#root").value = norm(r.data[0]); render(); }
+  };
+  render();
+  setInterval(function () { render(); autoTick(); }, 5000);
+  window.__autocut = { jobs: jobs, make: make, render: render };   // 테스트용
+})();
+</script>
+</body>
+</html>
