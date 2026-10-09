@@ -402,9 +402,9 @@
       "slot": 8,
       "label": "금 오전",
       "productIdx": 8,
-      "posted": false,
-      "reelId": null,
-      "postedAt": null
+      "posted": true,
+      "reelId": "17978424710915910",
+      "postedAt": "2026-10-09T02:44:04.850Z"
     },
     {
       "slot": 9,
